@@ -725,88 +725,6 @@ function LayerSection({ layer, vendors, selectedUseCase, selectedIds, onVendorCl
   );
 }
 
-/* ── DETAIL MODAL ─────────────────────────────────────────────────────── */
-function DetailModal({ vendor, onClose, lang }) {
-  useEffect(() => {
-    const h = e => { if (e.key==="Escape") onClose(); };
-    window.addEventListener("keydown", h);
-    return () => window.removeEventListener("keydown", h);
-  }, [onClose]);
-  if (!vendor) return null;
-  const ml = lang==="ko" ? MLK : ML;
-  const rd = Object.entries(vendor.metrics).map(([k,v]) => ({ metric:ml[k], value:v }));
-  const strengths   = vf(vendor,"strengths",lang);
-  const limitations = vf(vendor,"limitations",lang);
-  const insight     = vf(vendor,"insight",lang);
-  const pricing     = vf(vendor,"pricing",lang);
-  const bestFit     = vf(vendor,"bestFit",lang);
-  return (
-    <>
-      <div onClick={onClose} className="ai" style={{ position:"fixed",inset:0,background:"var(--overlay)",zIndex:45,backdropFilter:"blur(8px)" }}/>
-      <div className="asi ns" style={{
-        position:"fixed",top:"50%",left:"50%",transform:"translate(-50%,-50%)",
-        width:"min(820px,93vw)",maxHeight:"88vh",overflowY:"auto",
-        background:"var(--bg2)",border:"1px solid var(--bdr)",borderRadius:20,
-        zIndex:50,padding:28,boxShadow:"0 24px 80px rgba(0,0,0,0.45)",
-      }}>
-        <div style={{ display:"flex", justifyContent:"space-between", alignItems:"flex-start", marginBottom:18 }}>
-          <div style={{ display:"flex", alignItems:"center", gap:14 }}>
-            <LogoBadge vendorId={vendor.id} size={56}/>
-            <div>
-              <div style={{ fontWeight:900, fontSize:ux(22), lineHeight:1.2 }}>{vendor.name}</div>
-              <div style={{ color:"var(--dim)", fontSize:ux(13), marginTop:ux(2) }}>{vendor.org}</div>
-            </div>
-          </div>
-          <button onClick={onClose} style={{ background:"none",border:"none",cursor:"pointer",padding:4 }}>
-            <X size={20} color="var(--dim)"/>
-          </button>
-        </div>
-        <div style={{ display:"flex", gap:7, marginBottom:18, flexWrap:"wrap" }}>
-          {vendor.priceFree && <span style={{ fontSize:ux(12), padding:`${ux(4)}px ${ux(12)}px`, borderRadius:100, background:"var(--okbg)", color:"var(--ok)", fontWeight:700 }}>{lang==="ko"?"무료 플랜":"Free Tier"}</span>}
-          {vendor.priceLabel && <span style={{ fontSize:ux(12), padding:`${ux(4)}px ${ux(12)}px`, borderRadius:100, background:"var(--adim)", color:"var(--accentText)", fontWeight:600 }}>{vendor.priceLabel}</span>}
-          <span style={{ fontSize:ux(12), padding:`${ux(4)}px ${ux(12)}px`, borderRadius:100, background:"var(--cydim)", color:"var(--a3)", fontWeight:600 }}>{bestFit}</span>
-        </div>
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14, marginBottom:16 }}>
-          <div style={{ background:"var(--card)", borderRadius:12, padding:16 }}>
-            <div style={{ fontWeight:700, fontSize:ux(12.5), color:"var(--ok)", marginBottom:ux(8) }}>✦ {lang==="ko"?"강점":"Strengths"}</div>
-            {strengths.map((s,i) => <div key={i} style={{ fontSize:ux(13.5), lineHeight:1.65, paddingLeft:ux(14), position:"relative", marginBottom:ux(5) }}><span style={{ position:"absolute",left:0,color:"var(--dim)" }}>›</span>{s}</div>)}
-          </div>
-          <div style={{ background:"var(--card)", borderRadius:12, padding:16 }}>
-            <div style={{ fontWeight:700, fontSize:ux(12.5), color:"var(--warn)", marginBottom:ux(8) }}>⚠ {lang==="ko"?"한계":"Limitations"}</div>
-            {limitations.map((s,i) => <div key={i} style={{ fontSize:ux(13.5), lineHeight:1.65, paddingLeft:ux(14), position:"relative", marginBottom:ux(5) }}><span style={{ position:"absolute",left:0,color:"var(--dim)" }}>›</span>{s}</div>)}
-          </div>
-        </div>
-        <div style={{ background:"linear-gradient(135deg,var(--adim),var(--cydim))", border:"1px solid var(--bdr)", borderRadius:12, padding:18, marginBottom:16 }}>
-          <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:7 }}>
-            <MessageSquareQuote size={14} color="var(--a2)"/>
-            <span style={{ fontWeight:700, fontSize:ux(11.5), color:"var(--accentText)", textTransform:"uppercase", letterSpacing:.9 }}>{lang==="ko"?"세일즈 디렉터 인사이트":"Sales Director's Take"}</span>
-          </div>
-          <p style={{ fontSize:ux(14.5), lineHeight:1.75, fontStyle:"italic" }}>"{insight}"</p>
-        </div>
-        <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
-          <div>
-            <div style={{ fontWeight:700, fontSize:ux(13), marginBottom:ux(9) }}>{lang==="ko"?"유즈케이스":"Use Cases"}</div>
-            <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
-              {vendor.useCases.map(uid => { const u=USE_CASES.find(x=>x.id===uid); if(!u) return null;
-                return <span key={uid} style={{ fontSize:ux(12), padding:`${ux(4)}px ${ux(10)}px`, borderRadius:7, background:"var(--card)", border:"1px solid var(--bdr)" }}>{u.emoji} {lang==="ko"?u.labelKo:u.label}</span>;
-              })}
-            </div>
-          </div>
-          <div style={{ background:"var(--card)", borderRadius:12, padding:"6px 0" }}>
-            <ResponsiveContainer width="100%" height={190}>
-              <RadarChart data={rd}>
-                <PolarGrid stroke="rgba(139,92,246,.18)" gridType="polygon"/>
-                <PolarAngleAxis dataKey="metric" tick={{ fill:"var(--dim)", fontSize:ux(11) }}/>
-                <Radar dataKey="value" stroke="var(--a)" fill="var(--a)" fillOpacity={.22} strokeWidth={2} dot={{ r:3, fill:"var(--a)" }}/>
-              </RadarChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-}
-
 /* ── COMPARE BAR (inline, top) ────────────────────────────────────────── */
 function CompareBar({ selIds, vendors, onCompare, onClear, onRemove, lang }) {
   if (!selIds.length) return null;
@@ -885,7 +803,7 @@ function ComparisonView({ vendors, onBack, lang }) {
             </tr></thead>
             <tbody>
               {Object.entries(ml).map(([k,lbl]) => (
-                <tr key={k} style={{ borderBottom:"1px solid rgba(139,92,246,.07)" }}>
+                <tr key={k} style={{ borderBottom:"1px solid var(--bdr)" }}>
                   <td style={{ padding:`${ux(9)}px ${ux(12)}px`, fontWeight:600 }}>{lbl}</td>
                   {vendors.map((v,i) => { const val=v.metrics[k]; const mx=Math.max(...vendors.map(x=>x.metrics[k]));
                     return <td key={v.id} style={{ textAlign:"center", padding:`${ux(9)}px ${ux(12)}px` }}>

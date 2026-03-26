@@ -1,7 +1,7 @@
 # AI Vendor Ecosystem Navigator — Claude Code Handoff
 
 > 작성일: 2026-03-26  
-> 현재 버전: v1.5.5  
+> 현재 버전: v1.5.6
 > 이관 대상: Claude Code  
 > 목적: 최종 polish, visual QA, 마무리 이터레이션
 
@@ -79,7 +79,7 @@ Sales Director가 고객 미팅에서 AI 벤더 생태계를 레이어별로 설
    - `VendorNode`
    - `FlowArrow`
    - `LayerSection`
-   - `DetailModal` (레거시로 남아있지만 현재 렌더되지 않음)
+   - ~~`DetailModal`~~ → **v1.5.6에서 완전 제거됨**
    - `CompareBar`
    - `ComparisonView`
    - `DecisionFlow`
@@ -185,7 +185,7 @@ const [stackAutoRevealKey, setStackAutoRevealKey] = useState(0);
 | 한국어 / 영어 | 완료 | LangCtx 기반 |
 | 다크 / 라이트 모드 | 완료 | 다만 시각 QA 한 번 더 권장 |
 | 공식 로고 렌더링 | 완료 | 외부 favicon 기반, fallback 있음 |
-| 상세 모달 UX | 비활성 | `DetailModal` 코드는 남아 있으나 현재 렌더 안 함 |
+| 상세 모달 UX | 완료(제거) | `DetailModal` v1.5.6에서 완전 삭제. hover tooltip으로 대체됨 |
 | 한국 시장 레이어 | 미완료 | Naver / KT / Samsung SDS 등 추가 가능 |
 | 모바일 반응형 | 미완료 | 아직 데스크톱 중심 |
 | 레이어 연결선 | 미완료 | 선택 시 flow 시각화 없음 |
@@ -201,7 +201,7 @@ const [stackAutoRevealKey, setStackAutoRevealKey] = useState(0);
 공식 홈페이지 도메인 기반 외부 favicon 방식이라, 일부 벤더는 로고 품질이나 모양이 균일하지 않을 수 있다.
 
 3. 레거시 코드
-`DetailModal`은 파일 안에 남아 있지만 현재 사용되지 않는다. 필요하면 정리해도 되지만, 단일 파일 유지 원칙 때문에 영향 범위를 조심해야 한다.
+`DetailModal`은 v1.5.6에서 완전히 제거되었다. hover tooltip이 대체 UX다.
 
 4. 파일 크기
 `src/App.jsx`가 1500 LOC를 넘어서 line-based 수정보다 `rg` 검색 기반으로 블록을 찾는 편이 빠르다.
@@ -240,7 +240,7 @@ const [stackAutoRevealKey, setStackAutoRevealKey] = useState(0);
 unused legacy 정리 여부 판단
 
 후보:
-- `DetailModal` 제거 또는 유지 판단
+- ~~`DetailModal` 제거 또는 유지 판단~~ → **완료 (v1.5.6)**
 - 유지한다면 handoff 문서에 legacy로 더 명확히 표기
 
 ### Priority 3

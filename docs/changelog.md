@@ -5,6 +5,23 @@
 
 ---
 
+## [1.5.6] 2026-03-26 — legacy cleanup + light-mode final QA
+
+### Removed
+- `DetailModal` 컴포넌트 제거 (728-808라인): v1.5.2 이후 렌더링되지 않던 레거시 코드 삭제. ~80줄 감소.
+
+### Fixed
+- 비교 뷰 테이블 행 구분선: 하드코드 `rgba(139,92,246,.07)` → `var(--bdr)` 교체 (라이트 모드에서 가시성 향상)
+- 라이트 모드 전체 탭 순회 QA 완료: Explore / Decision Flow / Stack Builder / Compare 모두 확인
+  - 모든 텍스트: `var(--txt)`, `var(--dim)`, `var(--accentText)` 변수 사용 확인 (하드코드 없음)
+  - `--accentText:#0F172A`, `--dim:#334155`, `--a2:#0F172A` 라이트 모드에서 적절한 대비 확인
+  - 벤더 카드 및 Stack Builder 선택 카드: 100% 배율에서 텍스트 클리핑 없음 확인
+
+### Build
+- `npm run build` 성공 (583KB gzip 170KB, 경고 없음)
+
+---
+
 ## [1.5.5] 2026-03-26 — card scale reduction + borderless logos + full light-mode text pass
 
 ### Changed
