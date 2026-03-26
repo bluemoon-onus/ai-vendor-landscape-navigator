@@ -1,4 +1,5 @@
-import { useState, useMemo, useEffect, createContext, useContext } from "react";
+import { useState, useMemo, useEffect, useRef, createContext, useContext } from "react";
+import { createPortal } from "react-dom";
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
 import { X, GitCompare, Layers, Sparkles, Zap, Building2, Wrench, ChevronDown, ArrowRight, Check, RotateCcw, MessageSquareQuote, Boxes, Shield, Star, Sun, Moon, DollarSign } from "lucide-react";
 
@@ -141,7 +142,223 @@ const STACK_PRESETS = [
   { name:"Data-First",       nameKo:"데이터 우선형",       desc:"Analytics & data pipeline focused", descKo:"분석 & 데이터 파이프라인 중심", picks:{foundation:"gemini",  platform:"vertex",      vertical:"glean",         tooling:"pinecone"},    cost:"$50-120/user/mo" },
 ];
 
+const makeEmptyStack = () => ({ foundation:null, platform:null, vertical:null, tooling:null });
+
+const DECISION_BUDGETS = [
+  { id:"limited", label:"Limited (< $50K/yr)", labelKo:"제한적 (< 연 $50K)", desc:"Prioritize cost efficiency and fast wins", descKo:"비용 효율과 빠른 성과를 우선합니다." },
+  { id:"moderate", label:"Moderate ($50K–$200K)", labelKo:"중간 규모 ($50K–$200K)", desc:"Balance capability, integration, and spend", descKo:"역량, 통합, 예산의 균형을 맞춥니다." },
+  { id:"enterprise", label:"Enterprise ($200K+)", labelKo:"엔터프라이즈 ($200K+)", desc:"Optimize for governance, scale, and adoption", descKo:"거버넌스, 확장성, 전사 도입을 우선합니다." },
+];
+
+const DECISION_SOVEREIGNTY = [
+  { id:"public", label:"Public Cloud OK", labelKo:"퍼블릭 클라우드 가능", desc:"Managed services and fastest deployment path", descKo:"매니지드 서비스와 빠른 구축 경로를 우선합니다." },
+  { id:"private", label:"Private / On-premise Required", labelKo:"프라이빗 / 온프레미스 필수", desc:"Favor self-hosted and private control patterns", descKo:"자체 호스팅과 프라이빗 제어를 우선합니다." },
+];
+
+const DECISION_METRIC_WEIGHTS = {
+  limited:    { performance:0.9, integration:0.7, cost:2.2, enterprise:0.6, scalability:0.8, community:0.7 },
+  moderate:   { performance:1.0, integration:1.0, cost:1.2, enterprise:1.0, scalability:0.9, community:0.7 },
+  enterprise: { performance:1.2, integration:1.4, cost:0.6, enterprise:1.5, scalability:1.3, community:0.6 },
+};
+
+const DECISION_USE_CASE_WEIGHTS = {
+  "customer-service": { integration:0.5, enterprise:0.4, scalability:0.4 },
+  "doc-intel":        { performance:0.5, integration:0.3, cost:0.2 },
+  "code-assist":      { performance:0.6, community:0.4, cost:0.3 },
+  "sales-intel":      { integration:0.6, enterprise:0.5, performance:0.4 },
+  "content-gen":      { performance:0.6, integration:0.3, scalability:0.2 },
+  "data-analytics":   { performance:0.5, scalability:0.6, integration:0.5 },
+};
+
+const DECISION_BUDGET_BONUS = {
+  limited: {
+    foundation:{ llama:6, deepseek:6, mistral:4, gemini:3, cohere:3, gpt4o:-4, claude35:-1 },
+    platform:{ huggingface:6, vertex:3, bedrock:1, "azure-openai":-2, databricks:-5, "nvidia-nim":-4 },
+    vertical:{ "github-copilot":6, "sap-joule":2, glean:2, "ms-copilot":-2, "salesforce-einstein":-3, servicenow:-4 },
+    tooling:{ mlflow:5, chroma:4, llamaindex:4, langchain:3, weaviate:2, pinecone:1 },
+  },
+  moderate: {
+    foundation:{ claude35:2, gemini:2, cohere:2, mistral:1, gpt4o:1 },
+    platform:{ bedrock:3, vertex:3, "azure-openai":2, huggingface:2 },
+    vertical:{ glean:3, "github-copilot":3, "ms-copilot":2, "salesforce-einstein":2 },
+    tooling:{ langchain:3, pinecone:3, llamaindex:3, weaviate:2, wandb:1 },
+  },
+  enterprise: {
+    foundation:{ claude35:4, gpt4o:4, gemini:3, cohere:2 },
+    platform:{ "azure-openai":6, bedrock:5, vertex:4, databricks:3, "nvidia-nim":2 },
+    vertical:{ "ms-copilot":5, "salesforce-einstein":5, servicenow:5, glean:4, "sap-joule":4 },
+    tooling:{ langchain:4, pinecone:3, wandb:2, mlflow:2, weaviate:2 },
+  },
+};
+
+const DECISION_SOVEREIGNTY_BONUS = {
+  public: {
+    foundation:{ gpt4o:4, claude35:4, gemini:4, cohere:3 },
+    platform:{ "azure-openai":4, bedrock:4, vertex:4, huggingface:1 },
+    vertical:{ "ms-copilot":4, "salesforce-einstein":4, servicenow:3, glean:3 },
+    tooling:{ pinecone:3, langchain:2, wandb:1, llamaindex:1 },
+  },
+  private: {
+    foundation:{ llama:7, mistral:5, claude35:2, cohere:2, deepseek:-4, gpt4o:-5, gemini:-4 },
+    platform:{ "nvidia-nim":8, bedrock:4, "azure-openai":3, databricks:3, huggingface:2, vertex:-1 },
+    vertical:{ "sap-joule":4, servicenow:2, "ms-copilot":2, "salesforce-einstein":1, glean:1 },
+    tooling:{ mlflow:7, weaviate:5, langchain:4, llamaindex:4, chroma:3, pinecone:-2, wandb:1 },
+  },
+};
+
+const DECISION_USE_CASE_BONUS = {
+  "customer-service": {
+    foundation:{ claude35:5, gpt4o:4, cohere:4, llama:2 },
+    platform:{ "azure-openai":4, bedrock:4, vertex:2 },
+    vertical:{ servicenow:5, "salesforce-einstein":4, "ms-copilot":3, glean:3 },
+    tooling:{ pinecone:4, langchain:3, llamaindex:2, weaviate:2, chroma:1 },
+  },
+  "doc-intel": {
+    foundation:{ claude35:5, gemini:4, cohere:4, gpt4o:2, mistral:2 },
+    platform:{ bedrock:4, vertex:4, "azure-openai":2, databricks:2 },
+    vertical:{ glean:5, servicenow:4, "sap-joule":3, "ms-copilot":2 },
+    tooling:{ llamaindex:5, pinecone:4, weaviate:4, chroma:2, langchain:2 },
+  },
+  "code-assist": {
+    foundation:{ deepseek:5, claude35:4, gpt4o:4, llama:3, mistral:2 },
+    platform:{ huggingface:4, "nvidia-nim":4, bedrock:2, "azure-openai":2 },
+    vertical:{ "github-copilot":8 },
+    tooling:{ langchain:4, wandb:4, mlflow:2, chroma:2 },
+  },
+  "sales-intel": {
+    foundation:{ gpt4o:5, cohere:4, claude35:3, gemini:2 },
+    platform:{ "azure-openai":5, databricks:4, bedrock:2, vertex:2 },
+    vertical:{ "salesforce-einstein":8, "ms-copilot":4, glean:4, "sap-joule":2 },
+    tooling:{ pinecone:4, langchain:4, weaviate:2, llamaindex:2 },
+  },
+  "content-gen": {
+    foundation:{ gpt4o:5, gemini:4, claude35:4, mistral:2, llama:2 },
+    platform:{ "azure-openai":5, vertex:4, bedrock:2, huggingface:2 },
+    vertical:{ "ms-copilot":5, "salesforce-einstein":4 },
+    tooling:{ langchain:5, chroma:2 },
+  },
+  "data-analytics": {
+    foundation:{ gemini:5, deepseek:4, gpt4o:2, mistral:2 },
+    platform:{ vertex:5, databricks:5, "nvidia-nim":2, bedrock:2 },
+    vertical:{ "sap-joule":5, glean:3, "ms-copilot":2 },
+    tooling:{ mlflow:5, wandb:4, llamaindex:2, pinecone:2 },
+  },
+};
+
+const DECISION_PLATFORM_COMPAT = {
+  gpt4o:{ "azure-openai":7, bedrock:1 },
+  claude35:{ bedrock:6 },
+  gemini:{ vertex:8 },
+  llama:{ "nvidia-nim":7, huggingface:4, bedrock:3 },
+  mistral:{ huggingface:5, "nvidia-nim":4, bedrock:2 },
+  cohere:{ bedrock:4, "azure-openai":1 },
+  deepseek:{ "nvidia-nim":5, huggingface:5 },
+};
+
+const DECISION_VERTICAL_COMPAT = {
+  "azure-openai": { "ms-copilot":4, "salesforce-einstein":2 },
+  bedrock: { servicenow:2, glean:2, "salesforce-einstein":1 },
+  vertex: { glean:2, "sap-joule":1 },
+  "nvidia-nim": { "sap-joule":1, servicenow:1 },
+  databricks: { "sap-joule":2, glean:2 },
+  huggingface: { "github-copilot":1, glean:1 },
+};
+
+const DECISION_TOOLING_COMPAT = {
+  "azure-openai": { langchain:2, pinecone:1 },
+  bedrock: { langchain:2, pinecone:2, llamaindex:1 },
+  vertex: { llamaindex:2, mlflow:1 },
+  "nvidia-nim": { mlflow:3, langchain:1, weaviate:1 },
+  databricks: { mlflow:4, wandb:1 },
+  huggingface: { chroma:2, langchain:1, mlflow:1 },
+};
+
 function vf(v, f, lang) { if (lang==="ko" && KO[v.id]) return KO[v.id][f] ?? v[f]; return v[f]; }
+
+function getStackPriceText(vendor, lang) {
+  const freeLabel = lang==="ko" ? "무료" : "Free";
+  if (!vendor.priceFree) return vendor.priceLabel || "";
+  if (!vendor.priceLabel || ["Self-hosted","Open Source","오픈소스"].includes(vendor.priceLabel)) return vendor.priceLabel || freeLabel;
+  return `${freeLabel} · ${vendor.priceLabel}`;
+}
+
+function getVendorTooltipPosition(rect) {
+  const gap = 14;
+  const width = 236;
+  const estimatedHeight = 136;
+  const viewportPad = 12;
+  const fitsRight = rect.right + gap + width <= window.innerWidth - viewportPad;
+
+  if (fitsRight) {
+    const top = Math.max(
+      viewportPad,
+      Math.min(rect.top + rect.height / 2 - estimatedHeight / 2, window.innerHeight - estimatedHeight - viewportPad)
+    );
+    return { left:rect.right + gap, top, width };
+  }
+
+  const left = Math.max(
+    viewportPad,
+    Math.min(rect.left + rect.width / 2 - width / 2, window.innerWidth - width - viewportPad)
+  );
+  const topAbove = rect.top - estimatedHeight - gap;
+  const top = topAbove >= viewportPad
+    ? topAbove
+    : Math.min(rect.bottom + gap, window.innerHeight - estimatedHeight - viewportPad);
+
+  return { left, top, width };
+}
+
+function decisionBonus(table, layerId, vendorId) {
+  return table?.[layerId]?.[vendorId] ?? 0;
+}
+
+function rankDecisionLayer(layerId, answers, context = {}) {
+  const layerVendors = V.filter(v => v.layer===layerId);
+  const matching = layerVendors.filter(v => v.useCases.includes(answers.useCase));
+  const candidates = matching.length ? matching : layerVendors;
+  const budgetWeights = DECISION_METRIC_WEIGHTS[answers.budget] || DECISION_METRIC_WEIGHTS.moderate;
+  const useCaseWeights = DECISION_USE_CASE_WEIGHTS[answers.useCase] || {};
+
+  return candidates
+    .map(vendor => {
+      const metricScore = Object.entries(vendor.metrics).reduce((sum, [metric, value]) => {
+        const weight = (budgetWeights[metric] ?? 1) + (useCaseWeights[metric] ?? 0);
+        return sum + (value * weight);
+      }, 0);
+
+      let score = metricScore;
+      score += decisionBonus(DECISION_BUDGET_BONUS[answers.budget], layerId, vendor.id);
+      score += decisionBonus(DECISION_SOVEREIGNTY_BONUS[answers.sovereignty], layerId, vendor.id);
+      score += decisionBonus(DECISION_USE_CASE_BONUS[answers.useCase], layerId, vendor.id);
+
+      if (layerId==="platform" && context.foundationId) score += DECISION_PLATFORM_COMPAT[context.foundationId]?.[vendor.id] ?? 0;
+      if (layerId==="vertical" && context.platformId) score += DECISION_VERTICAL_COMPAT[context.platformId]?.[vendor.id] ?? 0;
+      if (layerId==="tooling" && context.platformId) score += DECISION_TOOLING_COMPAT[context.platformId]?.[vendor.id] ?? 0;
+
+      return { vendor, score };
+    })
+    .sort((a, b) =>
+      b.score - a.score ||
+      b.vendor.metrics.enterprise - a.vendor.metrics.enterprise ||
+      b.vendor.metrics.integration - a.vendor.metrics.integration
+    );
+}
+
+function buildDecisionRecommendation(answers) {
+  if (!answers.budget || !answers.sovereignty || !answers.useCase) return null;
+
+  const foundation = rankDecisionLayer("foundation", answers)[0]?.vendor || null;
+  const platform = rankDecisionLayer("platform", answers, { foundationId:foundation?.id })[0]?.vendor || null;
+  const vertical = rankDecisionLayer("vertical", answers, { foundationId:foundation?.id, platformId:platform?.id })[0]?.vendor || null;
+  const tooling = rankDecisionLayer("tooling", answers, { foundationId:foundation?.id, platformId:platform?.id, verticalId:vertical?.id })[0]?.vendor || null;
+
+  const stackByLayer = { foundation, platform, vertical, tooling };
+  return {
+    picks: Object.fromEntries(Object.entries(stackByLayer).map(([layerId, vendor]) => [layerId, vendor?.id ?? null])),
+    stack: LAYERS.map(layer => ({ layer, vendor:stackByLayer[layer.id] })).filter(item => item.vendor),
+  };
+}
 
 /* ── CSS ──────────────────────────────────────────────────────────────── */
 const CSS = `
@@ -151,12 +368,14 @@ const CSS = `
   --bg:#09081A;--bg2:#0E0D20;--card:rgba(18,16,38,0.88);--cardh:rgba(26,23,52,0.98);
   --a:#8B5CF6;--a2:#A78BFA;--a3:#C4B5FD;--adim:rgba(139,92,246,0.12);--aglow:rgba(139,92,246,0.3);
   --txt:#ECE8F7;--dim:#9086AA;--bdr:rgba(139,92,246,0.18);--g1:#7C3AED;--g2:#6366F1;
+  --ok:#34D399;--okbg:rgba(52,211,153,0.12);
   --shadow:rgba(0,0,0,0.35);--overlay:rgba(0,0,0,0.6);
 }
 [data-theme="light"]{
   --bg:#F0EEFF;--bg2:#E6E1FB;--card:rgba(255,255,255,0.92);--cardh:rgba(248,246,255,0.99);
   --a:#7C3AED;--a2:#6D28D9;--a3:#5B21B6;--adim:rgba(124,58,237,0.1);--aglow:rgba(124,58,237,0.22);
   --txt:#1A1535;--dim:#5E5280;--bdr:rgba(124,58,237,0.18);--g1:#7C3AED;--g2:#6366F1;
+  --ok:#10B981;--okbg:rgba(16,185,129,0.12);
   --shadow:rgba(100,80,180,0.12);--overlay:rgba(40,20,100,0.45);
 }
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);font-size:15px;line-height:1.5}
@@ -232,19 +451,148 @@ const IconMap = { Sparkles, Zap, Building2, Wrench };
 /* ── VENDOR NODE ──────────────────────────────────────────────────────── */
 function VendorNode({ vendor, isHighlighted, isDimmed, isSelected, onClick, delay=0, lang }) {
   const cls = ["vn", isDimmed&&"dim", isHighlighted&&!isDimmed&&"glow", isSelected&&"sel"].filter(Boolean).join(" ");
+  const nodeRef = useRef(null);
+  const timerRef = useRef(null);
+  const [tooltipStyle, setTooltipStyle] = useState(null);
+  const strengths = vf(vendor, "strengths", lang).slice(0, 2);
+  const insight = vf(vendor, "insight", lang);
+  const isTooltipVisible = !!tooltipStyle;
+
+  const clearHoverTimer = () => {
+    if (timerRef.current) {
+      window.clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+
+  const updateTooltipPosition = () => {
+    if (!nodeRef.current) {
+      setTooltipStyle(null);
+      return;
+    }
+    setTooltipStyle(getVendorTooltipPosition(nodeRef.current.getBoundingClientRect()));
+  };
+
+  const hideTooltip = () => {
+    clearHoverTimer();
+    setTooltipStyle(null);
+  };
+
+  const handleMouseEnter = () => {
+    if (isDimmed) return;
+    clearHoverTimer();
+    timerRef.current = window.setTimeout(updateTooltipPosition, 400);
+  };
+
+  useEffect(() => () => clearHoverTimer(), []);
+
+  useEffect(() => {
+    if (!isTooltipVisible) return undefined;
+    const handleViewportChange = () => updateTooltipPosition();
+    window.addEventListener("resize", handleViewportChange);
+    window.addEventListener("scroll", handleViewportChange, true);
+    return () => {
+      window.removeEventListener("resize", handleViewportChange);
+      window.removeEventListener("scroll", handleViewportChange, true);
+    };
+  }, [isTooltipVisible]);
+
   return (
-    <div className={cls} onClick={() => onClick(vendor)} style={{ animationDelay:`${delay}ms`, minHeight:58 }}>
-      {isSelected && <div className="chk"><Check size={11} color="white" strokeWidth={3}/></div>}
-      <LogoBadge vendorId={vendor.id} size={44}/>
-      <div style={{ minWidth:0, flex:1 }}>
-        <div style={{ fontWeight:800, fontSize:15, lineHeight:1.2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{vendor.name}</div>
-        <div style={{ fontSize:12, color:"var(--dim)", lineHeight:1.3 }}>{vendor.org}</div>
+    <>
+      <div
+        ref={nodeRef}
+        className={cls}
+        onClick={() => { hideTooltip(); onClick(vendor); }}
+        onMouseEnter={handleMouseEnter}
+        onMouseLeave={hideTooltip}
+        style={{ animationDelay:`${delay}ms`, minHeight:58 }}
+      >
+        {isSelected && <div className="chk"><Check size={11} color="white" strokeWidth={3}/></div>}
+        <LogoBadge vendorId={vendor.id} size={44}/>
+        <div style={{ minWidth:0, flex:1 }}>
+          <div style={{ fontWeight:800, fontSize:15, lineHeight:1.2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{vendor.name}</div>
+          <div style={{ fontSize:12, color:"var(--dim)", lineHeight:1.3 }}>{vendor.org}</div>
+        </div>
+        <div style={{ textAlign:"right", flexShrink:0 }}>
+          {vendor.priceFree && <div style={{ fontSize:11, color:"var(--ok)", fontWeight:700, lineHeight:1.2 }}>{lang==="ko"?"무료":"Free"}</div>}
+          {vendor.priceLabel && <div style={{ fontSize:11, color:"var(--dim)", lineHeight:1.2 }}>{vendor.priceLabel}</div>}
+        </div>
       </div>
-      <div style={{ textAlign:"right", flexShrink:0 }}>
-        {vendor.priceFree && <div style={{ fontSize:11, color:"#34D399", fontWeight:700, lineHeight:1.2 }}>{lang==="ko"?"무료":"Free"}</div>}
-        {vendor.priceLabel && <div style={{ fontSize:11, color:"var(--dim)", lineHeight:1.2 }}>{vendor.priceLabel}</div>}
-      </div>
-    </div>
+
+      {isTooltipVisible && typeof document !== "undefined" && createPortal(
+        <div
+          className="ai"
+          style={{
+            position:"fixed",
+            left:tooltipStyle.left,
+            top:tooltipStyle.top,
+            width:tooltipStyle.width,
+            zIndex:40,
+            pointerEvents:"none",
+            borderRadius:14,
+            border:"1px solid var(--bdr)",
+            background:"linear-gradient(135deg,var(--bg2),var(--card))",
+            boxShadow:"0 18px 44px var(--shadow)",
+            backdropFilter:"blur(14px)",
+            padding:14,
+          }}
+        >
+          <div style={{ display:"flex", alignItems:"center", gap:9, marginBottom:10 }}>
+            <LogoBadge vendorId={vendor.id} size={28}/>
+            <div style={{ minWidth:0 }}>
+              <div style={{ fontSize:13.5, fontWeight:800, lineHeight:1.2 }}>{vendor.name}</div>
+              <div style={{ fontSize:11, color:"var(--dim)", lineHeight:1.2 }}>{vendor.org}</div>
+            </div>
+          </div>
+
+          <div style={{ fontSize:10.5, color:"var(--a2)", fontWeight:700, textTransform:"uppercase", letterSpacing:0.8, marginBottom:5 }}>
+            {lang==="ko"?"인사이트":"Insight"}
+          </div>
+          <p style={{
+            fontSize:12.5,
+            color:"var(--txt)",
+            lineHeight:1.45,
+            marginBottom:10,
+            overflow:"hidden",
+            display:"-webkit-box",
+            WebkitLineClamp:1,
+            WebkitBoxOrient:"vertical",
+          }}>
+            "{insight}"
+          </p>
+
+          <div style={{ fontSize:10.5, color:"var(--a2)", fontWeight:700, textTransform:"uppercase", letterSpacing:0.8, marginBottom:6 }}>
+            {lang==="ko"?"핵심 강점":"Top Strengths"}
+          </div>
+          <div style={{ display:"grid", gap:5, marginBottom:10 }}>
+            {strengths.map((strength, index) => (
+              <div key={`${vendor.id}-tip-${index}`} style={{ display:"flex", gap:6, alignItems:"flex-start" }}>
+                <span style={{ color:"var(--ok)", fontWeight:800, lineHeight:1.4 }}>•</span>
+                <span style={{
+                  fontSize:12,
+                  color:"var(--dim)",
+                  lineHeight:1.5,
+                  overflow:"hidden",
+                  display:"-webkit-box",
+                  WebkitLineClamp:1,
+                  WebkitBoxOrient:"vertical",
+                }}>
+                  {strength}
+                </span>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:10, borderTop:"1px solid var(--bdr)", paddingTop:10 }}>
+            <div style={{ fontSize:11, color:"var(--dim)", fontWeight:600 }}>{lang==="ko"?"가격":"Price"}</div>
+            <div style={{ fontSize:11.5, color:vendor.priceFree ? "var(--ok)" : "var(--a2)", fontWeight:700, textAlign:"right" }}>
+              {getStackPriceText(vendor, lang)}
+            </div>
+          </div>
+        </div>,
+        document.body
+      )}
+    </>
   );
 }
 
@@ -476,15 +824,240 @@ function ComparisonView({ vendors, onBack, lang }) {
 }
 
 /* ── STACK BUILDER ────────────────────────────────────────────────────── */
-function StackBuilder({ lang }) {
-  const [picks, setPicks] = useState({ foundation:null, platform:null, vertical:null, tooling:null });
+function DecisionFlow({ onBuildStack }) {
+  const lang = useLang();
+  const [answers, setAnswers] = useState({ budget:null, sovereignty:null, useCase:null });
+  const [openStep, setOpenStep] = useState(1);
+  const maxOpenStep = answers.useCase ? 4 : answers.sovereignty ? 3 : answers.budget ? 2 : 1;
+
+  useEffect(() => {
+    if (openStep > maxOpenStep) setOpenStep(maxOpenStep);
+  }, [maxOpenStep, openStep]);
+
+  const selectedBudget = DECISION_BUDGETS.find(option => option.id===answers.budget) || null;
+  const selectedSovereignty = DECISION_SOVEREIGNTY.find(option => option.id===answers.sovereignty) || null;
+  const selectedUseCase = USE_CASES.find(option => option.id===answers.useCase) || null;
+  const recommendation = useMemo(() => buildDecisionRecommendation(answers), [answers]);
+
+  const stepLabels = [
+    { id:1, label:lang==="ko"?"1. 예산":"1. Budget" },
+    { id:2, label:lang==="ko"?"2. 데이터 주권":"2. Data sovereignty" },
+    { id:3, label:lang==="ko"?"3. 주요 유즈케이스":"3. Primary use case" },
+    { id:4, label:lang==="ko"?"4. 추천 결과":"4. Recommendation" },
+  ];
+
+  const resetFlow = () => {
+    setAnswers({ budget:null, sovereignty:null, useCase:null });
+    setOpenStep(1);
+  };
+
+  const handleBudget = id => {
+    const hasUseCase = !!answers.useCase;
+    setAnswers(prev => ({ ...prev, budget:id }));
+    setOpenStep(hasUseCase ? 4 : 2);
+  };
+
+  const handleSovereignty = id => {
+    const hasUseCase = !!answers.useCase;
+    setAnswers(prev => ({ ...prev, sovereignty:id }));
+    setOpenStep(hasUseCase ? 4 : 3);
+  };
+
+  const handleUseCase = id => {
+    setAnswers(prev => ({ ...prev, useCase:id }));
+    setOpenStep(4);
+  };
+
+  const summaryChips = [
+    selectedBudget && { key:"budget", step:1, label:lang==="ko"?selectedBudget.labelKo:selectedBudget.label },
+    selectedSovereignty && { key:"sovereignty", step:2, label:lang==="ko"?selectedSovereignty.labelKo:selectedSovereignty.label },
+    selectedUseCase && { key:"useCase", step:3, label:`${selectedUseCase.emoji} ${lang==="ko"?selectedUseCase.labelKo:selectedUseCase.label}` },
+  ].filter(Boolean);
+
+  return (
+    <div className="au">
+      <div style={{ fontSize:13.5, color:"var(--dim)", marginBottom:14 }}>
+        {lang==="ko"
+          ?"세 가지 질문에 답하면 현재 고객 상황에 맞는 추천 AI 스택을 제안합니다."
+          :"Answer three questions and get a recommended AI stack for the customer in front of you."}
+      </div>
+
+      <div style={{ display:"flex", gap:6, flexWrap:"wrap", marginBottom:14 }}>
+        {stepLabels.map(step => {
+          const isAvailable = step.id <= maxOpenStep;
+          return (
+            <button
+              key={step.id}
+              className={`tab ${openStep===step.id ? "on" : ""}`}
+              onClick={() => isAvailable && setOpenStep(step.id)}
+              disabled={!isAvailable}
+              style={{ opacity:isAvailable ? 1 : 0.45, cursor:isAvailable ? "pointer" : "not-allowed" }}
+            >
+              {step.label}
+            </button>
+          );
+        })}
+        {(answers.budget || answers.sovereignty || answers.useCase) && (
+          <button className="ghost" onClick={resetFlow}><RotateCcw size={12}/> {lang==="ko"?"다시 시작":"Start Over"}</button>
+        )}
+      </div>
+
+      {summaryChips.length > 0 && (
+        <div className="au" style={{ display:"flex", gap:8, flexWrap:"wrap", marginBottom:16 }}>
+          {summaryChips.map(chip => (
+            <button key={chip.key} className="pill" onClick={() => setOpenStep(chip.step)}>
+              {chip.label}
+            </button>
+          ))}
+        </div>
+      )}
+
+      {openStep===1 && (
+        <div className="asi" style={{ background:"var(--card)", border:"1px solid var(--bdr)", borderRadius:18, padding:22 }}>
+          <div style={{ marginBottom:16 }}>
+            <div style={{ fontWeight:800, fontSize:18, marginBottom:5 }}>{lang==="ko"?"1단계. 예산 규모":"Step 1. Budget"}</div>
+            <div style={{ color:"var(--dim)", fontSize:13 }}>{lang==="ko"?"고객이 허용할 수 있는 연간 예산 범위를 선택하세요.":"Choose the annual budget range the customer is comfortable with."}</div>
+          </div>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(3,minmax(0,1fr))", gap:10 }}>
+            {DECISION_BUDGETS.map(option => {
+              const selected = answers.budget===option.id;
+              return (
+                <button
+                  key={option.id}
+                  className={`pill ${selected ? "on" : ""}`}
+                  onClick={() => handleBudget(option.id)}
+                  style={{ minHeight:128, borderRadius:18, padding:"18px 18px 16px", display:"flex", flexDirection:"column", alignItems:"flex-start", justifyContent:"space-between", textAlign:"left", whiteSpace:"normal" }}
+                >
+                  <div style={{ fontWeight:800, fontSize:15, lineHeight:1.35 }}>{lang==="ko" ? option.labelKo : option.label}</div>
+                  <div style={{ fontSize:12.5, color:selected ? "inherit" : "var(--dim)", lineHeight:1.55 }}>{lang==="ko" ? option.descKo : option.desc}</div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {openStep===2 && (
+        <div className="asi" style={{ background:"var(--card)", border:"1px solid var(--bdr)", borderRadius:18, padding:22 }}>
+          <div style={{ marginBottom:16 }}>
+            <div style={{ fontWeight:800, fontSize:18, marginBottom:5 }}>{lang==="ko"?"2단계. 데이터 주권":"Step 2. Data Sovereignty"}</div>
+            <div style={{ color:"var(--dim)", fontSize:13 }}>{lang==="ko"?"데이터를 퍼블릭 클라우드로 보낼 수 있는지, 프라이빗 통제가 필요한지 선택하세요.":"Choose whether public cloud is acceptable or private deployment is required."}</div>
+          </div>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(2,minmax(0,1fr))", gap:10 }}>
+            {DECISION_SOVEREIGNTY.map(option => {
+              const selected = answers.sovereignty===option.id;
+              return (
+                <button
+                  key={option.id}
+                  className={`pill ${selected ? "on" : ""}`}
+                  onClick={() => handleSovereignty(option.id)}
+                  style={{ minHeight:128, borderRadius:18, padding:"18px 18px 16px", display:"flex", flexDirection:"column", alignItems:"flex-start", justifyContent:"space-between", textAlign:"left", whiteSpace:"normal" }}
+                >
+                  <div style={{ fontWeight:800, fontSize:15, lineHeight:1.35 }}>{lang==="ko" ? option.labelKo : option.label}</div>
+                  <div style={{ fontSize:12.5, color:selected ? "inherit" : "var(--dim)", lineHeight:1.55 }}>{lang==="ko" ? option.descKo : option.desc}</div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {openStep===3 && (
+        <div className="asi" style={{ background:"var(--card)", border:"1px solid var(--bdr)", borderRadius:18, padding:22 }}>
+          <div style={{ marginBottom:16 }}>
+            <div style={{ fontWeight:800, fontSize:18, marginBottom:5 }}>{lang==="ko"?"3단계. 주요 유즈케이스":"Step 3. Primary Use Case"}</div>
+            <div style={{ color:"var(--dim)", fontSize:13 }}>{lang==="ko"?"가장 먼저 성과를 내야 하는 업무 시나리오를 선택하세요.":"Pick the business scenario that matters most for this customer."}</div>
+          </div>
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(3,minmax(0,1fr))", gap:10 }}>
+            {USE_CASES.map(useCase => {
+              const selected = answers.useCase===useCase.id;
+              return (
+                <button
+                  key={useCase.id}
+                  className={`pill ${selected ? "on" : ""}`}
+                  onClick={() => handleUseCase(useCase.id)}
+                  style={{ minHeight:132, borderRadius:18, padding:"18px", display:"flex", flexDirection:"column", alignItems:"flex-start", justifyContent:"space-between", textAlign:"left", whiteSpace:"normal" }}
+                >
+                  <div style={{ fontSize:28, lineHeight:1 }}>{useCase.emoji}</div>
+                  <div>
+                    <div style={{ fontWeight:800, fontSize:15, lineHeight:1.35, marginBottom:4 }}>{lang==="ko" ? useCase.labelKo : useCase.label}</div>
+                    <div style={{ fontSize:12.5, color:selected ? "inherit" : "var(--dim)" }}>{lang==="ko"?"추천 스택을 이 시나리오 기준으로 맞춥니다.":"Tune the stack recommendation around this scenario."}</div>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {openStep===4 && recommendation && (
+        <div className="asi" style={{ background:"var(--card)", border:"1px solid var(--bdr)", borderRadius:18, padding:22 }}>
+          <div style={{ display:"flex", alignItems:"flex-start", justifyContent:"space-between", gap:16, marginBottom:18, flexWrap:"wrap" }}>
+            <div>
+              <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:5 }}>
+                <Shield size={18} color="var(--a2)"/>
+                <span style={{ fontWeight:800, fontSize:18 }}>{lang==="ko"?"추천 스택":"Recommended Stack"}</span>
+              </div>
+              <div style={{ color:"var(--dim)", fontSize:13 }}>
+                {lang==="ko"
+                  ?"현재 선택한 예산, 데이터 주권, 유즈케이스를 기준으로 각 레이어별 최적 후보를 골랐습니다."
+                  :"Based on your budget, sovereignty, and use case, here is the best-fit vendor in each layer."}
+              </div>
+            </div>
+            <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
+              {summaryChips.map(chip => <span key={chip.key} className="pill">{chip.label}</span>)}
+            </div>
+          </div>
+
+          <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(250px,1fr))", gap:12, marginBottom:18 }}>
+            {recommendation.stack.map(({ layer, vendor }, index) => (
+              <div key={layer.id} className="au" style={{ animationDelay:`${index*70}ms`, background:"var(--bg2)", border:"1px solid var(--bdr)", borderRadius:16, padding:16 }}>
+                <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:12 }}>
+                  <div className="tab on" style={{ padding:"6px 10px", cursor:"default" }}>{lang==="ko" ? layer.labelKo : layer.label}</div>
+                  <div style={{ marginLeft:"auto", fontSize:12, color:"var(--dim)" }}>{getStackPriceText(vendor, lang)}</div>
+                </div>
+                <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:12 }}>
+                  <LogoBadge vendorId={vendor.id} size={42}/>
+                  <div style={{ minWidth:0 }}>
+                    <div style={{ fontWeight:800, fontSize:16, lineHeight:1.25 }}>{vendor.name}</div>
+                    <div style={{ fontSize:12, color:"var(--dim)" }}>{vendor.org}</div>
+                  </div>
+                </div>
+                <div style={{ fontSize:11, color:"var(--a2)", fontWeight:700, textTransform:"uppercase", letterSpacing:0.8, marginBottom:6 }}>
+                  {lang==="ko"?"선정 이유":"Why it was chosen"}
+                </div>
+                <p style={{ fontSize:13.5, lineHeight:1.65, color:"var(--dim)", fontStyle:"italic" }}>"{vf(vendor, "insight", lang)}"</p>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", gap:10, flexWrap:"wrap", borderTop:"1px solid var(--bdr)", paddingTop:16 }}>
+            <button className="ghost" onClick={() => setOpenStep(3)}><RotateCcw size={12}/> {lang==="ko"?"답변 조정":"Adjust Answers"}</button>
+            <button className="cbtn" onClick={() => onBuildStack(recommendation.picks)} style={{ padding:"11px 22px", fontSize:14 }}>
+              <Boxes size={15}/> {lang==="ko"?"이 스택으로 빌드":"Build This Stack"} <ArrowRight size={14}/>
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ── STACK BUILDER ────────────────────────────────────────────────────── */
+function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
   const [showResult, setShowResult] = useState(false);
   const [activePreset, setActivePreset] = useState(null);
   const pickCount = Object.values(picks).filter(Boolean).length;
   const handlePick = (lid, vid) => { setPicks(p => ({...p,[lid]:p[lid]===vid?null:vid})); setShowResult(false); setActivePreset(null); };
-  const applyPreset = p => { setPicks(p.picks); setActivePreset(p.name); setShowResult(false); };
-  const handleReset = () => { setPicks({foundation:null,platform:null,vertical:null,tooling:null}); setShowResult(false); setActivePreset(null); };
+  const applyPreset = p => { setPicks({ ...p.picks }); setActivePreset(p.name); setShowResult(false); };
+  const handleReset = () => { setPicks(makeEmptyStack()); setShowResult(false); setActivePreset(null); };
   const selectedVendors = LAYERS.map(l => ({ layer:l, vendor:V.find(v => v.id===picks[l.id]) })).filter(x => x.vendor);
+
+  useEffect(() => {
+    if (!autoRevealKey) return;
+    setActivePreset(null);
+    setShowResult(true);
+  }, [autoRevealKey]);
 
   const avgMetrics = useMemo(() => {
     if (!selectedVendors.length) return null;
@@ -541,8 +1114,8 @@ function StackBuilder({ lang }) {
                     <LogoBadge vendorId={vendor.id} size={22}/>
                     <div>
                       <div style={{ fontSize:11.5, fontWeight:600 }}>{vendor.name}</div>
-                      <div style={{ fontSize:11, color: vendor.priceFree?"#34D399":"var(--a2)", fontWeight:700 }}>
-                        {vendor.priceFree ? (lang==="ko"?"무료":"Free") : ""}{vendor.priceFree && vendor.priceLabel ? " + " : ""}{vendor.priceFree && vendor.priceLabel===lang==="ko"?"무료":"Self-hosted" ? "" : vendor.priceLabel}
+                      <div style={{ fontSize:11, color: vendor.priceFree ? "var(--ok)" : "var(--a2)", fontWeight:700 }}>
+                        {getStackPriceText(vendor, lang)}
                       </div>
                     </div>
                   </div>
@@ -551,7 +1124,7 @@ function StackBuilder({ lang }) {
             </div>
             <div style={{ textAlign:"right" }}>
               <div style={{ fontSize:11, color:"var(--dim)" }}>{lang==="ko"?"무료 컴포넌트":"Free components"}</div>
-              <div style={{ fontSize:28, fontWeight:900, color:"#34D399", lineHeight:1.1 }}>{costSummary.freeCount}</div>
+              <div style={{ fontSize:28, fontWeight:900, color:"var(--ok)", lineHeight:1.1 }}>{costSummary.freeCount}</div>
               <div style={{ fontSize:11, color:"var(--dim)" }}>/ {pickCount} {lang==="ko"?"레이어":"layers"}</div>
             </div>
           </div>
@@ -573,8 +1146,8 @@ function StackBuilder({ lang }) {
                   <div style={{ fontSize:11, color:"var(--dim)" }}>{lang==="ko"?"벤더 하나 선택":"Select one vendor"}</div>
                 </div>
                 {picks[layer.id] && (
-                  <div className="asi" style={{ display:"flex", alignItems:"center", gap:5, background:"rgba(52,211,153,.1)", padding:"4px 9px", borderRadius:6 }}>
-                    <Check size={11} color="#34D399"/><span style={{ fontSize:11.5, color:"#34D399", fontWeight:700 }}>{V.find(v=>v.id===picks[layer.id])?.name}</span>
+                  <div className="asi" style={{ display:"flex", alignItems:"center", gap:5, background:"var(--okbg)", padding:"4px 9px", borderRadius:6 }}>
+                    <Check size={11} color="var(--ok)"/><span style={{ fontSize:11.5, color:"var(--ok)", fontWeight:700 }}>{V.find(v=>v.id===picks[layer.id])?.name}</span>
                   </div>
                 )}
               </div>
@@ -586,7 +1159,7 @@ function StackBuilder({ lang }) {
                     <div style={{ minWidth:0, flex:1 }}>
                       <div style={{ fontWeight:700, fontSize:13, lineHeight:1.2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{v.name}</div>
                       <div style={{ fontSize:11, color:"var(--dim)" }}>
-                        {v.priceFree ? <span style={{ color:"#34D399" }}>{lang==="ko"?"무료":"Free"}</span> : ""}
+                        {v.priceFree ? <span style={{ color:"var(--ok)" }}>{lang==="ko"?"무료":"Free"}</span> : ""}
                         {v.priceFree && v.priceLabel ? " · " : ""}
                         {v.priceLabel}
                       </div>
@@ -704,6 +1277,8 @@ export default function App() {
   const [selIds,setSelIds]= useState([]);
   const [detail,setDetail]= useState(null);
   const [view,  setView]  = useState("map");
+  const [stackPicks, setStackPicks] = useState(makeEmptyStack);
+  const [stackAutoRevealKey, setStackAutoRevealKey] = useState(0);
 
   const handleVendorClick = v => {
     if (!selIds.includes(v.id) && selIds.length < 6) setSelIds(p => [...p, v.id]);
@@ -714,10 +1289,17 @@ export default function App() {
   const handleCompare = () => { if (selIds.length>=2) { setDetail(null); setView("compare"); } };
   const handleBack = () => setView("map");
   const handleClear = () => { setSelIds([]); setDetail(null); setView("map"); };
+  const handleBuildStack = picks => {
+    setStackPicks({ ...picks });
+    setStackAutoRevealKey(key => key + 1);
+    setDetail(null);
+    setTab("stack");
+  };
   const selectedVendors = V.filter(v => selIds.includes(v.id));
 
   const L = {
     explore: lang==="ko"?"맵 탐색":"Explore Map",
+    decision: lang==="ko"?"의사결정 플로우":"Decision Flow",
     stack:   lang==="ko"?"스택 빌더":"Stack Builder",
     clearAll:lang==="ko"?"초기화":"Clear All",
     subtitle:lang==="ko"
@@ -757,8 +1339,9 @@ export default function App() {
 
           {/* Tabs */}
           <div style={{ display:"flex", gap:3, padding:"14px 0 16px", marginLeft:60 }}>
-            <button className={`tab ${tab==="explore"?"on":""}`} onClick={() => { setTab("explore"); setView("map"); }}><Layers size={14}/> {L.explore}</button>
-            <button className={`tab ${tab==="stack"?"on":""}`} onClick={() => setTab("stack")}><Boxes size={14}/> {L.stack}</button>
+            <button className={`tab ${tab==="explore"?"on":""}`} onClick={() => { setDetail(null); setTab("explore"); setView("map"); }}><Layers size={14}/> {L.explore}</button>
+            <button className={`tab ${tab==="decision"?"on":""}`} onClick={() => { setDetail(null); setTab("decision"); }}><Shield size={14}/> {L.decision}</button>
+            <button className={`tab ${tab==="stack"?"on":""}`} onClick={() => { setDetail(null); setStackAutoRevealKey(0); setTab("stack"); }}><Boxes size={14}/> {L.stack}</button>
           </div>
         </div>
 
@@ -803,7 +1386,9 @@ export default function App() {
             </div>
           )}
 
-          {tab==="stack" && <StackBuilder key="stack" lang={lang}/>}
+          {tab==="decision" && <DecisionFlow key="decision" onBuildStack={handleBuildStack}/>}
+
+          {tab==="stack" && <StackBuilder key="stack" lang={lang} picks={stackPicks} setPicks={setStackPicks} autoRevealKey={stackAutoRevealKey}/>}
         </div>
 
         {/* DETAIL MODAL */}

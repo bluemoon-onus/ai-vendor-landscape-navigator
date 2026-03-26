@@ -5,13 +5,27 @@
 
 ---
 
-## [Unreleased — v1.5] — Codex 인계 예정
+## [Unreleased — v3.1] 2026-03-26 — Decision Flow wizard
+
+### Added
+- F-08: `Decision Flow` 탭 추가
+  - 3단계 wizard UX: Budget → Data sovereignty → Primary use case
+  - 결과 화면에서 레이어별 추천 벤더 1개씩 표시 + 기존 `insight` 기반 선정 이유 노출
+  - `Build This Stack` 버튼으로 Stack Builder 탭 이동 + 추천 조합 자동 프리필
+- F-11: VendorNode 호버 툴팁 추가
+  - 400ms delay 후 insight 1줄 + 핵심 강점 2개 + 가격 표시
+  - 화면 경계에 따라 우측 또는 상단/하단으로 자동 위치 조정
+  - 영문/한국어, 다크/라이트 테마 모두 지원
+
+### Changed
+- Stack Builder 선택 상태를 App 레벨로 이동
+  - Decision Flow와 Stack Builder 간 추천 스택 handoff 가능
+  - 추천 스택에서 Stack Builder 진입 시 결과 화면이 바로 열리도록 개선
+- Decision Flow 전용 한국어/영문 UI 문자열 추가
 
 ### Planned
-- F-08: Decision Flow (3단계 예산/규모/규제 의사결정 트리 → 추천 스택 출력)
 - F-09: 한국 시장 레이어 (Naver HyperCLOVA, KT AI, Samsung SDS 태그)
 - F-10: 모바일 반응형 레이아웃
-- F-11: 벤더 노드 호버 툴팁 (클릭 없이 핵심 정보 미리보기)
 - F-12: 레이어 간 연결선 애니메이션 (선택된 벤더의 layer-to-layer flow 시각화)
 - UI: 다크/라이트 모드 전환 애니메이션 개선
 - UI: 비교 뷰 PDF 내보내기
