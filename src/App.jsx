@@ -1479,7 +1479,7 @@ function EcosystemAssessment({ lang, theme }) {
 
 /* ── APP ──────────────────────────────────────────────────────────────── */
 export default function App() {
-  const [theme, setTheme] = useState("dark");
+  const [theme, setTheme] = useState("light");
   const [lang,  setLang]  = useState("en");
   const [tab,   setTab]   = useState("explore");
   const [uc,    setUc]    = useState(null);
