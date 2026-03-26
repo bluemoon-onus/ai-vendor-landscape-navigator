@@ -884,6 +884,9 @@ function DecisionFlow({ onBuildStack }) {
       </div>
 
       <div style={{ display:"flex", gap:6, flexWrap:"wrap", marginBottom:14 }}>
+        {(answers.budget || answers.sovereignty || answers.useCase) && (
+          <button className="ghost" onClick={resetFlow}><RotateCcw size={12}/> {lang==="ko"?"초기화":"Reset"}</button>
+        )}
         {stepLabels.map(step => {
           const isAvailable = step.id <= maxOpenStep;
           return (
@@ -898,9 +901,6 @@ function DecisionFlow({ onBuildStack }) {
             </button>
           );
         })}
-        {(answers.budget || answers.sovereignty || answers.useCase) && (
-          <button className="ghost" onClick={resetFlow}><RotateCcw size={12}/> {lang==="ko"?"다시 시작":"Start Over"}</button>
-        )}
       </div>
 
       {summaryChips.length > 0 && (
@@ -1035,12 +1035,13 @@ function DecisionFlow({ onBuildStack }) {
           <div style={{ borderTop:"1px solid var(--bdr)", paddingTop:20, display:"flex", flexDirection:"column", alignItems:"center", gap:12 }}>
             <button className="cbtn" onClick={() => onBuildStack(recommendation.picks)} style={{
               padding:`${ux(16)}px ${ux(44)}px`, fontSize:ux(17), borderRadius:16, gap:ux(10),
-              boxShadow:"0 8px 32px rgba(139,92,246,.35), 0 0 0 2px rgba(139,92,246,.15)",
+              border:"2px solid rgba(255,255,255,.45)",
+              boxShadow:"0 8px 32px rgba(139,92,246,.4), 0 0 0 4px rgba(139,92,246,.25), 0 0 60px rgba(139,92,246,.15)",
               animation:"pulse 2.2s ease-in-out infinite",
             }}>
               <Boxes size={18}/> {lang==="ko"?"이 스택으로 빌드":"Build This Stack"} <ArrowRight size={16}/>
             </button>
-            <button className="ghost" onClick={() => setOpenStep(3)} style={{ fontSize:ux(12) }}><RotateCcw size={12}/> {lang==="ko"?"답변 조정":"Adjust Answers"}</button>
+            <button className="ghost" onClick={resetFlow} style={{ fontSize:ux(12) }}><RotateCcw size={12}/> {lang==="ko"?"초기화":"Reset"}</button>
           </div>
         </div>
       )}
@@ -1097,13 +1098,13 @@ function StackBuilder({ lang, theme, picks, setPicks, autoRevealKey }) {
       <div style={{ marginBottom:18 }}>
         <div style={{ fontSize:ux(11), color:"var(--dim)", marginBottom:ux(8), fontWeight:700, textTransform:"uppercase", letterSpacing:.8 }}>{lang==="ko"?"빠른 프리셋":"Quick Presets"}</div>
         <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
+          {pickCount>0 && <button className="pill" onClick={handleReset} style={{ color:"var(--dim)" }}><RotateCcw size={11}/> {lang==="ko"?"초기화":"Reset"}</button>}
           {STACK_PRESETS.map(p => (
             <button key={p.name} className={`pill ${activePreset===p.name?"on":""}`} onClick={() => applyPreset(p)}>
               <Star size={12}/> {lang==="ko"?p.nameKo:p.name}
               <span style={{ fontSize:ux(11), opacity:.65 }}>— {lang==="ko"?p.descKo:p.desc}</span>
             </button>
           ))}
-          {pickCount>0 && <button className="pill" onClick={handleReset} style={{ color:"var(--dim)" }}><RotateCcw size={11}/> {lang==="ko"?"초기화":"Reset"}</button>}
         </div>
       </div>
 
@@ -1471,7 +1472,7 @@ export default function App() {
     explore: lang==="ko"?"맵 탐색":"Explore Map",
     decision: lang==="ko"?"의사결정 플로우":"Decision Flow",
     stack:   lang==="ko"?"스택 빌더":"Stack Builder",
-    clearAll:lang==="ko"?"초기화":"Clear All",
+    clearAll:lang==="ko"?"초기화":"Reset",
     subtitle:lang==="ko"
       ?`${V.length}개 벤더 · ${LAYERS.length}개 레이어 · ${USE_CASES.length}개 유즈케이스 — 엔터프라이즈 AI 전략을 위한 인터랙티브 랜드스케이프`
       :`${V.length} vendors · ${LAYERS.length} layers · ${USE_CASES.length} use cases — Interactive landscape for enterprise AI strategy`,
