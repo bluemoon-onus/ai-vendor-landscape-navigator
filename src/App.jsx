@@ -365,73 +365,79 @@ const CSS = `
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&display=swap');
 *{margin:0;padding:0;box-sizing:border-box}
 :root{
-  --bg:#09081A;--bg2:#0E0D20;--card:rgba(18,16,38,0.88);--cardh:rgba(26,23,52,0.98);
-  --a:#8B5CF6;--a2:#A78BFA;--a3:#C4B5FD;--adim:rgba(139,92,246,0.12);--aglow:rgba(139,92,246,0.3);
-  --txt:#ECE8F7;--dim:#9086AA;--bdr:rgba(139,92,246,0.18);--g1:#7C3AED;--g2:#6366F1;
-  --ok:#34D399;--okbg:rgba(52,211,153,0.12);
-  --shadow:rgba(0,0,0,0.35);--overlay:rgba(0,0,0,0.6);
+  --bg:#0A0A0F;--bg2:#0F1118;--card:#13131A;--cardh:#171722;
+  --a:#8B5CF6;--a2:#A78BFA;--a3:#06B6D4;--cy:#06B6D4;--a-rgb:139,92,246;--cy-rgb:6,182,212;
+  --adim:rgba(139,92,246,0.12);--aglow:rgba(139,92,246,0.18);--cydim:rgba(6,182,212,0.12);
+  --txt:#F1F0FF;--dim:#6B7280;--bdr:#1E1E2E;--g1:#8B5CF6;--g2:#06B6D4;
+  --ok:#10B981;--okbg:rgba(16,185,129,0.12);--warn:#F59E0B;--warnbg:rgba(245,158,11,0.12);--err:#EF4444;--errbg:rgba(239,68,68,0.12);
+  --shadow:rgba(0,0,0,0.42);--overlay:rgba(10,10,15,0.72);
 }
 [data-theme="light"]{
-  --bg:#F0EEFF;--bg2:#E6E1FB;--card:rgba(255,255,255,0.92);--cardh:rgba(248,246,255,0.99);
-  --a:#7C3AED;--a2:#6D28D9;--a3:#5B21B6;--adim:rgba(124,58,237,0.1);--aglow:rgba(124,58,237,0.22);
-  --txt:#1A1535;--dim:#5E5280;--bdr:rgba(124,58,237,0.18);--g1:#7C3AED;--g2:#6366F1;
-  --ok:#10B981;--okbg:rgba(16,185,129,0.12);
-  --shadow:rgba(100,80,180,0.12);--overlay:rgba(40,20,100,0.45);
+  --bg:#F8FAFC;--bg2:#F1F5F9;--card:#FFFFFF;--cardh:#FFFFFF;
+  --a:#8B5CF6;--a2:#7C3AED;--a3:#06B6D4;--cy:#06B6D4;--a-rgb:139,92,246;--cy-rgb:6,182,212;
+  --adim:rgba(139,92,246,0.08);--aglow:rgba(139,92,246,0.12);--cydim:rgba(6,182,212,0.1);
+  --txt:#0F172A;--dim:#64748B;--bdr:#E2E8F0;--g1:#8B5CF6;--g2:#06B6D4;
+  --ok:#10B981;--okbg:rgba(16,185,129,0.1);--warn:#F59E0B;--warnbg:rgba(245,158,11,0.1);--err:#EF4444;--errbg:rgba(239,68,68,0.1);
+  --shadow:rgba(15,23,42,0.1);--overlay:rgba(15,23,42,0.28);
 }
-body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);font-size:15px;line-height:1.5}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);font-size:14px;line-height:1.5}
 .root{min-height:100vh;background:var(--bg);
-  background-image:radial-gradient(ellipse 80% 50% at 10% 90%,rgba(124,58,237,.08) 0%,transparent 60%),
-    radial-gradient(ellipse 60% 40% at 90% 10%,rgba(99,102,241,.06) 0%,transparent 60%);
+  background-image:radial-gradient(ellipse 82% 50% at 12% 92%,rgba(var(--a-rgb),.12) 0%,transparent 60%),
+    radial-gradient(ellipse 60% 42% at 88% 8%,rgba(var(--cy-rgb),.08) 0%,transparent 58%);
 }
-[data-theme="light"] .root{background-image:radial-gradient(ellipse 80% 50% at 10% 90%,rgba(124,58,237,.05) 0%,transparent 60%),radial-gradient(ellipse 60% 40% at 90% 10%,rgba(99,102,241,.04) 0%,transparent 60%)}
-.dots{background-image:radial-gradient(rgba(139,92,246,.06) 1px,transparent 1px);background-size:22px 22px}
-[data-theme="light"] .dots{background-image:radial-gradient(rgba(124,58,237,.07) 1px,transparent 1px)}
+[data-theme="light"] .root{background-image:radial-gradient(ellipse 82% 50% at 12% 92%,rgba(var(--a-rgb),.08) 0%,transparent 60%),radial-gradient(ellipse 60% 42% at 88% 8%,rgba(var(--cy-rgb),.06) 0%,transparent 58%)}
+.dots{background-image:radial-gradient(rgba(var(--a-rgb),.075) 1px,transparent 1px);background-size:22px 22px}
+[data-theme="light"] .dots{background-image:radial-gradient(rgba(var(--a-rgb),.08) 1px,transparent 1px)}
 
 /* vendor node */
 .vn{transition:all .25s cubic-bezier(.4,0,.2,1);cursor:pointer;border:1px solid var(--bdr);
-  backdrop-filter:blur(10px);background:var(--card);position:relative;border-radius:12px;
-  padding:10px 14px;display:flex;align-items:center;gap:10px;box-shadow:0 2px 6px var(--shadow);}
-.vn:hover{transform:translateY(-2px) scale(1.02);border-color:var(--a2);box-shadow:0 6px 22px var(--aglow)}
+  backdrop-filter:blur(12px);background:var(--card);position:relative;border-radius:12px;
+  padding:12px 14px 12px 18px;display:flex;align-items:center;gap:12px;overflow:hidden;
+  box-shadow:0 10px 24px var(--shadow);}
+.vn::before{content:"";position:absolute;left:0;top:10px;bottom:10px;width:4px;border-radius:0 4px 4px 0;
+  background:var(--layer-accent,var(--a));opacity:0;transform:scaleY(.7);transition:all .25s cubic-bezier(.4,0,.2,1)}
+.vn:hover{transform:translateY(-2px);border-color:var(--a);background:var(--cardh);box-shadow:0 14px 32px var(--shadow)}
+.vn:hover::before,.vn.glow::before,.vn.sel::before{opacity:.95;transform:scaleY(1)}
 .vn.dim{opacity:.12;transform:scale(.9);filter:grayscale(.9);pointer-events:none}
-.vn.glow{border-color:var(--a);box-shadow:0 0 18px var(--aglow),0 3px 12px var(--shadow)}
-.vn.sel{border-color:var(--a2);background:var(--adim);box-shadow:0 0 20px var(--aglow)}
+.vn.glow{border-color:var(--a);box-shadow:0 0 0 1px var(--adim),0 14px 30px var(--shadow)}
+.vn.sel{border-color:var(--a);background:linear-gradient(135deg,var(--cardh),var(--adim));box-shadow:0 0 0 1px var(--adim),0 14px 30px var(--shadow)}
 
 /* stack node */
 .sn{transition:all .25s cubic-bezier(.4,0,.2,1);cursor:pointer;
-  border:2px dashed var(--bdr);background:var(--card);
-  position:relative;border-radius:11px;padding:10px 14px;
-  display:flex;align-items:center;gap:10px;}
-.sn:hover{border-color:var(--a2);background:var(--cardh);transform:translateY(-2px)}
-.sn.pick{border-style:solid;border-color:var(--a);background:var(--adim);box-shadow:0 0 16px var(--aglow)}
+  border:1px dashed var(--bdr);background:var(--card);
+  position:relative;border-radius:12px;padding:12px 14px;
+  display:flex;align-items:center;gap:10px;box-shadow:0 10px 24px var(--shadow);}
+.sn:hover{border-color:var(--a);background:var(--cardh);transform:translateY(-2px)}
+.sn.pick{border-style:solid;border-color:var(--a);background:linear-gradient(135deg,var(--cardh),var(--adim));box-shadow:0 0 0 1px var(--adim),0 14px 28px var(--shadow)}
 
 /* pills */
 .pill{transition:all .2s ease;cursor:pointer;border:1px solid var(--bdr);
   font-family:'Outfit',sans-serif;background:var(--card);color:var(--txt);
-  border-radius:100px;padding:7px 15px;font-size:13px;font-weight:500;
+  border-radius:999px;padding:8px 15px;font-size:13.5px;font-weight:500;
   display:inline-flex;align-items:center;gap:5px;white-space:nowrap;}
-.pill:hover{border-color:var(--a2);background:var(--cardh)}
-.pill.on{background:var(--a);border-color:var(--a);color:#fff;box-shadow:0 0 12px var(--aglow)}
+.pill:hover{border-color:var(--a);background:var(--cardh)}
+.pill.on{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;color:#fff;box-shadow:0 10px 22px var(--shadow)}
 
 /* tabs */
 .tab{transition:all .2s ease;cursor:pointer;border:none;font-family:'Outfit',sans-serif;
-  background:none;color:var(--dim);padding:8px 18px;font-size:14px;font-weight:600;
-  border-radius:9px;display:flex;align-items:center;gap:6px;}
-.tab:hover{color:var(--txt);background:var(--adim)}
-.tab.on{color:#fff;background:var(--a);box-shadow:0 0 14px var(--aglow)}
+  background:var(--card);color:var(--dim);padding:9px 18px;font-size:14px;font-weight:600;
+  border-radius:10px;display:flex;align-items:center;gap:6px;border:1px solid var(--bdr);}
+.tab:hover{color:var(--txt);border-color:var(--a);background:var(--cardh)}
+.tab.on{color:#fff;background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;box-shadow:0 12px 24px var(--shadow)}
 
 /* buttons */
 .cbtn{background:linear-gradient(135deg,var(--g1),var(--g2));transition:all .25s ease;
-  font-family:'Outfit',sans-serif;border:none;border-radius:9px;padding:9px 20px;
-  color:#fff;cursor:pointer;font-weight:700;font-size:13.5px;display:flex;align-items:center;gap:6px;}
-.cbtn:hover{box-shadow:0 0 24px var(--aglow);transform:translateY(-1px)}
-.ghost{background:none;border:1px solid var(--bdr);border-radius:8px;padding:6px 13px;
-  cursor:pointer;color:var(--dim);font-size:13px;font-family:'Outfit',sans-serif;
+  font-family:'Outfit',sans-serif;border:none;border-radius:12px;padding:10px 20px;
+  color:#fff;cursor:pointer;font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px;}
+.cbtn:hover{box-shadow:0 16px 28px var(--shadow);transform:translateY(-1px)}
+.ghost{background:transparent;border:1px solid var(--bdr);border-radius:10px;padding:7px 13px;
+  cursor:pointer;color:var(--dim);font-size:13.5px;font-family:'Outfit',sans-serif;
   display:flex;align-items:center;gap:5px;transition:all .2s;}
-.ghost:hover{border-color:var(--a2);color:var(--txt)}
+.ghost:hover{border-color:var(--a);color:var(--txt);background:var(--cardh)}
 
 /* misc */
 .chk{position:absolute;top:-7px;right:-7px;width:20px;height:20px;border-radius:50%;
-  background:var(--a);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px var(--aglow)}
+  background:linear-gradient(135deg,var(--g1),var(--g2));display:flex;align-items:center;justify-content:center;box-shadow:0 8px 18px var(--shadow)}
 .mb{height:6px;border-radius:3px;background:var(--adim);overflow:hidden;width:44px}
 .mbf{height:100%;border-radius:3px;transition:width .7s cubic-bezier(.4,0,.2,1)}
 .ns::-webkit-scrollbar{display:none}.ns{-ms-overflow-style:none;scrollbar-width:none}
@@ -451,6 +457,7 @@ const IconMap = { Sparkles, Zap, Building2, Wrench };
 /* ── VENDOR NODE ──────────────────────────────────────────────────────── */
 function VendorNode({ vendor, isHighlighted, isDimmed, isSelected, onClick, delay=0, lang }) {
   const cls = ["vn", isDimmed&&"dim", isHighlighted&&!isDimmed&&"glow", isSelected&&"sel"].filter(Boolean).join(" ");
+  const layerMeta = LAYERS.find(layer => layer.id===vendor.layer);
   const nodeRef = useRef(null);
   const timerRef = useRef(null);
   const [tooltipStyle, setTooltipStyle] = useState(null);
@@ -505,17 +512,17 @@ function VendorNode({ vendor, isHighlighted, isDimmed, isSelected, onClick, dela
         onClick={() => { hideTooltip(); onClick(vendor); }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={hideTooltip}
-        style={{ animationDelay:`${delay}ms`, minHeight:58 }}
+        style={{ "--layer-accent":layerMeta?.color ?? "var(--a)", animationDelay:`${delay}ms`, minHeight:68 }}
       >
         {isSelected && <div className="chk"><Check size={11} color="white" strokeWidth={3}/></div>}
-        <LogoBadge vendorId={vendor.id} size={44}/>
+        <LogoBadge vendorId={vendor.id} size={40}/>
         <div style={{ minWidth:0, flex:1 }}>
-          <div style={{ fontWeight:800, fontSize:15, lineHeight:1.2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{vendor.name}</div>
+          <div style={{ fontWeight:700, fontSize:16, lineHeight:1.2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{vendor.name}</div>
           <div style={{ fontSize:12, color:"var(--dim)", lineHeight:1.3 }}>{vendor.org}</div>
         </div>
         <div style={{ textAlign:"right", flexShrink:0 }}>
-          {vendor.priceFree && <div style={{ fontSize:11, color:"var(--ok)", fontWeight:700, lineHeight:1.2 }}>{lang==="ko"?"무료":"Free"}</div>}
-          {vendor.priceLabel && <div style={{ fontSize:11, color:"var(--dim)", lineHeight:1.2 }}>{vendor.priceLabel}</div>}
+          {vendor.priceFree && <div style={{ fontSize:12, color:"var(--ok)", fontWeight:700, lineHeight:1.2 }}>{lang==="ko"?"무료":"Free"}</div>}
+          {vendor.priceLabel && <div style={{ fontSize:12, color:"var(--dim)", lineHeight:1.2 }}>{vendor.priceLabel}</div>}
         </div>
       </div>
 
@@ -599,10 +606,10 @@ function VendorNode({ vendor, isHighlighted, isDimmed, isSelected, onClick, dela
 /* ── FLOW ARROW ───────────────────────────────────────────────────────── */
 function FlowArrow() {
   return (
-    <div style={{ display:"flex", justifyContent:"center", padding:"3px 0" }}>
+    <div style={{ display:"flex", justifyContent:"center", padding:"0" }}>
       <div className="pls" style={{ display:"flex", flexDirection:"column", alignItems:"center", gap:0 }}>
-        <div style={{ width:2, height:10, background:"linear-gradient(to bottom,var(--a),transparent)", borderRadius:1 }}/>
-        <ChevronDown size={14} color="var(--a)" style={{ opacity:.45 }}/>
+        <div style={{ width:2, height:8, background:"linear-gradient(to bottom,var(--a3),transparent)", borderRadius:1 }}/>
+        <ChevronDown size={14} color="var(--a3)" style={{ opacity:.5 }}/>
       </div>
     </div>
   );
@@ -615,19 +622,19 @@ function LayerSection({ layer, vendors, selectedUseCase, selectedIds, onVendorCl
   const desc  = lang==="ko" ? layer.descKo  : layer.desc;
   return (
     <div className="au" style={{
-      animationDelay:`${index*80}ms`, padding:"14px 18px", borderRadius:14,
-      background:`linear-gradient(135deg,rgba(${14+index*6},${12+index*4},${28+index*10},0.5),rgba(14,13,32,0.25))`,
-      border:`1px solid ${layer.color}18`,
+      animationDelay:`${index*80}ms`, padding:"14px 18px", borderRadius:16,
+      background:"linear-gradient(135deg,var(--card),var(--bg2))",
+      border:"1px solid var(--bdr)", boxShadow:"0 18px 36px var(--shadow)",
     }}>
       <div style={{ display:"flex", alignItems:"center", gap:9, marginBottom:11 }}>
-        <div style={{ width:32, height:32, borderRadius:9, background:`${layer.color}1C`, display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
+        <div style={{ width:34, height:34, borderRadius:10, background:"var(--adim)", border:"1px solid var(--bdr)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
           <Icon size={16} color={layer.color}/>
         </div>
         <div>
-          <div style={{ fontWeight:800, fontSize:14, color:layer.color }}>{label}</div>
-          <div style={{ fontSize:11.5, color:"var(--dim)" }}>{desc}</div>
+          <div style={{ fontWeight:700, fontSize:18, color:"var(--txt)", lineHeight:1.15 }}>{label}</div>
+          <div style={{ fontSize:12, color:"var(--dim)" }}>{desc}</div>
         </div>
-        <div style={{ marginLeft:"auto", fontSize:11, color:"var(--dim)", background:"var(--adim)", padding:"3px 9px", borderRadius:6, fontWeight:600 }}>
+        <div style={{ marginLeft:"auto", fontSize:12, color:"var(--dim)", background:"var(--bg2)", border:"1px solid var(--bdr)", padding:"4px 10px", borderRadius:999, fontWeight:500 }}>
           {vendors.length} {lang==="ko"?"벤더":"vendors"}
         </div>
       </div>
@@ -680,21 +687,21 @@ function DetailModal({ vendor, onClose, lang }) {
           </button>
         </div>
         <div style={{ display:"flex", gap:7, marginBottom:18, flexWrap:"wrap" }}>
-          {vendor.priceFree && <span style={{ fontSize:12, padding:"4px 12px", borderRadius:100, background:"rgba(52,211,153,.12)", color:"#34D399", fontWeight:700 }}>{lang==="ko"?"무료 플랜":"Free Tier"}</span>}
+          {vendor.priceFree && <span style={{ fontSize:12, padding:"4px 12px", borderRadius:100, background:"var(--okbg)", color:"var(--ok)", fontWeight:700 }}>{lang==="ko"?"무료 플랜":"Free Tier"}</span>}
           {vendor.priceLabel && <span style={{ fontSize:12, padding:"4px 12px", borderRadius:100, background:"var(--adim)", color:"var(--a2)", fontWeight:600 }}>{vendor.priceLabel}</span>}
-          <span style={{ fontSize:12, padding:"4px 12px", borderRadius:100, background:"rgba(16,185,129,.1)", color:"#6EE7B7", fontWeight:600 }}>{bestFit}</span>
+          <span style={{ fontSize:12, padding:"4px 12px", borderRadius:100, background:"var(--cydim)", color:"var(--a3)", fontWeight:600 }}>{bestFit}</span>
         </div>
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14, marginBottom:16 }}>
           <div style={{ background:"var(--card)", borderRadius:12, padding:16 }}>
-            <div style={{ fontWeight:700, fontSize:12.5, color:"#34D399", marginBottom:8 }}>✦ {lang==="ko"?"강점":"Strengths"}</div>
+            <div style={{ fontWeight:700, fontSize:12.5, color:"var(--ok)", marginBottom:8 }}>✦ {lang==="ko"?"강점":"Strengths"}</div>
             {strengths.map((s,i) => <div key={i} style={{ fontSize:13.5, lineHeight:1.65, paddingLeft:14, position:"relative", marginBottom:5 }}><span style={{ position:"absolute",left:0,color:"var(--dim)" }}>›</span>{s}</div>)}
           </div>
           <div style={{ background:"var(--card)", borderRadius:12, padding:16 }}>
-            <div style={{ fontWeight:700, fontSize:12.5, color:"#FBBF24", marginBottom:8 }}>⚠ {lang==="ko"?"한계":"Limitations"}</div>
+            <div style={{ fontWeight:700, fontSize:12.5, color:"var(--warn)", marginBottom:8 }}>⚠ {lang==="ko"?"한계":"Limitations"}</div>
             {limitations.map((s,i) => <div key={i} style={{ fontSize:13.5, lineHeight:1.65, paddingLeft:14, position:"relative", marginBottom:5 }}><span style={{ position:"absolute",left:0,color:"var(--dim)" }}>›</span>{s}</div>)}
           </div>
         </div>
-        <div style={{ background:"linear-gradient(135deg,rgba(139,92,246,.1),rgba(99,102,241,.04))", border:"1px solid rgba(139,92,246,.2)", borderRadius:12, padding:18, marginBottom:16 }}>
+        <div style={{ background:"linear-gradient(135deg,var(--adim),var(--cydim))", border:"1px solid var(--bdr)", borderRadius:12, padding:18, marginBottom:16 }}>
           <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:7 }}>
             <MessageSquareQuote size={14} color="var(--a2)"/>
             <span style={{ fontWeight:700, fontSize:11.5, color:"var(--a2)", textTransform:"uppercase", letterSpacing:.9 }}>{lang==="ko"?"세일즈 디렉터 인사이트":"Sales Director's Take"}</span>
@@ -765,7 +772,7 @@ function ComparisonView({ vendors, onBack, lang }) {
     <div className="au" style={{ paddingBottom:40 }}>
       <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:18 }}>
         <button className="ghost" onClick={onBack}><RotateCcw size={13}/> {lang==="ko"?"뒤로":"Back"}</button>
-        <span style={{ fontWeight:800, fontSize:19 }}>{lang==="ko"?"벤더 비교":"Vendor Comparison"}</span>
+        <span style={{ fontWeight:700, fontSize:18 }}>{lang==="ko"?"벤더 비교":"Vendor Comparison"}</span>
         <span style={{ fontSize:12.5, color:"var(--dim)" }}>— {vendors.length} {lang==="ko"?"선택됨":"selected"}</span>
       </div>
       <div style={{ display:"grid", gridTemplateColumns:`repeat(${Math.min(vendors.length,6)},1fr)`, gap:10, marginBottom:18 }}>
@@ -780,7 +787,7 @@ function ComparisonView({ vendors, onBack, lang }) {
         ))}
       </div>
       <div className="asi" style={{ animationDelay:"180ms", background:"var(--card)", borderRadius:14, padding:20, border:"1px solid var(--bdr)", marginBottom:18 }}>
-        <div style={{ fontWeight:800, fontSize:15, marginBottom:3 }}>{lang==="ko"?"역량 레이더":"Capability Radar"}</div>
+        <div style={{ fontWeight:700, fontSize:18, marginBottom:3 }}>{lang==="ko"?"역량 레이더":"Capability Radar"}</div>
         <div style={{ fontSize:12, color:"var(--dim)", marginBottom:14 }}>{lang==="ko"?"6축 다차원 비교":"6-axis multi-dimensional comparison"}</div>
         <ResponsiveContainer width="100%" height={300}>
           <RadarChart data={radarData}>
@@ -794,7 +801,7 @@ function ComparisonView({ vendors, onBack, lang }) {
         </div>
       </div>
       <div className="asi" style={{ animationDelay:"260ms", background:"var(--card)", borderRadius:14, padding:20, border:"1px solid var(--bdr)" }}>
-        <div style={{ fontWeight:800, fontSize:15, marginBottom:14 }}>{lang==="ko"?"메트릭 세부":"Metric Breakdown"}</div>
+        <div style={{ fontWeight:700, fontSize:18, marginBottom:14 }}>{lang==="ko"?"메트릭 세부":"Metric Breakdown"}</div>
         <div style={{ overflowX:"auto" }}>
           <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
             <thead><tr style={{ borderBottom:"1px solid var(--bdr)" }}>
@@ -915,7 +922,7 @@ function DecisionFlow({ onBuildStack }) {
       {openStep===1 && (
         <div className="asi" style={{ background:"var(--card)", border:"1px solid var(--bdr)", borderRadius:18, padding:22 }}>
           <div style={{ marginBottom:16 }}>
-            <div style={{ fontWeight:800, fontSize:18, marginBottom:5 }}>{lang==="ko"?"1단계. 예산 규모":"Step 1. Budget"}</div>
+            <div style={{ fontWeight:700, fontSize:18, marginBottom:5 }}>{lang==="ko"?"1단계. 예산 규모":"Step 1. Budget"}</div>
             <div style={{ color:"var(--dim)", fontSize:13 }}>{lang==="ko"?"고객이 허용할 수 있는 연간 예산 범위를 선택하세요.":"Choose the annual budget range the customer is comfortable with."}</div>
           </div>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(3,minmax(0,1fr))", gap:10 }}>
@@ -940,7 +947,7 @@ function DecisionFlow({ onBuildStack }) {
       {openStep===2 && (
         <div className="asi" style={{ background:"var(--card)", border:"1px solid var(--bdr)", borderRadius:18, padding:22 }}>
           <div style={{ marginBottom:16 }}>
-            <div style={{ fontWeight:800, fontSize:18, marginBottom:5 }}>{lang==="ko"?"2단계. 데이터 주권":"Step 2. Data Sovereignty"}</div>
+            <div style={{ fontWeight:700, fontSize:18, marginBottom:5 }}>{lang==="ko"?"2단계. 데이터 주권":"Step 2. Data Sovereignty"}</div>
             <div style={{ color:"var(--dim)", fontSize:13 }}>{lang==="ko"?"데이터를 퍼블릭 클라우드로 보낼 수 있는지, 프라이빗 통제가 필요한지 선택하세요.":"Choose whether public cloud is acceptable or private deployment is required."}</div>
           </div>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(2,minmax(0,1fr))", gap:10 }}>
@@ -965,7 +972,7 @@ function DecisionFlow({ onBuildStack }) {
       {openStep===3 && (
         <div className="asi" style={{ background:"var(--card)", border:"1px solid var(--bdr)", borderRadius:18, padding:22 }}>
           <div style={{ marginBottom:16 }}>
-            <div style={{ fontWeight:800, fontSize:18, marginBottom:5 }}>{lang==="ko"?"3단계. 주요 유즈케이스":"Step 3. Primary Use Case"}</div>
+            <div style={{ fontWeight:700, fontSize:18, marginBottom:5 }}>{lang==="ko"?"3단계. 주요 유즈케이스":"Step 3. Primary Use Case"}</div>
             <div style={{ color:"var(--dim)", fontSize:13 }}>{lang==="ko"?"가장 먼저 성과를 내야 하는 업무 시나리오를 선택하세요.":"Pick the business scenario that matters most for this customer."}</div>
           </div>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(3,minmax(0,1fr))", gap:10 }}>
@@ -996,7 +1003,7 @@ function DecisionFlow({ onBuildStack }) {
             <div>
               <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:5 }}>
                 <Shield size={18} color="var(--a2)"/>
-                <span style={{ fontWeight:800, fontSize:18 }}>{lang==="ko"?"추천 스택":"Recommended Stack"}</span>
+                <span style={{ fontWeight:700, fontSize:18 }}>{lang==="ko"?"추천 스택":"Recommended Stack"}</span>
               </div>
               <div style={{ color:"var(--dim)", fontSize:13 }}>
                 {lang==="ko"
@@ -1068,9 +1075,9 @@ function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
   const stackGrade = useMemo(() => {
     if (!avgMetrics) return null;
     const avg = avgMetrics.reduce((s,m)=>s+m.value,0)/avgMetrics.length;
-    if (avg>=8.5) return {letter:"A+",color:"#10B981"}; if (avg>=7.5) return {letter:"A",color:"#6EE7B7"};
-    if (avg>=6.5) return {letter:"B+",color:"#FBBF24"}; if (avg>=5.5) return {letter:"B",color:"#FB923C"};
-    return {letter:"C",color:"#F43F5E"};
+    if (avg>=8.5) return {letter:"A+",color:"var(--ok)",bg:"var(--okbg)"}; if (avg>=7.5) return {letter:"A",color:"var(--ok)",bg:"var(--okbg)"};
+    if (avg>=6.5) return {letter:"B+",color:"var(--warn)",bg:"var(--warnbg)"}; if (avg>=5.5) return {letter:"B",color:"var(--warn)",bg:"var(--warnbg)"};
+    return {letter:"C",color:"var(--err)",bg:"var(--errbg)"};
   }, [avgMetrics]);
 
   // Cost summary
@@ -1190,11 +1197,11 @@ function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
               <div style={{ display:"flex", alignItems:"center", gap:12 }}>
                 <Shield size={20} color="var(--a2)"/>
                 <div>
-                  <div style={{ fontWeight:800, fontSize:18 }}>{lang==="ko"?"나의 추천 스택":"My Recommended Stack"}</div>
+                  <div style={{ fontWeight:700, fontSize:18 }}>{lang==="ko"?"나의 추천 스택":"My Recommended Stack"}</div>
                   <div style={{ fontSize:12, color:"var(--dim)" }}>{selectedVendors.length} {lang==="ko"?"레이어 구성됨":"layers configured"}</div>
                 </div>
                 {stackGrade && (
-                  <div style={{ background:`${stackGrade.color}18`, border:`1px solid ${stackGrade.color}44`, borderRadius:10, padding:"4px 12px", display:"flex", alignItems:"center", gap:5 }}>
+                  <div style={{ background:stackGrade.bg, border:`1px solid ${stackGrade.color}`, borderRadius:10, padding:"4px 12px", display:"flex", alignItems:"center", gap:5 }}>
                     <span style={{ fontWeight:900, fontSize:22, color:stackGrade.color }}>{stackGrade.letter}</span>
                     <span style={{ fontSize:11, color:"var(--dim)" }}>{lang==="ko"?"점수":"Score"}</span>
                   </div>
@@ -1217,7 +1224,7 @@ function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
                         <div style={{ fontWeight:700, fontSize:14, lineHeight:1.2 }}>{vendor.name}</div>
                       </div>
                       <div style={{ textAlign:"right" }}>
-                        {vendor.priceFree && <div style={{ fontSize:11, color:"#34D399", fontWeight:700 }}>{lang==="ko"?"무료":"Free"}</div>}
+                        {vendor.priceFree && <div style={{ fontSize:11, color:"var(--ok)", fontWeight:700 }}>{lang==="ko"?"무료":"Free"}</div>}
                         <div style={{ fontSize:11, color:"var(--dim)" }}>{vendor.priceLabel}</div>
                       </div>
                     </div>
@@ -1313,18 +1320,18 @@ export default function App() {
       <div data-theme={theme} className="root dots" style={{ minHeight:"100vh" }}>
 
         {/* HEADER */}
-        <div style={{ padding:"24px 40px 0" }}>
+        <div style={{ padding:"24px 40px 16px", borderBottom:"1px solid var(--bdr)", marginBottom:18 }}>
           <div style={{ display:"flex", alignItems:"flex-start", gap:14, marginBottom:6 }}>
-            <div style={{ width:46,height:46,borderRadius:13,background:"linear-gradient(135deg,var(--g1),var(--g2))",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 0 22px var(--aglow)",flexShrink:0,marginTop:3 }}>
+            <div style={{ width:46,height:46,borderRadius:13,background:"linear-gradient(135deg,var(--g1),var(--g2))",display:"flex",alignItems:"center",justifyContent:"center",boxShadow:"0 18px 34px var(--shadow)",border:"1px solid var(--bdr)",flexShrink:0,marginTop:3 }}>
               <Layers size={22} color="white"/>
             </div>
             <div style={{ flex:1 }}>
-              <h1 style={{ fontWeight:900, fontSize:26, letterSpacing:-.6, lineHeight:1.15 }}>
+              <h1 style={{ fontWeight:800, fontSize:28, letterSpacing:-.7, lineHeight:1.1 }}>
                 {lang==="ko"?"AI 벤더 에코시스템 네비게이터":"AI Vendor Ecosystem Navigator"}
               </h1>
               {/* Prominent subtitle */}
-              <div style={{ marginTop:5, padding:"7px 14px", borderRadius:9, display:"inline-flex", alignItems:"center", gap:8, background:"linear-gradient(90deg,rgba(139,92,246,.14),rgba(99,102,241,.08))", border:"1px solid rgba(139,92,246,.2)" }}>
-                <span style={{ fontWeight:700, fontSize:14.5, background:"linear-gradient(90deg,var(--a2),var(--a3))", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>{L.subtitle}</span>
+              <div style={{ marginTop:6, padding:"8px 14px", borderRadius:12, display:"inline-flex", alignItems:"center", gap:8, background:"linear-gradient(90deg,var(--adim),var(--cydim))", border:"1px solid var(--bdr)" }}>
+                <span style={{ fontWeight:500, fontSize:14, background:"linear-gradient(90deg,var(--a2),var(--a3))", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>{L.subtitle}</span>
               </div>
             </div>
             <div style={{ display:"flex", alignItems:"center", gap:7, flexShrink:0 }}>
@@ -1338,7 +1345,7 @@ export default function App() {
           </div>
 
           {/* Tabs */}
-          <div style={{ display:"flex", gap:3, padding:"14px 0 16px", marginLeft:60 }}>
+          <div style={{ display:"flex", gap:6, padding:"14px 0 0", marginLeft:60 }}>
             <button className={`tab ${tab==="explore"?"on":""}`} onClick={() => { setDetail(null); setTab("explore"); setView("map"); }}><Layers size={14}/> {L.explore}</button>
             <button className={`tab ${tab==="decision"?"on":""}`} onClick={() => { setDetail(null); setTab("decision"); }}><Shield size={14}/> {L.decision}</button>
             <button className={`tab ${tab==="stack"?"on":""}`} onClick={() => { setDetail(null); setStackAutoRevealKey(0); setTab("stack"); }}><Boxes size={14}/> {L.stack}</button>
@@ -1373,7 +1380,7 @@ export default function App() {
                   {LAYERS.map((l,i) => {
                     const lv = V.filter(v => v.layer===l.id);
                     return (
-                      <div key={l.id}>
+                      <div key={l.id} style={{ display:"flex", flexDirection:"column", gap:8 }}>
                         <LayerSection layer={l} vendors={lv} selectedUseCase={uc} selectedIds={selIds} onVendorClick={handleVendorClick} index={i} lang={lang}/>
                         {i < LAYERS.length-1 && <FlowArrow/>}
                       </div>

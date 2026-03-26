@@ -5,7 +5,7 @@
 
 ---
 
-## [Unreleased — v3.1] 2026-03-26 — Decision Flow wizard
+## [1.5.0] 2026-03-26 — Decision Flow + hover tooltip + UI design refresh
 
 ### Added
 - F-08: `Decision Flow` 탭 추가
@@ -22,6 +22,11 @@
   - Decision Flow와 Stack Builder 간 추천 스택 handoff 가능
   - 추천 스택에서 Stack Builder 진입 시 결과 화면이 바로 열리도록 개선
 - Decision Flow 전용 한국어/영문 UI 문자열 추가
+- 디자인 시스템 전면 리프레시
+  - 다크/라이트 CSS 변수 토큰을 신규 대시보드 톤으로 교체
+  - 헤더 하단 1px 보더, 새 타이포 계층, 카드/탭/필 버튼 스타일 재정렬
+  - VendorNode 카드에 표면형 배경, 호버 보더, 레이어 컬러 좌측 accent 추가
+  - 레이어 섹션 간격과 카드 밀도를 조정해 대시보드형 레이아웃으로 정리
 
 ### Planned
 - F-09: 한국 시장 레이어 (Naver HyperCLOVA, KT AI, Samsung SDS 태그)
