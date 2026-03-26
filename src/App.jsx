@@ -1032,11 +1032,15 @@ function DecisionFlow({ onBuildStack }) {
             ))}
           </div>
 
-          <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", gap:10, flexWrap:"wrap", borderTop:"1px solid var(--bdr)", paddingTop:16 }}>
-            <button className="ghost" onClick={() => setOpenStep(3)}><RotateCcw size={12}/> {lang==="ko"?"답변 조정":"Adjust Answers"}</button>
-            <button className="cbtn" onClick={() => onBuildStack(recommendation.picks)} style={{ padding:`${ux(11)}px ${ux(22)}px`, fontSize:ux(14) }}>
-              <Boxes size={15}/> {lang==="ko"?"이 스택으로 빌드":"Build This Stack"} <ArrowRight size={14}/>
+          <div style={{ borderTop:"1px solid var(--bdr)", paddingTop:20, display:"flex", flexDirection:"column", alignItems:"center", gap:12 }}>
+            <button className="cbtn" onClick={() => onBuildStack(recommendation.picks)} style={{
+              padding:`${ux(16)}px ${ux(44)}px`, fontSize:ux(17), borderRadius:16, gap:ux(10),
+              boxShadow:"0 8px 32px rgba(139,92,246,.35), 0 0 0 2px rgba(139,92,246,.15)",
+              animation:"pulse 2.2s ease-in-out infinite",
+            }}>
+              <Boxes size={18}/> {lang==="ko"?"이 스택으로 빌드":"Build This Stack"} <ArrowRight size={16}/>
             </button>
+            <button className="ghost" onClick={() => setOpenStep(3)} style={{ fontSize:ux(12) }}><RotateCcw size={12}/> {lang==="ko"?"답변 조정":"Adjust Answers"}</button>
           </div>
         </div>
       )}
@@ -1106,26 +1110,57 @@ function StackBuilder({ lang, theme, picks, setPicks, autoRevealKey }) {
       {/* Total cost bar */}
       {pickCount > 0 && (
         <div className="asi" style={{ marginBottom:18, padding:`${ux(14)}px ${ux(20)}px`, borderRadius:13, background:"linear-gradient(135deg,rgba(139,92,246,.12),rgba(99,102,241,.06))", border:"1px solid rgba(139,92,246,.22)" }}>
-          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:10 }}>
-            <div>
-              <div style={{ fontSize:ux(11), color:"var(--accentText)", fontWeight:700, textTransform:"uppercase", letterSpacing:.9, marginBottom:ux(10) }}>
-                <DollarSign size={ux(11)} style={{ display:"inline", verticalAlign:"middle" }}/> {lang==="ko"?"예상 월 비용 구성":"Estimated Monthly Cost Breakdown"}
-              </div>
-              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))", gap:8 }}>
-                {costSummary.items.map(({layer,vendor}) => (
-                  <div key={layer.id} style={{ display:"flex", alignItems:"center", gap:ux(10), background:"var(--card)", border:"1px solid var(--bdr)", borderRadius:12, padding:`${ux(12)}px ${ux(14)}px`, minHeight:ux(68), boxShadow:"0 10px 24px var(--shadow)" }}>
-                    <LogoBadge vendorId={vendor.id} size={ux(32)}/>
-                    <div>
-                      <div style={{ fontSize:ux(11.5), fontWeight:600, lineHeight:1.2 }}>{vendor.name}</div>
-                      <div style={{ fontSize:ux(11), color: vendor.priceFree ? "var(--ok)" : "var(--accentText)", fontWeight:700, lineHeight:1.25 }}>
-                        {getStackPriceText(vendor, lang)}
-                      </div>
+          <div style={{ fontSize:ux(11), color:"var(--accentText)", fontWeight:700, textTransform:"uppercase", letterSpacing:.9, marginBottom:ux(10) }}>
+            <DollarSign size={ux(11)} style={{ display:"inline", verticalAlign:"middle" }}/> {lang==="ko"?"예상 월 비용 구성":"Estimated Monthly Cost Breakdown"}
+          </div>
+          <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr 1fr", gap:12, alignItems:"start" }}>
+            {/* Left: vendor cost cards */}
+            <div style={{ display:"flex", flexDirection:"column", gap:8 }}>
+              {costSummary.items.map(({layer,vendor}) => (
+                <div key={layer.id} style={{ display:"flex", alignItems:"center", gap:ux(10), background:"var(--card)", border:"1px solid var(--bdr)", borderRadius:12, padding:`${ux(12)}px ${ux(14)}px`, minHeight:ux(68), boxShadow:"0 10px 24px var(--shadow)" }}>
+                  <LogoBadge vendorId={vendor.id} size={ux(32)}/>
+                  <div>
+                    <div style={{ fontSize:ux(11.5), fontWeight:600, lineHeight:1.2 }}>{vendor.name}</div>
+                    <div style={{ fontSize:ux(11), color: vendor.priceFree ? "var(--ok)" : "var(--accentText)", fontWeight:700, lineHeight:1.25 }}>
+                      {getStackPriceText(vendor, lang)}
                     </div>
                   </div>
+                </div>
+              ))}
+            </div>
+            {/* Center: stack combination summary */}
+            <div style={{ background:"var(--card)", border:"1px solid var(--bdr)", borderRadius:16, padding:`${ux(16)}px ${ux(18)}px`, boxShadow:"0 10px 24px var(--shadow)" }}>
+              <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:ux(12) }}>
+                <MessageSquareQuote size={ux(14)} color="var(--a2)"/>
+                <span style={{ fontWeight:700, fontSize:ux(12.5), color:"var(--accentText)", textTransform:"uppercase", letterSpacing:.8 }}>
+                  {lang==="ko"?"스택 조합 요약":"Stack Summary"}
+                </span>
+              </div>
+              <div style={{ display:"flex", flexDirection:"column", gap:ux(8) }}>
+                <p style={{ fontSize:ux(12.5), color:"var(--txt)", lineHeight:1.6 }}>
+                  {lang==="ko"
+                    ? `${selectedVendors.map(x => x.vendor.name).join(" + ")} 조합으로 ${selectedVendors.length}개 레이어를 구성합니다.`
+                    : `${selectedVendors.map(x => x.vendor.name).join(" + ")} covering ${selectedVendors.length} layers.`}
+                </p>
+                {selectedVendors.map(({layer, vendor}) => (
+                  <div key={layer.id} style={{ display:"flex", alignItems:"center", gap:ux(6) }}>
+                    <div style={{ width:ux(6), height:ux(6), borderRadius:"50%", background:layer.gradient, flexShrink:0 }}/>
+                    <span style={{ fontSize:ux(11), color:"var(--dim)", lineHeight:1.3 }}>
+                      <strong style={{ color:"var(--txt)", fontWeight:700 }}>{lang==="ko"?layer.labelKo:layer.label}</strong> — {vendor.name} ({vendor.priceFree ? (lang==="ko"?"무료":"Free") : vendor.priceLabel})
+                    </span>
+                  </div>
                 ))}
+                <div style={{ borderTop:"1px solid var(--bdr)", paddingTop:ux(8), marginTop:ux(4) }}>
+                  <p style={{ fontSize:ux(11.5), color:"var(--dim)", lineHeight:1.55, fontStyle:"italic" }}>
+                    {lang==="ko"
+                      ? `무료 컴포넌트 ${costSummary.freeCount}개 포함. ${costSummary.paidCount > 0 ? `유료 ${costSummary.paidCount}개 구성으로 ` : ""}비용 효율적인 스택입니다.`
+                      : `Includes ${costSummary.freeCount} free component${costSummary.freeCount!==1?"s":""}. ${costSummary.paidCount > 0 ? `${costSummary.paidCount} paid tier${costSummary.paidCount!==1?"s":""} for a ` : "A "}cost-efficient stack.`}
+                  </p>
+                </div>
               </div>
             </div>
-            <div style={{ minWidth:ux(260), display:"flex", flexDirection:"column", gap:ux(10), flexShrink:0 }}>
+            {/* Right: annual total + free count */}
+            <div style={{ display:"flex", flexDirection:"column", gap:ux(10) }}>
               <div style={{ padding:`${ux(16)}px ${ux(18)}px`, borderRadius:18, border:"1px solid var(--ok)", background:"linear-gradient(135deg,var(--okbg),rgba(6,182,212,0.08))" }}>
                 <div style={{ fontSize:ux(11), color:"var(--dim)", fontWeight:700, marginBottom:ux(6) }}>
                   {lang==="ko"?"예상 연간 총비용":"Estimated Annual Total"}
