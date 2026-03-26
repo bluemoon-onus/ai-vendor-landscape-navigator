@@ -5,6 +5,22 @@
 
 ---
 
+## [1.5.1] 2026-03-26 — 5-column vendor grid + official CI logos + annual stack total
+
+### Added
+- `LogoBadge`를 공식 홈페이지 기반 CI 이미지 로고 렌더링으로 업그레이드
+  - 26개 벤더 모두 공식 도메인 기준 로고 이미지를 사용
+  - 로고 로드 실패 시 기존 텍스트 뱃지로 자동 폴백
+- Stack Builder 결과 헤더에 `예상 연간 총비용` 표시 추가
+  - 선택된 벤더들의 시작 기준 연간 추정치를 합산해 `A/B/C` 점수 옆에 노출
+
+### Changed
+- Explore Map 및 Stack Builder 벤더 카드 그리드를 데스크톱 기준 5열로 고정
+  - 5개를 넘는 카드는 다음 줄로 자연스럽게 래핑
+  - 화면 폭이 좁아지면 4/3/2/1열로 단계적으로 축소
+- 라이트 모드 선택자를 보정해 배경 그라디언트와 도트 패턴 오버라이드가 정상 적용되도록 수정
+- 새 로고 배지가 다크/라이트 테마 모두에서 읽히도록 로고 쉘 배경과 보더 토큰 추가
+
 ## [1.5.0] 2026-03-26 — Decision Flow + hover tooltip + UI design refresh
 
 ### Added

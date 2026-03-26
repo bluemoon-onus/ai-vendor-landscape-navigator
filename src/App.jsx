@@ -8,37 +8,43 @@ const useLang = () => useContext(LangCtx);
 
 /* ── BRAND LOGOS ─────────────────────────────────────────────────────── */
 const LOGOS = {
-  "gpt4o":               { abbr:"GPT-4o", bg:"#10A37F", color:"#fff", border:"#0D8A6A" },
-  "claude35":            { abbr:"Claude",  bg:"#E37B4B", color:"#fff", border:"#C5612D" },
-  "gemini":              { abbr:"Gemini",  bg:"#4285F4", color:"#fff", border:"#2B6EDA" },
-  "llama":               { abbr:"Llama 3", bg:"#0064E0", color:"#fff", border:"#004DB3" },
-  "mistral":             { abbr:"Mistral", bg:"#FF5C00", color:"#fff", border:"#D44D00" },
-  "cohere":              { abbr:"Cohere",  bg:"#39594D", color:"#9FE0CD", border:"#2A4438" },
-  "deepseek":            { abbr:"DeepSeek",bg:"#4D6BFE", color:"#fff", border:"#3352E0" },
-  "azure-openai":        { abbr:"Azure AI",bg:"#0078D4", color:"#fff", border:"#005FA8" },
-  "bedrock":             { abbr:"Bedrock", bg:"#FF9900", color:"#111", border:"#D47F00" },
-  "vertex":              { abbr:"Vertex",  bg:"#34A853", color:"#fff", border:"#287D40" },
-  "huggingface":         { abbr:"🤗 HF",   bg:"#FFD21E", color:"#1A1A1A", border:"#D4AE00" },
-  "databricks":          { abbr:"Databricks",bg:"#FF3621",color:"#fff", border:"#CC2212" },
-  "nvidia-nim":          { abbr:"NVIDIA",  bg:"#76B900", color:"#fff", border:"#5E9300" },
-  "salesforce-einstein": { abbr:"Einstein",bg:"#00A1E0", color:"#fff", border:"#0083B8" },
-  "servicenow":          { abbr:"Now Assist",bg:"#62D84E",color:"#0A2000",border:"#48B435" },
-  "sap-joule":           { abbr:"SAP Joule",bg:"#009FDB",color:"#fff", border:"#007DB0" },
-  "github-copilot":      { abbr:"Copilot", bg:"#24292E", color:"#fff", border:"#1A1E22" },
-  "glean":               { abbr:"Glean",   bg:"#FF6B2B", color:"#fff", border:"#D4521A" },
-  "ms-copilot":          { abbr:"M365 AI", bg:"#0078D4", color:"#fff", border:"#005FA8" },
-  "langchain":           { abbr:"LangChain",bg:"#1C3C3C",color:"#65C7BF",border:"#122828" },
-  "pinecone":            { abbr:"Pinecone",bg:"#000",    color:"#1DB954", border:"#222" },
-  "wandb":               { abbr:"W&B",     bg:"#FFBE00", color:"#1A1A1A", border:"#D49E00" },
-  "llamaindex":          { abbr:"LlamaIndex",bg:"#7C3AED",color:"#fff", border:"#5E24D0" },
-  "weaviate":            { abbr:"Weaviate",bg:"#1D2030", color:"#FA0050", border:"#111520" },
-  "mlflow":              { abbr:"MLflow",  bg:"#0194E2", color:"#fff", border:"#0177B8" },
-  "chroma":              { abbr:"Chroma",  bg:"#F47B20", color:"#fff", border:"#C85E0A" },
+  "gpt4o":               { abbr:"OpenAI", bg:"#10A37F", color:"#fff", border:"#0D8A6A", home:"https://openai.com" },
+  "claude35":            { abbr:"Claude", bg:"#E37B4B", color:"#fff", border:"#C5612D", home:"https://www.anthropic.com" },
+  "gemini":              { abbr:"Gemini", bg:"#4285F4", color:"#fff", border:"#2B6EDA", home:"https://gemini.google.com" },
+  "llama":               { abbr:"Llama", bg:"#0064E0", color:"#fff", border:"#004DB3", home:"https://ai.meta.com/llama" },
+  "mistral":             { abbr:"Mistral", bg:"#FF5C00", color:"#fff", border:"#D44D00", home:"https://mistral.ai" },
+  "cohere":              { abbr:"Cohere", bg:"#39594D", color:"#9FE0CD", border:"#2A4438", home:"https://cohere.com" },
+  "deepseek":            { abbr:"DeepSeek", bg:"#4D6BFE", color:"#fff", border:"#3352E0", home:"https://www.deepseek.com" },
+  "azure-openai":        { abbr:"Azure", bg:"#0078D4", color:"#fff", border:"#005FA8", home:"https://azure.microsoft.com" },
+  "bedrock":             { abbr:"AWS", bg:"#FF9900", color:"#111", border:"#D47F00", home:"https://aws.amazon.com/bedrock" },
+  "vertex":              { abbr:"Vertex", bg:"#34A853", color:"#fff", border:"#287D40", home:"https://cloud.google.com/vertex-ai" },
+  "huggingface":         { abbr:"HF", bg:"#FFD21E", color:"#1A1A1A", border:"#D4AE00", home:"https://huggingface.co" },
+  "databricks":          { abbr:"Databricks", bg:"#FF3621", color:"#fff", border:"#CC2212", home:"https://www.databricks.com" },
+  "nvidia-nim":          { abbr:"NVIDIA", bg:"#76B900", color:"#fff", border:"#5E9300", home:"https://www.nvidia.com" },
+  "salesforce-einstein": { abbr:"Salesforce", bg:"#00A1E0", color:"#fff", border:"#0083B8", home:"https://www.salesforce.com" },
+  "servicenow":          { abbr:"ServiceNow", bg:"#62D84E", color:"#0A2000", border:"#48B435", home:"https://www.servicenow.com" },
+  "sap-joule":           { abbr:"SAP", bg:"#009FDB", color:"#fff", border:"#007DB0", home:"https://www.sap.com" },
+  "github-copilot":      { abbr:"GitHub", bg:"#24292E", color:"#fff", border:"#1A1E22", home:"https://github.com" },
+  "glean":               { abbr:"Glean", bg:"#FF6B2B", color:"#fff", border:"#D4521A", home:"https://www.glean.com" },
+  "ms-copilot":          { abbr:"Microsoft", bg:"#0078D4", color:"#fff", border:"#005FA8", home:"https://www.microsoft.com" },
+  "langchain":           { abbr:"LangChain", bg:"#1C3C3C", color:"#65C7BF", border:"#122828", home:"https://www.langchain.com" },
+  "pinecone":            { abbr:"Pinecone", bg:"#000", color:"#1DB954", border:"#222", home:"https://www.pinecone.io" },
+  "wandb":               { abbr:"W&B", bg:"#FFBE00", color:"#1A1A1A", border:"#D49E00", home:"https://wandb.ai" },
+  "llamaindex":          { abbr:"LlamaIndex", bg:"#7C3AED", color:"#fff", border:"#5E24D0", home:"https://www.llamaindex.ai" },
+  "weaviate":            { abbr:"Weaviate", bg:"#1D2030", color:"#FA0050", border:"#111520", home:"https://weaviate.io" },
+  "mlflow":              { abbr:"MLflow", bg:"#0194E2", color:"#fff", border:"#0177B8", home:"https://mlflow.org" },
+  "chroma":              { abbr:"Chroma", bg:"#F47B20", color:"#fff", border:"#C85E0A", home:"https://www.trychroma.com" },
 };
 
 function LogoBadge({ vendorId, size = 44 }) {
-  const cfg = LOGOS[vendorId] || { abbr:"AI", bg:"#6366F1", color:"#fff", border:"#4F46E5" };
+  const cfg = LOGOS[vendorId] || { abbr:"AI", bg:"#6366F1", color:"#fff", border:"#4F46E5", home:null };
+  const [hasError, setHasError] = useState(false);
   const fs = size <= 40 ? 10 : size <= 50 ? 11 : 13;
+  const imageSize = Math.round(size * 0.56);
+  const shellRadius = Math.max(8, Math.round(size * 0.24));
+  const logoSrc = cfg.home && !hasError
+    ? `https://www.google.com/s2/favicons?domain_url=${encodeURIComponent(cfg.home)}&sz=128`
+    : null;
   return (
     <div style={{
       width:size, height:size, borderRadius:10, flexShrink:0,
@@ -46,11 +52,34 @@ function LogoBadge({ vendorId, size = 44 }) {
       display:"flex", alignItems:"center", justifyContent:"center",
       fontWeight:800, fontSize:fs, color:cfg.color,
       letterSpacing:-0.3, lineHeight:1.1, textAlign:"center",
-      padding:"2px 4px", boxShadow:`0 2px 8px ${cfg.bg}55`,
+      padding:Math.max(3, Math.round(size * 0.08)), boxShadow:`0 2px 8px ${cfg.bg}55`,
       border:`1px solid ${cfg.border}`,
       fontFamily:"'Outfit',sans-serif",
     }}>
-      {cfg.abbr}
+      <div style={{
+        width:"100%",
+        height:"100%",
+        borderRadius:shellRadius,
+        background:"var(--logo-shell)",
+        border:"1px solid var(--logo-ring)",
+        display:"flex",
+        alignItems:"center",
+        justifyContent:"center",
+        overflow:"hidden",
+      }}>
+        {logoSrc ? (
+          <img
+            src={logoSrc}
+            alt={`${cfg.abbr} logo`}
+            width={imageSize}
+            height={imageSize}
+            style={{ width:imageSize, height:imageSize, objectFit:"contain" }}
+            onError={() => setHasError(true)}
+          />
+        ) : (
+          <span style={{ padding:"2px 4px" }}>{cfg.abbr}</span>
+        )}
+      </div>
     </div>
   );
 }
@@ -141,6 +170,35 @@ const STACK_PRESETS = [
   { name:"Cost Optimized",   nameKo:"비용 최적화형",      desc:"Best value for growing companies",  descKo:"성장 기업을 위한 최적 가치",   picks:{foundation:"llama",   platform:"huggingface", vertical:"github-copilot",tooling:"llamaindex"}, cost:"$10-20/user/mo" },
   { name:"Data-First",       nameKo:"데이터 우선형",       desc:"Analytics & data pipeline focused", descKo:"분석 & 데이터 파이프라인 중심", picks:{foundation:"gemini",  platform:"vertex",      vertical:"glean",         tooling:"pinecone"},    cost:"$50-120/user/mo" },
 ];
+
+const ANNUAL_COST_ESTIMATES = {
+  "gpt4o": 6000,
+  "claude35": 3600,
+  "gemini": 1800,
+  "llama": 12000,
+  "mistral": 2400,
+  "cohere": 3000,
+  "deepseek": 900,
+  "azure-openai": 24000,
+  "bedrock": 18000,
+  "vertex": 12000,
+  "huggingface": 108,
+  "databricks": 36000,
+  "nvidia-nim": 48000,
+  "salesforce-einstein": 6000,
+  "servicenow": 18000,
+  "sap-joule": 0,
+  "github-copilot": 1200,
+  "glean": 15000,
+  "ms-copilot": 3600,
+  "langchain": 468,
+  "pinecone": 840,
+  "wandb": 6000,
+  "llamaindex": 2400,
+  "weaviate": 300,
+  "mlflow": 0,
+  "chroma": 0,
+};
 
 const makeEmptyStack = () => ({ foundation:null, platform:null, vertical:null, tooling:null });
 
@@ -282,6 +340,21 @@ function getStackPriceText(vendor, lang) {
   return `${freeLabel} · ${vendor.priceLabel}`;
 }
 
+function getVendorAnnualEstimate(vendorId) {
+  return ANNUAL_COST_ESTIMATES[vendorId] ?? 0;
+}
+
+function formatAnnualEstimate(amount, lang) {
+  if (!amount) return lang==="ko" ? "포함 / 무료" : "Included / free";
+  const formatted = new Intl.NumberFormat("en-US", {
+    style:"currency",
+    currency:"USD",
+    notation: amount >= 1000 ? "compact" : "standard",
+    maximumFractionDigits: amount >= 1000 ? 1 : 0,
+  }).format(amount);
+  return lang==="ko" ? `약 ${formatted}/년` : `~${formatted}/yr`;
+}
+
 const UI_SCALE = 1.5;
 const ux = value => Number((value * UI_SCALE).toFixed(1));
 
@@ -373,7 +446,7 @@ const CSS = `
   --adim:rgba(139,92,246,0.12);--aglow:rgba(139,92,246,0.18);--cydim:rgba(6,182,212,0.12);
   --txt:#F1F0FF;--dim:#6B7280;--bdr:#1E1E2E;--g1:#8B5CF6;--g2:#06B6D4;
   --ok:#10B981;--okbg:rgba(16,185,129,0.12);--warn:#F59E0B;--warnbg:rgba(245,158,11,0.12);--err:#EF4444;--errbg:rgba(239,68,68,0.12);
-  --shadow:rgba(0,0,0,0.42);--overlay:rgba(10,10,15,0.72);
+  --shadow:rgba(0,0,0,0.42);--overlay:rgba(10,10,15,0.72);--logo-shell:rgba(255,255,255,0.96);--logo-ring:rgba(255,255,255,0.36);
 }
 [data-theme="light"]{
   --bg:#F8FAFC;--bg2:#F1F5F9;--card:#FFFFFF;--cardh:#FFFFFF;
@@ -381,16 +454,18 @@ const CSS = `
   --adim:rgba(139,92,246,0.08);--aglow:rgba(139,92,246,0.12);--cydim:rgba(6,182,212,0.1);
   --txt:#0F172A;--dim:#64748B;--bdr:#E2E8F0;--g1:#8B5CF6;--g2:#06B6D4;
   --ok:#10B981;--okbg:rgba(16,185,129,0.1);--warn:#F59E0B;--warnbg:rgba(245,158,11,0.1);--err:#EF4444;--errbg:rgba(239,68,68,0.1);
-  --shadow:rgba(15,23,42,0.1);--overlay:rgba(15,23,42,0.28);
+  --shadow:rgba(15,23,42,0.1);--overlay:rgba(15,23,42,0.28);--logo-shell:#FFFFFF;--logo-ring:rgba(15,23,42,0.08);
 }
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);font-size:21px;line-height:1.5}
 .root{min-height:100vh;background:var(--bg);
   background-image:radial-gradient(ellipse 82% 50% at 12% 92%,rgba(var(--a-rgb),.12) 0%,transparent 60%),
     radial-gradient(ellipse 60% 42% at 88% 8%,rgba(var(--cy-rgb),.08) 0%,transparent 58%);
+  color-scheme:dark;
 }
-[data-theme="light"] .root{background-image:radial-gradient(ellipse 82% 50% at 12% 92%,rgba(var(--a-rgb),.08) 0%,transparent 60%),radial-gradient(ellipse 60% 42% at 88% 8%,rgba(var(--cy-rgb),.06) 0%,transparent 58%)}
+[data-theme="light"].root{color-scheme:light}
+[data-theme="light"].root{background-image:radial-gradient(ellipse 82% 50% at 12% 92%,rgba(var(--a-rgb),.08) 0%,transparent 60%),radial-gradient(ellipse 60% 42% at 88% 8%,rgba(var(--cy-rgb),.06) 0%,transparent 58%)}
 .dots{background-image:radial-gradient(rgba(var(--a-rgb),.075) 1px,transparent 1px);background-size:22px 22px}
-[data-theme="light"] .dots{background-image:radial-gradient(rgba(var(--a-rgb),.08) 1px,transparent 1px)}
+[data-theme="light"].dots{background-image:radial-gradient(rgba(var(--a-rgb),.08) 1px,transparent 1px)}
 
 /* vendor node */
 .vn{transition:all .25s cubic-bezier(.4,0,.2,1);cursor:pointer;border:1px solid var(--bdr);
@@ -444,6 +519,11 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);font-
 .mb{height:6px;border-radius:3px;background:var(--adim);overflow:hidden;width:44px}
 .mbf{height:100%;border-radius:3px;transition:width .7s cubic-bezier(.4,0,.2,1)}
 .ns::-webkit-scrollbar{display:none}.ns{-ms-overflow-style:none;scrollbar-width:none}
+.vendor-grid-5{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px}
+@media (max-width:1680px){.vendor-grid-5{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (max-width:1320px){.vendor-grid-5{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media (max-width:960px){.vendor-grid-5{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:640px){.vendor-grid-5{grid-template-columns:1fr}}
 
 @keyframes fu{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
 @keyframes fi{from{opacity:0}to{opacity:1}}
@@ -641,7 +721,7 @@ function LayerSection({ layer, vendors, selectedUseCase, selectedIds, onVendorCl
           {vendors.length} {lang==="ko"?"벤더":"vendors"}
         </div>
       </div>
-      <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(220px,1fr))", gap:8 }}>
+      <div className="vendor-grid-5">
         {vendors.map((v,i) => {
           const rel = !selectedUseCase || v.useCases.includes(selectedUseCase);
           return <VendorNode key={v.id} vendor={v}
@@ -1087,8 +1167,9 @@ function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
   const costSummary = useMemo(() => {
     const freeItems = selectedVendors.filter(x => x.vendor.priceFree);
     const paidItems = selectedVendors.filter(x => !x.vendor.priceFree);
-    return { freeCount:freeItems.length, paidCount:paidItems.length, items:selectedVendors };
-  }, [picks]);
+    const annualTotal = selectedVendors.reduce((sum, { vendor }) => sum + getVendorAnnualEstimate(vendor.id), 0);
+    return { freeCount:freeItems.length, paidCount:paidItems.length, items:selectedVendors, annualTotal };
+  }, [selectedVendors]);
 
   return (
     <div className="au">
@@ -1161,7 +1242,7 @@ function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
                   </div>
                 )}
               </div>
-              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))", gap:8 }}>
+              <div className="vendor-grid-5">
                 {lv.map(v => (
                   <div key={v.id} className={`sn ${picks[layer.id]===v.id?"pick":""}`} onClick={() => handlePick(layer.id,v.id)}>
                     {picks[layer.id]===v.id && <div className="chk" style={{ width:18,height:18 }}><Check size={10} color="white" strokeWidth={3}/></div>}
@@ -1204,9 +1285,20 @@ function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
                   <div style={{ fontSize:ux(12), color:"var(--dim)" }}>{selectedVendors.length} {lang==="ko"?"레이어 구성됨":"layers configured"}</div>
                 </div>
                 {stackGrade && (
-                  <div style={{ background:stackGrade.bg, border:`1px solid ${stackGrade.color}`, borderRadius:10, padding:"4px 12px", display:"flex", alignItems:"center", gap:5 }}>
-                    <span style={{ fontWeight:900, fontSize:ux(22), color:stackGrade.color }}>{stackGrade.letter}</span>
-                    <span style={{ fontSize:ux(11), color:"var(--dim)" }}>{lang==="ko"?"점수":"Score"}</span>
+                  <div style={{ background:stackGrade.bg, border:`1px solid ${stackGrade.color}`, borderRadius:12, padding:`${ux(6)}px ${ux(12)}px`, display:"flex", alignItems:"center", gap:ux(10) }}>
+                    <div style={{ display:"flex", alignItems:"center", gap:5 }}>
+                      <span style={{ fontWeight:900, fontSize:ux(22), color:stackGrade.color }}>{stackGrade.letter}</span>
+                      <span style={{ fontSize:ux(11), color:"var(--dim)" }}>{lang==="ko"?"점수":"Score"}</span>
+                    </div>
+                    <div style={{ width:1, alignSelf:"stretch", background:`${stackGrade.color}33` }}/>
+                    <div style={{ display:"flex", flexDirection:"column", gap:ux(2) }}>
+                      <span style={{ fontSize:ux(10.5), color:"var(--dim)", fontWeight:600 }}>
+                        {lang==="ko"?"예상 연간 총비용":"Est. annual total"}
+                      </span>
+                      <span style={{ fontSize:ux(12.5), color:stackGrade.color, fontWeight:800 }}>
+                        {formatAnnualEstimate(costSummary.annualTotal, lang)}
+                      </span>
+                    </div>
                   </div>
                 )}
               </div>
