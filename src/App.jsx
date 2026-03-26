@@ -601,7 +601,7 @@ function VendorNode({ vendor, isHighlighted, isDimmed, isSelected, onClick, dela
         {isSelected && <div className="chk"><Check size={11} color="white" strokeWidth={3}/></div>}
         <LogoBadge vendorId={vendor.id} size={ux(40)}/>
         <div style={{ minWidth:0, flex:1 }}>
-          <div style={{ fontWeight:700, fontSize:ux(16), lineHeight:1.2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{vendor.name}</div>
+          <div style={{ fontWeight:700, fontSize:ux(16), color:"var(--txt)", lineHeight:1.2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{vendor.name}</div>
           <div style={{ fontSize:ux(12), color:"var(--dim)", lineHeight:1.3 }}>{vendor.org}</div>
         </div>
         <div style={{ textAlign:"right", flexShrink:0 }}>
@@ -631,7 +631,7 @@ function VendorNode({ vendor, isHighlighted, isDimmed, isSelected, onClick, dela
           <div style={{ display:"flex", alignItems:"center", gap:ux(9), marginBottom:ux(10) }}>
             <LogoBadge vendorId={vendor.id} size={ux(28)}/>
             <div style={{ minWidth:0 }}>
-              <div style={{ fontSize:ux(13.5), fontWeight:800, lineHeight:1.2 }}>{vendor.name}</div>
+              <div style={{ fontSize:ux(13.5), fontWeight:800, color:"var(--txt)", lineHeight:1.2 }}>{vendor.name}</div>
               <div style={{ fontSize:ux(11), color:"var(--dim)", lineHeight:1.2 }}>{vendor.org}</div>
             </div>
           </div>
@@ -1135,9 +1135,10 @@ function DecisionFlow({ onBuildStack }) {
 }
 
 /* ── STACK BUILDER ────────────────────────────────────────────────────── */
-function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
+function StackBuilder({ lang, theme, picks, setPicks, autoRevealKey }) {
   const [showResult, setShowResult] = useState(false);
   const [activePreset, setActivePreset] = useState(null);
+  const isLight = theme==="light";
   const pickCount = Object.values(picks).filter(Boolean).length;
   const handlePick = (lid, vid) => { setPicks(p => ({...p,[lid]:p[lid]===vid?null:vid})); setShowResult(false); setActivePreset(null); };
   const applyPreset = p => { setPicks({ ...p.picks }); setActivePreset(p.name); setShowResult(false); };
@@ -1244,7 +1245,7 @@ function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
               <div style={{ display:"flex", alignItems:"center", gap:9, marginBottom:10 }}>
                 <div style={{ width:ux(30),height:ux(30),borderRadius:8,background:layer.gradient,display:"flex",alignItems:"center",justifyContent:"center",fontSize:ux(13),fontWeight:800,color:"#fff",boxShadow:`0 0 12px ${layer.color}44`,flexShrink:0 }}>{layer.step}</div>
                 <div style={{ flex:1 }}>
-                  <div style={{ fontWeight:800, fontSize:ux(14), color:layer.color }}>{lbl}</div>
+                  <div style={{ fontWeight:800, fontSize:ux(14), color:isLight ? "var(--txt)" : layer.color }}>{lbl}</div>
                   <div style={{ fontSize:ux(11), color:"var(--dim)" }}>{lang==="ko"?"벤더 하나 선택":"Select one vendor"}</div>
                 </div>
                 {picks[layer.id] && (
@@ -1326,8 +1327,8 @@ function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
                       <div style={{ width:ux(26),height:ux(26),borderRadius:6,background:layer.gradient,display:"flex",alignItems:"center",justifyContent:"center",fontSize:ux(12),fontWeight:800,color:"#fff",flexShrink:0 }}>{layer.step}</div>
                       <LogoBadge vendorId={vendor.id} size={ux(34)}/>
                       <div style={{ flex:1, minWidth:0 }}>
-                        <div style={{ fontSize:ux(10.5), color:layer.color, fontWeight:700, textTransform:"uppercase", letterSpacing:.4 }}>{lang==="ko"?layer.labelKo:layer.label}</div>
-                        <div style={{ fontWeight:700, fontSize:ux(14), lineHeight:1.2 }}>{vendor.name}</div>
+                        <div style={{ fontSize:ux(10.5), color:isLight ? "var(--txt)" : layer.color, fontWeight:700, textTransform:"uppercase", letterSpacing:.4 }}>{lang==="ko"?layer.labelKo:layer.label}</div>
+                        <div style={{ fontWeight:700, fontSize:ux(14), color:"var(--txt)", lineHeight:1.2 }}>{vendor.name}</div>
                       </div>
                       <div style={{ textAlign:"right" }}>
                         {vendor.priceFree && <div style={{ fontSize:ux(11), color:"var(--ok)", fontWeight:700 }}>{lang==="ko"?"무료":"Free"}</div>}
@@ -1365,8 +1366,8 @@ function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
                     <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:7 }}>
                       <LogoBadge vendorId={vendor.id} size={ux(28)}/>
                       <div>
-                        <div style={{ fontSize:ux(10), color:layer.color, fontWeight:700, textTransform:"uppercase", letterSpacing:.4 }}>{lang==="ko"?layer.labelKo:layer.label}</div>
-                        <div style={{ fontWeight:700, fontSize:ux(13) }}>{vendor.name}</div>
+                        <div style={{ fontSize:ux(10), color:isLight ? "var(--txt)" : layer.color, fontWeight:700, textTransform:"uppercase", letterSpacing:.4 }}>{lang==="ko"?layer.labelKo:layer.label}</div>
+                        <div style={{ fontWeight:700, fontSize:ux(13), color:"var(--txt)" }}>{vendor.name}</div>
                       </div>
                     </div>
                     <p style={{ fontSize:ux(12.5), lineHeight:1.65, color:"var(--dim)", fontStyle:"italic" }}>"{vf(vendor,"insight",lang)}"</p>
@@ -1429,12 +1430,15 @@ export default function App() {
               <Layers size={22} color="white"/>
             </div>
             <div style={{ flex:1 }}>
-              <h1 style={{ fontWeight:800, fontSize:ux(28), letterSpacing:-.7, lineHeight:1.1 }}>
+              <h1 style={{ fontWeight:800, fontSize:ux(28), color:"var(--txt)", letterSpacing:-.7, lineHeight:1.1 }}>
                 {lang==="ko"?"AI 벤더 에코시스템 네비게이터":"AI Vendor Ecosystem Navigator"}
               </h1>
               {/* Prominent subtitle */}
               <div style={{ marginTop:ux(6), padding:`${ux(8)}px ${ux(14)}px`, borderRadius:12, display:"inline-flex", alignItems:"center", gap:ux(8), background:"linear-gradient(90deg,var(--adim),var(--cydim))", border:"1px solid var(--bdr)" }}>
-                <span style={{ fontWeight:500, fontSize:ux(14), background:"linear-gradient(90deg,var(--a2),var(--a3))", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>{L.subtitle}</span>
+                <span style={theme==="light"
+                  ? { fontWeight:500, fontSize:ux(14), color:"var(--txt)", WebkitTextFillColor:"var(--txt)" }
+                  : { fontWeight:500, fontSize:ux(14), background:"linear-gradient(90deg,var(--a2),var(--a3))", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }
+                }>{L.subtitle}</span>
               </div>
             </div>
             <div style={{ display:"flex", alignItems:"center", gap:7, flexShrink:0 }}>
@@ -1501,7 +1505,7 @@ export default function App() {
 
           {tab==="decision" && <DecisionFlow key="decision" onBuildStack={handleBuildStack}/>}
 
-          {tab==="stack" && <StackBuilder key="stack" lang={lang} picks={stackPicks} setPicks={setStackPicks} autoRevealKey={stackAutoRevealKey}/>}
+          {tab==="stack" && <StackBuilder key="stack" lang={lang} theme={theme} picks={stackPicks} setPicks={setStackPicks} autoRevealKey={stackAutoRevealKey}/>}
         </div>
       </div>
     </LangCtx.Provider>

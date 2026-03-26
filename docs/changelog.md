@@ -5,6 +5,14 @@
 
 ---
 
+## [1.5.4] 2026-03-26 — light mode text hardening
+
+### Changed
+- 라이트 모드에서 연하게 보이던 헤더 타이틀, 서브타이틀, 벤더 카드명, 스택 레이어 라벨을 검정 계열로 명시
+  - 헤더 서브타이틀은 라이트 모드에서 그라디언트 텍스트 대신 단색 텍스트로 전환
+  - Explore Map 및 Stack Builder 카드의 벤더명은 `var(--txt)`로 고정
+  - Stack Builder의 레이어 라벨은 라이트 모드에서 레이어 컬러 대신 검정 텍스트로 표시
+
 ## [1.5.3] 2026-03-26 — light mode text contrast + annual total in cost panel
 
 ### Changed
