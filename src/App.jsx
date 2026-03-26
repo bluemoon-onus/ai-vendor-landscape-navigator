@@ -74,10 +74,10 @@ function LogoBadge({ vendorId, size = 44 }) {
 
 /* ── DATA ─────────────────────────────────────────────────────────────── */
 const LAYERS = [
-  { id:"foundation",label:"Foundation Models",     labelKo:"파운데이션 모델",     icon:"Sparkles",color:"#8B5CF6",gradient:"linear-gradient(135deg,#7C3AED,#6D28D9)",desc:"Core LLMs powering the AI ecosystem",           descKo:"AI 생태계를 구동하는 핵심 LLM",step:"1" },
-  { id:"platform",  label:"AI Platforms",          labelKo:"AI 플랫폼",           icon:"Zap",     color:"#6366F1",gradient:"linear-gradient(135deg,#6366F1,#4F46E5)",desc:"Cloud infrastructure & model serving",         descKo:"클라우드 인프라 & 모델 서빙",  step:"2" },
-  { id:"vertical",  label:"Enterprise AI Apps",    labelKo:"엔터프라이즈 AI 앱",  icon:"Building2",color:"#A78BFA",gradient:"linear-gradient(135deg,#A78BFA,#8B5CF6)",desc:"Industry-specific AI solutions",               descKo:"산업별 특화 AI 솔루션",        step:"3" },
-  { id:"tooling",   label:"Tooling & Infra",       labelKo:"툴링 & 인프라",       icon:"Wrench",  color:"#C4B5FD",gradient:"linear-gradient(135deg,#C4B5FD,#A78BFA)",desc:"Developer tools & data infrastructure",        descKo:"개발 도구 & 데이터 인프라",    step:"4" },
+  { id:"foundation",label:"Foundation Models",     labelKo:"파운데이션 모델",     icon:"Sparkles",color:"#8B5CF6",colorLight:"#6D28D9",gradient:"linear-gradient(135deg,#7C3AED,#6D28D9)",desc:"Core LLMs powering the AI ecosystem",           descKo:"AI 생태계를 구동하는 핵심 LLM",step:"1" },
+  { id:"platform",  label:"AI Platforms",          labelKo:"AI 플랫폼",           icon:"Zap",     color:"#6366F1",colorLight:"#4338CA",gradient:"linear-gradient(135deg,#6366F1,#4F46E5)",desc:"Cloud infrastructure & model serving",         descKo:"클라우드 인프라 & 모델 서빙",  step:"2" },
+  { id:"vertical",  label:"Enterprise AI Apps",    labelKo:"엔터프라이즈 AI 앱",  icon:"Building2",color:"#A78BFA",colorLight:"#7C3AED",gradient:"linear-gradient(135deg,#A78BFA,#8B5CF6)",desc:"Industry-specific AI solutions",               descKo:"산업별 특화 AI 솔루션",        step:"3" },
+  { id:"tooling",   label:"Tooling & Infra",       labelKo:"툴링 & 인프라",       icon:"Wrench",  color:"#C4B5FD",colorLight:"#6D28D9",gradient:"linear-gradient(135deg,#C4B5FD,#A78BFA)",desc:"Developer tools & data infrastructure",        descKo:"개발 도구 & 데이터 인프라",    step:"4" },
 ];
 const USE_CASES = [
   { id:"customer-service",label:"Customer Service",      labelKo:"고객 서비스",       emoji:"🎧" },
@@ -449,7 +449,7 @@ const CSS = `
   --shadow:rgba(15,23,42,0.1);--overlay:rgba(15,23,42,0.28);
 }
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);font-size:21px;line-height:1.5}
-.root{min-height:100vh;background:var(--bg);
+.root{min-height:100vh;background:var(--bg);color:var(--txt);
   background-image:radial-gradient(ellipse 82% 50% at 12% 92%,rgba(var(--a-rgb),.12) 0%,transparent 60%),
     radial-gradient(ellipse 60% 42% at 88% 8%,rgba(var(--cy-rgb),.08) 0%,transparent 58%);
   color-scheme:dark;
@@ -691,10 +691,11 @@ function FlowArrow() {
 }
 
 /* ── LAYER SECTION ────────────────────────────────────────────────────── */
-function LayerSection({ layer, vendors, selectedUseCase, selectedIds, onVendorClick, index, lang }) {
+function LayerSection({ layer, vendors, selectedUseCase, selectedIds, onVendorClick, index, lang, theme }) {
   const Icon = IconMap[layer.icon] || Layers;
   const label = lang==="ko" ? layer.labelKo : layer.label;
   const desc  = lang==="ko" ? layer.descKo  : layer.desc;
+  const iconColor = theme==="light" ? (layer.colorLight || layer.color) : layer.color;
   return (
     <div className="au" style={{
       animationDelay:`${index*80}ms`, padding:"14px 18px", borderRadius:16,
@@ -703,7 +704,7 @@ function LayerSection({ layer, vendors, selectedUseCase, selectedIds, onVendorCl
     }}>
       <div style={{ display:"flex", alignItems:"center", gap:9, marginBottom:11 }}>
         <div style={{ width:34, height:34, borderRadius:10, background:"var(--adim)", border:"1px solid var(--bdr)", display:"flex", alignItems:"center", justifyContent:"center", flexShrink:0 }}>
-          <Icon size={16} color={layer.color}/>
+          <Icon size={16} color={iconColor}/>
         </div>
         <div>
           <div style={{ fontWeight:700, fontSize:ux(18), color:"var(--txt)", lineHeight:1.15 }}>{label}</div>
@@ -1291,6 +1292,120 @@ function StackBuilder({ lang, theme, picks, setPicks, autoRevealKey }) {
   );
 }
 
+/* ── ECOSYSTEM ASSESSMENT ─────────────────────────────────────────────── */
+function EcosystemAssessment({ lang, theme }) {
+  const totalVendors = V.length;
+  const totalLayers = LAYERS.length;
+  const freeCount = V.filter(v => v.priceFree).length;
+  const paidCount = totalVendors - freeCount;
+  const avgMetrics = Object.keys(ML).map(k => {
+    const avg = V.reduce((s, v) => s + v.metrics[k], 0) / totalVendors;
+    return { key: k, label: lang === "ko" ? MLK[k] : ML[k], value: +avg.toFixed(1) };
+  });
+  const topPerf = [...V].sort((a, b) => b.metrics.performance - a.metrics.performance).slice(0, 3);
+  const topCost = [...V].sort((a, b) => b.metrics.cost - a.metrics.cost).slice(0, 3);
+  const topEnterprise = [...V].sort((a, b) => b.metrics.enterprise - a.metrics.enterprise).slice(0, 3);
+
+  const sections = [
+    {
+      icon: "📊",
+      title: lang === "ko" ? "생태계 개요" : "Ecosystem Overview",
+      content: lang === "ko"
+        ? `${totalLayers}개 레이어에 걸쳐 ${totalVendors}개 벤더를 추적하고 있으며, 무료 ${freeCount}개 / 유료 ${paidCount}개로 구성됩니다. Foundation 모델에서 Tooling까지 엔터프라이즈 AI 스택의 전체 범위를 커버합니다.`
+        : `Tracking ${totalVendors} vendors across ${totalLayers} layers — ${freeCount} free-tier, ${paidCount} paid. Covers the full range from Foundation Models to Tooling & Infra for enterprise AI stacks.`,
+    },
+    {
+      icon: "🏆",
+      title: lang === "ko" ? "성능 리더" : "Performance Leaders",
+      content: lang === "ko"
+        ? `최고 성능: ${topPerf.map(v => `${v.name} (${v.metrics.performance}/10)`).join(", ")}. 이 벤더들은 벤치마크와 실제 워크로드에서 일관되게 높은 점수를 기록합니다.`
+        : `Top performers: ${topPerf.map(v => `${v.name} (${v.metrics.performance}/10)`).join(", ")}. These vendors consistently score highest on benchmarks and real-world workloads.`,
+    },
+    {
+      icon: "💰",
+      title: lang === "ko" ? "비용 효율 최적" : "Best Cost Efficiency",
+      content: lang === "ko"
+        ? `비용 효율 상위: ${topCost.map(v => `${v.name} (${v.metrics.cost}/10)`).join(", ")}. 오픈소스와 프리티어 옵션이 초기 도입 비용을 크게 절감해줍니다.`
+        : `Most cost-efficient: ${topCost.map(v => `${v.name} (${v.metrics.cost}/10)`).join(", ")}. Open-source and free-tier options significantly reduce initial adoption costs.`,
+    },
+    {
+      icon: "🏢",
+      title: lang === "ko" ? "엔터프라이즈 적합도" : "Enterprise Readiness",
+      content: lang === "ko"
+        ? `엔터프라이즈 준비도 상위: ${topEnterprise.map(v => `${v.name} (${v.metrics.enterprise}/10)`).join(", ")}. 보안, 규정 준수, SLA 측면에서 기업 환경에 가장 적합합니다.`
+        : `Enterprise-ready leaders: ${topEnterprise.map(v => `${v.name} (${v.metrics.enterprise}/10)`).join(", ")}. Best suited for corporate environments requiring security, compliance, and SLAs.`,
+    },
+    {
+      icon: "🔑",
+      title: lang === "ko" ? "핵심 인사이트" : "Key Insights",
+      content: lang === "ko"
+        ? "GPT-4o와 Claude가 범용 성능을 주도하고, Llama/Mistral이 데이터 주권 시나리오를 커버합니다. Azure와 AWS Bedrock이 플랫폼 계층을 양분하며, LangChain/Pinecone이 툴링 생태계의 핵심축입니다."
+        : "GPT-4o and Claude lead general-purpose performance while Llama/Mistral cover data sovereignty scenarios. Azure and AWS Bedrock dominate the platform layer, with LangChain/Pinecone anchoring the tooling ecosystem.",
+    },
+  ];
+
+  return (
+    <div className="asi" style={{
+      marginBottom: 18,
+      background: "linear-gradient(135deg,var(--card),var(--bg2))",
+      border: "1px solid var(--bdr)",
+      borderRadius: 18,
+      padding: "22px 24px",
+      boxShadow: "0 18px 36px var(--shadow)",
+    }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 16 }}>
+        <div style={{ width: 38, height: 38, borderRadius: 12, background: "linear-gradient(135deg,var(--g1),var(--g2))", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, boxShadow: "0 8px 20px var(--shadow)" }}>
+          <Star size={18} color="white"/>
+        </div>
+        <div>
+          <div style={{ fontWeight: 800, fontSize: ux(20), color: "var(--txt)", lineHeight: 1.15 }}>
+            {lang === "ko" ? "AI 벤더 생태계 평가 요약" : "AI Vendor Ecosystem Assessment"}
+          </div>
+          <div style={{ fontSize: ux(12.5), color: "var(--dim)" }}>
+            {lang === "ko" ? `${totalVendors}개 벤더 · ${USE_CASES.length}개 유즈케이스 기준 종합 분석` : `Comprehensive analysis across ${totalVendors} vendors · ${USE_CASES.length} use cases`}
+          </div>
+        </div>
+      </div>
+
+      {/* Metric averages bar */}
+      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 18 }}>
+        {avgMetrics.map(m => (
+          <div key={m.key} style={{
+            flex: "1 1 140px", minWidth: 130,
+            background: "var(--card)", border: "1px solid var(--bdr)", borderRadius: 12,
+            padding: `${ux(10)}px ${ux(14)}px`,
+            display: "flex", alignItems: "center", gap: ux(10),
+          }}>
+            <div style={{ fontSize: ux(20), fontWeight: 900, color: m.value >= 7.5 ? "var(--ok)" : m.value >= 6 ? "var(--warn)" : "var(--err)", lineHeight: 1 }}>
+              {m.value}
+            </div>
+            <div>
+              <div style={{ fontSize: ux(11), fontWeight: 700, color: "var(--txt)", lineHeight: 1.2 }}>{m.label}</div>
+              <div style={{ fontSize: ux(10), color: "var(--dim)", lineHeight: 1.2 }}>{lang === "ko" ? "평균" : "avg"} /10</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Insight cards */}
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))", gap: 10 }}>
+        {sections.map((s, i) => (
+          <div key={i} style={{
+            background: "var(--card)", border: "1px solid var(--bdr)", borderRadius: 13,
+            padding: `${ux(14)}px ${ux(16)}px`,
+          }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: ux(8) }}>
+              <span style={{ fontSize: ux(18) }}>{s.icon}</span>
+              <span style={{ fontWeight: 700, fontSize: ux(13.5), color: "var(--txt)" }}>{s.title}</span>
+            </div>
+            <p style={{ fontSize: ux(12.5), color: "var(--dim)", lineHeight: 1.65 }}>{s.content}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 /* ── APP ──────────────────────────────────────────────────────────────── */
 export default function App() {
   const [theme, setTheme] = useState("dark");
@@ -1396,11 +1511,12 @@ export default function App() {
 
               {view==="map" ? (
                 <div key="map">
+                  <EcosystemAssessment lang={lang} theme={theme}/>
                   {LAYERS.map((l,i) => {
                     const lv = V.filter(v => v.layer===l.id);
                     return (
                       <div key={l.id} style={{ display:"flex", flexDirection:"column", gap:8 }}>
-                        <LayerSection layer={l} vendors={lv} selectedUseCase={uc} selectedIds={selIds} onVendorClick={handleVendorClick} index={i} lang={lang}/>
+                        <LayerSection layer={l} vendors={lv} selectedUseCase={uc} selectedIds={selIds} onVendorClick={handleVendorClick} index={i} lang={lang} theme={theme}/>
                         {i < LAYERS.length-1 && <FlowArrow/>}
                       </div>
                     );

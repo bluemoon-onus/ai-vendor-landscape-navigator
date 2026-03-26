@@ -1,7 +1,7 @@
 # AI Vendor Ecosystem Navigator — Claude Code Handoff
 
 > 작성일: 2026-03-26  
-> 현재 버전: v1.5.6
+> 현재 버전: v1.6.0
 > 이관 대상: Claude Code  
 > 목적: 최종 polish, visual QA, 마무리 이터레이션
 
@@ -84,6 +84,7 @@ Sales Director가 고객 미팅에서 AI 벤더 생태계를 레이어별로 설
    - `ComparisonView`
    - `DecisionFlow`
    - `StackBuilder`
+   - `EcosystemAssessment`
 5. `App`
 
 현재 App state:
@@ -204,7 +205,7 @@ const [stackAutoRevealKey, setStackAutoRevealKey] = useState(0);
 `DetailModal`은 v1.5.6에서 완전히 제거되었다. hover tooltip이 대체 UX다.
 
 4. 파일 크기
-`src/App.jsx`가 1500 LOC를 넘어서 line-based 수정보다 `rg` 검색 기반으로 블록을 찾는 편이 빠르다.
+`src/App.jsx`가 1600 LOC를 넘어서 line-based 수정보다 `rg` 검색 기반으로 블록을 찾는 편이 빠르다.
 
 ---
 

@@ -5,6 +5,25 @@
 
 ---
 
+## [1.6.0] 2026-03-26 — Ecosystem Assessment + light-mode color fix
+
+### Added
+- `EcosystemAssessment` 컴포넌트: Explore Map 상단에 AI 벤더 생태계 종합 평가 섹션 추가
+  - 6개 메트릭 평균 점수 (Performance, Integration, Cost, Enterprise, Scalability, Community) 시각화
+  - 성능 리더, 비용 효율, 엔터프라이즈 적합도, 핵심 인사이트 5개 분석 카드
+  - 영문/한국어 모두 지원
+
+### Fixed
+- `LayerSection` 아이콘 색상: 라이트 모드에서 `layer.color` 대신 `layer.colorLight` 사용
+  - `#C4B5FD`(Tooling), `#A78BFA`(Vertical) 등 밝은 보라색이 흰 배경에서 안 보이던 문제 해결
+  - `theme` prop을 `LayerSection`에 전달하여 테마별 아이콘 색상 분기 처리
+- 라이트 모드 전체 탭 재검수: Explore / Decision Flow / Stack Builder 모두 검정 텍스트 확인
+
+### Build
+- `npm run build` 성공 (588KB gzip 172KB)
+
+---
+
 ## [1.5.6] 2026-03-26 — legacy cleanup + light-mode final QA
 
 ### Removed
