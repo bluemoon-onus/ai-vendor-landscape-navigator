@@ -40,45 +40,34 @@ function LogoBadge({ vendorId, size = 44 }) {
   const cfg = LOGOS[vendorId] || { abbr:"AI", bg:"#6366F1", color:"#fff", border:"#4F46E5", home:null };
   const [hasError, setHasError] = useState(false);
   const fs = size <= 40 ? 10 : size <= 50 ? 11 : 13;
-  const imageSize = Math.round(size * 0.74);
-  const shellRadius = Math.max(8, Math.round(size * 0.24));
+  const imageSize = Math.round(size);
   const logoSrc = cfg.home && !hasError
     ? `https://www.google.com/s2/favicons?domain_url=${encodeURIComponent(cfg.home)}&sz=128`
     : null;
+  useEffect(() => {
+    setHasError(false);
+  }, [vendorId]);
   return (
     <div style={{
-      width:size, height:size, borderRadius:10, flexShrink:0,
-      background:`linear-gradient(145deg,${cfg.bg},${cfg.border})`,
+      width:size, height:size, flexShrink:0,
       display:"flex", alignItems:"center", justifyContent:"center",
       fontWeight:800, fontSize:fs, color:cfg.color,
       letterSpacing:-0.3, lineHeight:1.1, textAlign:"center",
-      padding:Math.max(2, Math.round(size * 0.05)), boxShadow:`0 2px 8px ${cfg.bg}55`,
-      border:`1px solid ${cfg.border}`,
+      padding:0,
       fontFamily:"'Outfit',sans-serif",
     }}>
-      <div style={{
-        width:"100%",
-        height:"100%",
-        borderRadius:shellRadius,
-        background:"var(--logo-shell)",
-        display:"flex",
-        alignItems:"center",
-        justifyContent:"center",
-        overflow:"hidden",
-      }}>
-        {logoSrc ? (
-          <img
-            src={logoSrc}
-            alt={`${cfg.abbr} logo`}
-            width={imageSize}
-            height={imageSize}
-            style={{ width:imageSize, height:imageSize, objectFit:"contain" }}
-            onError={() => setHasError(true)}
-          />
-        ) : (
-          <span style={{ padding:"2px 4px" }}>{cfg.abbr}</span>
-        )}
-      </div>
+      {logoSrc ? (
+        <img
+          src={logoSrc}
+          alt={`${cfg.abbr} logo`}
+          width={imageSize}
+          height={imageSize}
+          style={{ width:imageSize, height:imageSize, objectFit:"contain" }}
+          onError={() => setHasError(true)}
+        />
+      ) : (
+        <span style={{ color:"var(--txt)" }}>{cfg.abbr}</span>
+      )}
     </div>
   );
 }
@@ -356,6 +345,8 @@ function formatAnnualEstimate(amount, lang) {
 
 const UI_SCALE = 1.5;
 const ux = value => Number((value * UI_SCALE).toFixed(1));
+const CARD_SCALE = 0.85;
+const cx = value => Number((ux(value) * CARD_SCALE).toFixed(1));
 
 function getVendorTooltipPosition(rect) {
   const gap = 14;
@@ -446,16 +437,16 @@ const CSS = `
   --accentText:#A78BFA;
   --txt:#F1F0FF;--dim:#6B7280;--bdr:#1E1E2E;--g1:#8B5CF6;--g2:#06B6D4;
   --ok:#10B981;--okbg:rgba(16,185,129,0.12);--warn:#F59E0B;--warnbg:rgba(245,158,11,0.12);--err:#EF4444;--errbg:rgba(239,68,68,0.12);
-  --shadow:rgba(0,0,0,0.42);--overlay:rgba(10,10,15,0.72);--logo-shell:rgba(255,255,255,0.98);
+  --shadow:rgba(0,0,0,0.42);--overlay:rgba(10,10,15,0.72);
 }
 [data-theme="light"]{
   --bg:#F8FAFC;--bg2:#F1F5F9;--card:#FFFFFF;--cardh:#FFFFFF;
-  --a:#8B5CF6;--a2:#7C3AED;--a3:#06B6D4;--cy:#06B6D4;--a-rgb:139,92,246;--cy-rgb:6,182,212;
+  --a:#8B5CF6;--a2:#0F172A;--a3:#06B6D4;--cy:#06B6D4;--a-rgb:139,92,246;--cy-rgb:6,182,212;
   --adim:rgba(139,92,246,0.08);--aglow:rgba(139,92,246,0.12);--cydim:rgba(6,182,212,0.1);
   --accentText:#0F172A;
-  --txt:#0F172A;--dim:#64748B;--bdr:#E2E8F0;--g1:#8B5CF6;--g2:#06B6D4;
+  --txt:#0F172A;--dim:#334155;--bdr:#E2E8F0;--g1:#8B5CF6;--g2:#06B6D4;
   --ok:#10B981;--okbg:rgba(16,185,129,0.1);--warn:#F59E0B;--warnbg:rgba(245,158,11,0.1);--err:#EF4444;--errbg:rgba(239,68,68,0.1);
-  --shadow:rgba(15,23,42,0.1);--overlay:rgba(15,23,42,0.28);--logo-shell:#FFFFFF;
+  --shadow:rgba(15,23,42,0.1);--overlay:rgba(15,23,42,0.28);
 }
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);font-size:21px;line-height:1.5}
 .root{min-height:100vh;background:var(--bg);
@@ -484,8 +475,8 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);font-
 /* stack node */
 .sn{transition:all .25s cubic-bezier(.4,0,.2,1);cursor:pointer;
   border:1px dashed var(--bdr);background:var(--card);
-  position:relative;border-radius:12px;padding:12px 14px;
-  display:flex;align-items:center;gap:10px;box-shadow:0 10px 24px var(--shadow);}
+  position:relative;border-radius:12px;padding:10px 12px;
+  display:flex;align-items:center;gap:8px;box-shadow:0 10px 24px var(--shadow);}
 .sn:hover{border-color:var(--a);background:var(--cardh);transform:translateY(-2px)}
 .sn.pick{border-style:solid;border-color:var(--a);background:linear-gradient(135deg,var(--cardh),var(--adim));box-shadow:0 0 0 1px var(--adim),0 14px 28px var(--shadow)}
 
@@ -596,17 +587,17 @@ function VendorNode({ vendor, isHighlighted, isDimmed, isSelected, onClick, dela
         onClick={() => { hideTooltip(); onClick(vendor); }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={hideTooltip}
-        style={{ "--layer-accent":layerMeta?.color ?? "var(--a)", animationDelay:`${delay}ms`, minHeight:ux(68), padding:`${ux(12)}px ${ux(14)}px ${ux(12)}px ${ux(18)}px` }}
+        style={{ "--layer-accent":layerMeta?.color ?? "var(--a)", animationDelay:`${delay}ms`, minHeight:cx(68), padding:`${cx(12)}px ${cx(14)}px ${cx(12)}px ${cx(18)}px`, gap:cx(12) }}
       >
         {isSelected && <div className="chk"><Check size={11} color="white" strokeWidth={3}/></div>}
-        <LogoBadge vendorId={vendor.id} size={ux(40)}/>
+        <LogoBadge vendorId={vendor.id} size={cx(40)}/>
         <div style={{ minWidth:0, flex:1 }}>
-          <div style={{ fontWeight:700, fontSize:ux(16), color:"var(--txt)", lineHeight:1.2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{vendor.name}</div>
-          <div style={{ fontSize:ux(12), color:"var(--dim)", lineHeight:1.3 }}>{vendor.org}</div>
+          <div style={{ fontWeight:700, fontSize:cx(16), color:"var(--txt)", lineHeight:1.2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{vendor.name}</div>
+          <div style={{ fontSize:cx(12), color:"var(--dim)", lineHeight:1.3 }}>{vendor.org}</div>
         </div>
         <div style={{ textAlign:"right", flexShrink:0 }}>
-          {vendor.priceFree && <div style={{ fontSize:ux(12), color:"var(--ok)", fontWeight:700, lineHeight:1.2 }}>{lang==="ko"?"무료":"Free"}</div>}
-          {vendor.priceLabel && <div style={{ fontSize:ux(12), color:"var(--dim)", lineHeight:1.2 }}>{vendor.priceLabel}</div>}
+          {vendor.priceFree && <div style={{ fontSize:cx(12), color:"var(--ok)", fontWeight:700, lineHeight:1.2 }}>{lang==="ko"?"무료":"Free"}</div>}
+          {vendor.priceLabel && <div style={{ fontSize:cx(12), color:"var(--dim)", lineHeight:1.2 }}>{vendor.priceLabel}</div>}
         </div>
       </div>
 
@@ -1258,10 +1249,10 @@ function StackBuilder({ lang, theme, picks, setPicks, autoRevealKey }) {
                 {lv.map(v => (
                   <div key={v.id} className={`sn ${picks[layer.id]===v.id?"pick":""}`} onClick={() => handlePick(layer.id,v.id)}>
                     {picks[layer.id]===v.id && <div className="chk" style={{ width:18,height:18 }}><Check size={10} color="white" strokeWidth={3}/></div>}
-                    <LogoBadge vendorId={v.id} size={ux(36)}/>
+                    <LogoBadge vendorId={v.id} size={cx(36)}/>
                     <div style={{ minWidth:0, flex:1 }}>
-                      <div style={{ fontWeight:700, fontSize:ux(13), lineHeight:1.2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{v.name}</div>
-                      <div style={{ fontSize:ux(11), color:"var(--dim)" }}>
+                      <div style={{ fontWeight:700, fontSize:cx(13), color:"var(--txt)", lineHeight:1.2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{v.name}</div>
+                      <div style={{ fontSize:cx(11), color:"var(--dim)" }}>
                         {v.priceFree ? <span style={{ color:"var(--ok)" }}>{lang==="ko"?"무료":"Free"}</span> : ""}
                         {v.priceFree && v.priceLabel ? " · " : ""}
                         {v.priceLabel}
