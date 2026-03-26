@@ -40,7 +40,7 @@ function LogoBadge({ vendorId, size = 44 }) {
   const cfg = LOGOS[vendorId] || { abbr:"AI", bg:"#6366F1", color:"#fff", border:"#4F46E5", home:null };
   const [hasError, setHasError] = useState(false);
   const fs = size <= 40 ? 10 : size <= 50 ? 11 : 13;
-  const imageSize = Math.round(size * 0.56);
+  const imageSize = Math.round(size * 0.74);
   const shellRadius = Math.max(8, Math.round(size * 0.24));
   const logoSrc = cfg.home && !hasError
     ? `https://www.google.com/s2/favicons?domain_url=${encodeURIComponent(cfg.home)}&sz=128`
@@ -52,7 +52,7 @@ function LogoBadge({ vendorId, size = 44 }) {
       display:"flex", alignItems:"center", justifyContent:"center",
       fontWeight:800, fontSize:fs, color:cfg.color,
       letterSpacing:-0.3, lineHeight:1.1, textAlign:"center",
-      padding:Math.max(3, Math.round(size * 0.08)), boxShadow:`0 2px 8px ${cfg.bg}55`,
+      padding:Math.max(2, Math.round(size * 0.05)), boxShadow:`0 2px 8px ${cfg.bg}55`,
       border:`1px solid ${cfg.border}`,
       fontFamily:"'Outfit',sans-serif",
     }}>
@@ -61,7 +61,6 @@ function LogoBadge({ vendorId, size = 44 }) {
         height:"100%",
         borderRadius:shellRadius,
         background:"var(--logo-shell)",
-        border:"1px solid var(--logo-ring)",
         display:"flex",
         alignItems:"center",
         justifyContent:"center",
@@ -361,7 +360,7 @@ const ux = value => Number((value * UI_SCALE).toFixed(1));
 function getVendorTooltipPosition(rect) {
   const gap = 14;
   const width = 354;
-  const estimatedHeight = 204;
+  const estimatedHeight = 228;
   const viewportPad = 12;
   const fitsRight = rect.right + gap + width <= window.innerWidth - viewportPad;
 
@@ -446,7 +445,7 @@ const CSS = `
   --adim:rgba(139,92,246,0.12);--aglow:rgba(139,92,246,0.18);--cydim:rgba(6,182,212,0.12);
   --txt:#F1F0FF;--dim:#6B7280;--bdr:#1E1E2E;--g1:#8B5CF6;--g2:#06B6D4;
   --ok:#10B981;--okbg:rgba(16,185,129,0.12);--warn:#F59E0B;--warnbg:rgba(245,158,11,0.12);--err:#EF4444;--errbg:rgba(239,68,68,0.12);
-  --shadow:rgba(0,0,0,0.42);--overlay:rgba(10,10,15,0.72);--logo-shell:rgba(255,255,255,0.96);--logo-ring:rgba(255,255,255,0.36);
+  --shadow:rgba(0,0,0,0.42);--overlay:rgba(10,10,15,0.72);--logo-shell:rgba(255,255,255,0.98);
 }
 [data-theme="light"]{
   --bg:#F8FAFC;--bg2:#F1F5F9;--card:#FFFFFF;--cardh:#FFFFFF;
@@ -454,7 +453,7 @@ const CSS = `
   --adim:rgba(139,92,246,0.08);--aglow:rgba(139,92,246,0.12);--cydim:rgba(6,182,212,0.1);
   --txt:#0F172A;--dim:#64748B;--bdr:#E2E8F0;--g1:#8B5CF6;--g2:#06B6D4;
   --ok:#10B981;--okbg:rgba(16,185,129,0.1);--warn:#F59E0B;--warnbg:rgba(245,158,11,0.1);--err:#EF4444;--errbg:rgba(239,68,68,0.1);
-  --shadow:rgba(15,23,42,0.1);--overlay:rgba(15,23,42,0.28);--logo-shell:#FFFFFF;--logo-ring:rgba(15,23,42,0.08);
+  --shadow:rgba(15,23,42,0.1);--overlay:rgba(15,23,42,0.28);--logo-shell:#FFFFFF;
 }
 body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);font-size:21px;line-height:1.5}
 .root{min-height:100vh;background:var(--bg);
@@ -645,7 +644,7 @@ function VendorNode({ vendor, isHighlighted, isDimmed, isSelected, onClick, dela
             marginBottom:ux(10),
             overflow:"hidden",
             display:"-webkit-box",
-            WebkitLineClamp:1,
+            WebkitLineClamp:2,
             WebkitBoxOrient:"vertical",
           }}>
             "{insight}"
@@ -1377,7 +1376,6 @@ export default function App() {
   const [tab,   setTab]   = useState("explore");
   const [uc,    setUc]    = useState(null);
   const [selIds,setSelIds]= useState([]);
-  const [detail,setDetail]= useState(null);
   const [view,  setView]  = useState("map");
   const [stackPicks, setStackPicks] = useState(makeEmptyStack);
   const [stackAutoRevealKey, setStackAutoRevealKey] = useState(0);
@@ -1385,16 +1383,14 @@ export default function App() {
   const handleVendorClick = v => {
     if (!selIds.includes(v.id) && selIds.length < 6) setSelIds(p => [...p, v.id]);
     else if (selIds.includes(v.id)) setSelIds(p => p.filter(x => x!==v.id));
-    setDetail(v);
   };
   const handleRemove = id => { setSelIds(p => p.filter(x => x!==id)); };
-  const handleCompare = () => { if (selIds.length>=2) { setDetail(null); setView("compare"); } };
+  const handleCompare = () => { if (selIds.length>=2) { setView("compare"); } };
   const handleBack = () => setView("map");
-  const handleClear = () => { setSelIds([]); setDetail(null); setView("map"); };
+  const handleClear = () => { setSelIds([]); setView("map"); };
   const handleBuildStack = picks => {
     setStackPicks({ ...picks });
     setStackAutoRevealKey(key => key + 1);
-    setDetail(null);
     setTab("stack");
   };
   const selectedVendors = V.filter(v => selIds.includes(v.id));
@@ -1430,20 +1426,23 @@ export default function App() {
               </div>
             </div>
             <div style={{ display:"flex", alignItems:"center", gap:7, flexShrink:0 }}>
+              <button className="pill" onClick={() => setTheme(t=>t==="dark"?"light":"dark")} style={{ fontWeight:700 }}>
+                {theme==="dark" ? <Sun size={14}/> : <Moon size={14}/>}
+                {lang==="ko"
+                  ? (theme==="dark" ? "라이트 모드" : "다크 모드")
+                  : (theme==="dark" ? "Light Mode" : "Dark Mode")}
+              </button>
               <button className="pill" onClick={() => setLang(l=>l==="en"?"ko":"en")} style={{ fontWeight:700 }}>
                 {lang==="en"?"🇰🇷 한국어":"🇺🇸 English"}
-              </button>
-              <button className="pill" onClick={() => setTheme(t=>t==="dark"?"light":"dark")} style={{ padding:"7px 11px" }}>
-                {theme==="dark" ? <Sun size={14}/> : <Moon size={14}/>}
               </button>
             </div>
           </div>
 
           {/* Tabs */}
           <div style={{ display:"flex", gap:6, padding:"14px 0 0", marginLeft:60 }}>
-            <button className={`tab ${tab==="explore"?"on":""}`} onClick={() => { setDetail(null); setTab("explore"); setView("map"); }}><Layers size={14}/> {L.explore}</button>
-            <button className={`tab ${tab==="decision"?"on":""}`} onClick={() => { setDetail(null); setTab("decision"); }}><Shield size={14}/> {L.decision}</button>
-            <button className={`tab ${tab==="stack"?"on":""}`} onClick={() => { setDetail(null); setStackAutoRevealKey(0); setTab("stack"); }}><Boxes size={14}/> {L.stack}</button>
+            <button className={`tab ${tab==="explore"?"on":""}`} onClick={() => { setTab("explore"); setView("map"); }}><Layers size={14}/> {L.explore}</button>
+            <button className={`tab ${tab==="decision"?"on":""}`} onClick={() => { setTab("decision"); }}><Shield size={14}/> {L.decision}</button>
+            <button className={`tab ${tab==="stack"?"on":""}`} onClick={() => { setStackAutoRevealKey(0); setTab("stack"); }}><Boxes size={14}/> {L.stack}</button>
           </div>
         </div>
 
@@ -1492,9 +1491,6 @@ export default function App() {
 
           {tab==="stack" && <StackBuilder key="stack" lang={lang} picks={stackPicks} setPicks={setStackPicks} autoRevealKey={stackAutoRevealKey}/>}
         </div>
-
-        {/* DETAIL MODAL */}
-        {detail && <DetailModal vendor={detail} onClose={() => setDetail(null)} lang={lang}/>}
       </div>
     </LangCtx.Provider>
   );

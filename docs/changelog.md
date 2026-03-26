@@ -5,6 +5,17 @@
 
 ---
 
+## [1.5.2] 2026-03-26 — hover-first vendor cards + light mode toggle polish
+
+### Changed
+- Explore Map 벤더 카드 클릭 동작을 `선택 전용`으로 변경
+  - 클릭 시 비교 선택만 토글되고 상세 모달은 더 이상 열리지 않음
+  - 벤더 정보 확인은 기존 hover 툴팁으로 일원화
+- `LogoBadge` 내부 로고 테두리를 제거하고 CI 이미지를 더 크게 확장
+  - 기존 안쪽 보더 영역까지 로고가 차지하도록 조정
+- 다크/라이트 모드 토글 버튼을 헤더 우측 상단에서 언어 버튼 왼쪽으로 이동
+  - 아이콘 전용 버튼 대신 `Light Mode / Dark Mode` 텍스트가 보이는 pill 형태로 개선
+
 ## [1.5.1] 2026-03-26 — 5-column vendor grid + official CI logos + annual stack total
 
 ### Added
