@@ -27,6 +27,9 @@
   - 헤더 하단 1px 보더, 새 타이포 계층, 카드/탭/필 버튼 스타일 재정렬
   - VendorNode 카드에 표면형 배경, 호버 보더, 레이어 컬러 좌측 accent 추가
   - 레이어 섹션 간격과 카드 밀도를 조정해 대시보드형 레이아웃으로 정리
+- 전체 페이지 가독성 확대
+  - 주요 텍스트와 카드 내부 타이포를 약 1.5배 확대
+  - Stack Builder의 `Estimated Monthly Cost Breakdown` 아이템을 카드형 그리드로 재배치해 간격 확보
 
 ### Planned
 - F-09: 한국 시장 레이어 (Naver HyperCLOVA, KT AI, Samsung SDS 태그)

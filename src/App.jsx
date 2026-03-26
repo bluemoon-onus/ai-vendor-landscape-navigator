@@ -282,10 +282,13 @@ function getStackPriceText(vendor, lang) {
   return `${freeLabel} · ${vendor.priceLabel}`;
 }
 
+const UI_SCALE = 1.5;
+const ux = value => Number((value * UI_SCALE).toFixed(1));
+
 function getVendorTooltipPosition(rect) {
   const gap = 14;
-  const width = 236;
-  const estimatedHeight = 136;
+  const width = 354;
+  const estimatedHeight = 204;
   const viewportPad = 12;
   const fitsRight = rect.right + gap + width <= window.innerWidth - viewportPad;
 
@@ -380,7 +383,7 @@ const CSS = `
   --ok:#10B981;--okbg:rgba(16,185,129,0.1);--warn:#F59E0B;--warnbg:rgba(245,158,11,0.1);--err:#EF4444;--errbg:rgba(239,68,68,0.1);
   --shadow:rgba(15,23,42,0.1);--overlay:rgba(15,23,42,0.28);
 }
-body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);font-size:14px;line-height:1.5}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);font-size:21px;line-height:1.5}
 .root{min-height:100vh;background:var(--bg);
   background-image:radial-gradient(ellipse 82% 50% at 12% 92%,rgba(var(--a-rgb),.12) 0%,transparent 60%),
     radial-gradient(ellipse 60% 42% at 88% 8%,rgba(var(--cy-rgb),.08) 0%,transparent 58%);
@@ -413,25 +416,25 @@ body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--txt);font-
 /* pills */
 .pill{transition:all .2s ease;cursor:pointer;border:1px solid var(--bdr);
   font-family:'Outfit',sans-serif;background:var(--card);color:var(--txt);
-  border-radius:999px;padding:8px 15px;font-size:13.5px;font-weight:500;
+  border-radius:999px;padding:12px 18px;font-size:20px;font-weight:500;
   display:inline-flex;align-items:center;gap:5px;white-space:nowrap;}
 .pill:hover{border-color:var(--a);background:var(--cardh)}
 .pill.on{background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;color:#fff;box-shadow:0 10px 22px var(--shadow)}
 
 /* tabs */
 .tab{transition:all .2s ease;cursor:pointer;border:none;font-family:'Outfit',sans-serif;
-  background:var(--card);color:var(--dim);padding:9px 18px;font-size:14px;font-weight:600;
+  background:var(--card);color:var(--dim);padding:13px 22px;font-size:21px;font-weight:600;
   border-radius:10px;display:flex;align-items:center;gap:6px;border:1px solid var(--bdr);}
 .tab:hover{color:var(--txt);border-color:var(--a);background:var(--cardh)}
 .tab.on{color:#fff;background:linear-gradient(135deg,var(--g1),var(--g2));border-color:transparent;box-shadow:0 12px 24px var(--shadow)}
 
 /* buttons */
 .cbtn{background:linear-gradient(135deg,var(--g1),var(--g2));transition:all .25s ease;
-  font-family:'Outfit',sans-serif;border:none;border-radius:12px;padding:10px 20px;
-  color:#fff;cursor:pointer;font-weight:700;font-size:14px;display:flex;align-items:center;gap:6px;}
+  font-family:'Outfit',sans-serif;border:none;border-radius:12px;padding:14px 24px;
+  color:#fff;cursor:pointer;font-weight:700;font-size:21px;display:flex;align-items:center;gap:8px;}
 .cbtn:hover{box-shadow:0 16px 28px var(--shadow);transform:translateY(-1px)}
 .ghost{background:transparent;border:1px solid var(--bdr);border-radius:10px;padding:7px 13px;
-  cursor:pointer;color:var(--dim);font-size:13.5px;font-family:'Outfit',sans-serif;
+  cursor:pointer;color:var(--dim);font-size:20px;font-family:'Outfit',sans-serif;
   display:flex;align-items:center;gap:5px;transition:all .2s;}
 .ghost:hover{border-color:var(--a);color:var(--txt);background:var(--cardh)}
 
@@ -512,17 +515,17 @@ function VendorNode({ vendor, isHighlighted, isDimmed, isSelected, onClick, dela
         onClick={() => { hideTooltip(); onClick(vendor); }}
         onMouseEnter={handleMouseEnter}
         onMouseLeave={hideTooltip}
-        style={{ "--layer-accent":layerMeta?.color ?? "var(--a)", animationDelay:`${delay}ms`, minHeight:68 }}
+        style={{ "--layer-accent":layerMeta?.color ?? "var(--a)", animationDelay:`${delay}ms`, minHeight:ux(68), padding:`${ux(12)}px ${ux(14)}px ${ux(12)}px ${ux(18)}px` }}
       >
         {isSelected && <div className="chk"><Check size={11} color="white" strokeWidth={3}/></div>}
-        <LogoBadge vendorId={vendor.id} size={40}/>
+        <LogoBadge vendorId={vendor.id} size={ux(40)}/>
         <div style={{ minWidth:0, flex:1 }}>
-          <div style={{ fontWeight:700, fontSize:16, lineHeight:1.2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{vendor.name}</div>
-          <div style={{ fontSize:12, color:"var(--dim)", lineHeight:1.3 }}>{vendor.org}</div>
+          <div style={{ fontWeight:700, fontSize:ux(16), lineHeight:1.2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{vendor.name}</div>
+          <div style={{ fontSize:ux(12), color:"var(--dim)", lineHeight:1.3 }}>{vendor.org}</div>
         </div>
         <div style={{ textAlign:"right", flexShrink:0 }}>
-          {vendor.priceFree && <div style={{ fontSize:12, color:"var(--ok)", fontWeight:700, lineHeight:1.2 }}>{lang==="ko"?"무료":"Free"}</div>}
-          {vendor.priceLabel && <div style={{ fontSize:12, color:"var(--dim)", lineHeight:1.2 }}>{vendor.priceLabel}</div>}
+          {vendor.priceFree && <div style={{ fontSize:ux(12), color:"var(--ok)", fontWeight:700, lineHeight:1.2 }}>{lang==="ko"?"무료":"Free"}</div>}
+          {vendor.priceLabel && <div style={{ fontSize:ux(12), color:"var(--dim)", lineHeight:1.2 }}>{vendor.priceLabel}</div>}
         </div>
       </div>
 
@@ -541,25 +544,25 @@ function VendorNode({ vendor, isHighlighted, isDimmed, isSelected, onClick, dela
             background:"linear-gradient(135deg,var(--bg2),var(--card))",
             boxShadow:"0 18px 44px var(--shadow)",
             backdropFilter:"blur(14px)",
-            padding:14,
+            padding:ux(14),
           }}
         >
-          <div style={{ display:"flex", alignItems:"center", gap:9, marginBottom:10 }}>
-            <LogoBadge vendorId={vendor.id} size={28}/>
+          <div style={{ display:"flex", alignItems:"center", gap:ux(9), marginBottom:ux(10) }}>
+            <LogoBadge vendorId={vendor.id} size={ux(28)}/>
             <div style={{ minWidth:0 }}>
-              <div style={{ fontSize:13.5, fontWeight:800, lineHeight:1.2 }}>{vendor.name}</div>
-              <div style={{ fontSize:11, color:"var(--dim)", lineHeight:1.2 }}>{vendor.org}</div>
+              <div style={{ fontSize:ux(13.5), fontWeight:800, lineHeight:1.2 }}>{vendor.name}</div>
+              <div style={{ fontSize:ux(11), color:"var(--dim)", lineHeight:1.2 }}>{vendor.org}</div>
             </div>
           </div>
 
-          <div style={{ fontSize:10.5, color:"var(--a2)", fontWeight:700, textTransform:"uppercase", letterSpacing:0.8, marginBottom:5 }}>
+          <div style={{ fontSize:ux(10.5), color:"var(--a2)", fontWeight:700, textTransform:"uppercase", letterSpacing:0.8, marginBottom:ux(5) }}>
             {lang==="ko"?"인사이트":"Insight"}
           </div>
           <p style={{
-            fontSize:12.5,
+            fontSize:ux(12.5),
             color:"var(--txt)",
             lineHeight:1.45,
-            marginBottom:10,
+            marginBottom:ux(10),
             overflow:"hidden",
             display:"-webkit-box",
             WebkitLineClamp:1,
@@ -568,15 +571,15 @@ function VendorNode({ vendor, isHighlighted, isDimmed, isSelected, onClick, dela
             "{insight}"
           </p>
 
-          <div style={{ fontSize:10.5, color:"var(--a2)", fontWeight:700, textTransform:"uppercase", letterSpacing:0.8, marginBottom:6 }}>
+          <div style={{ fontSize:ux(10.5), color:"var(--a2)", fontWeight:700, textTransform:"uppercase", letterSpacing:0.8, marginBottom:ux(6) }}>
             {lang==="ko"?"핵심 강점":"Top Strengths"}
           </div>
-          <div style={{ display:"grid", gap:5, marginBottom:10 }}>
+          <div style={{ display:"grid", gap:ux(5), marginBottom:ux(10) }}>
             {strengths.map((strength, index) => (
-              <div key={`${vendor.id}-tip-${index}`} style={{ display:"flex", gap:6, alignItems:"flex-start" }}>
+              <div key={`${vendor.id}-tip-${index}`} style={{ display:"flex", gap:ux(6), alignItems:"flex-start" }}>
                 <span style={{ color:"var(--ok)", fontWeight:800, lineHeight:1.4 }}>•</span>
                 <span style={{
-                  fontSize:12,
+                  fontSize:ux(12),
                   color:"var(--dim)",
                   lineHeight:1.5,
                   overflow:"hidden",
@@ -590,9 +593,9 @@ function VendorNode({ vendor, isHighlighted, isDimmed, isSelected, onClick, dela
             ))}
           </div>
 
-          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:10, borderTop:"1px solid var(--bdr)", paddingTop:10 }}>
-            <div style={{ fontSize:11, color:"var(--dim)", fontWeight:600 }}>{lang==="ko"?"가격":"Price"}</div>
-            <div style={{ fontSize:11.5, color:vendor.priceFree ? "var(--ok)" : "var(--a2)", fontWeight:700, textAlign:"right" }}>
+          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:ux(10), borderTop:"1px solid var(--bdr)", paddingTop:ux(10) }}>
+            <div style={{ fontSize:ux(11), color:"var(--dim)", fontWeight:600 }}>{lang==="ko"?"가격":"Price"}</div>
+            <div style={{ fontSize:ux(11.5), color:vendor.priceFree ? "var(--ok)" : "var(--a2)", fontWeight:700, textAlign:"right" }}>
               {getStackPriceText(vendor, lang)}
             </div>
           </div>
@@ -631,10 +634,10 @@ function LayerSection({ layer, vendors, selectedUseCase, selectedIds, onVendorCl
           <Icon size={16} color={layer.color}/>
         </div>
         <div>
-          <div style={{ fontWeight:700, fontSize:18, color:"var(--txt)", lineHeight:1.15 }}>{label}</div>
-          <div style={{ fontSize:12, color:"var(--dim)" }}>{desc}</div>
+          <div style={{ fontWeight:700, fontSize:ux(18), color:"var(--txt)", lineHeight:1.15 }}>{label}</div>
+          <div style={{ fontSize:ux(12), color:"var(--dim)" }}>{desc}</div>
         </div>
-        <div style={{ marginLeft:"auto", fontSize:12, color:"var(--dim)", background:"var(--bg2)", border:"1px solid var(--bdr)", padding:"4px 10px", borderRadius:999, fontWeight:500 }}>
+        <div style={{ marginLeft:"auto", fontSize:ux(12), color:"var(--dim)", background:"var(--bg2)", border:"1px solid var(--bdr)", padding:`${ux(4)}px ${ux(10)}px`, borderRadius:999, fontWeight:500 }}>
           {vendors.length} {lang==="ko"?"벤더":"vendors"}
         </div>
       </div>
@@ -678,8 +681,8 @@ function DetailModal({ vendor, onClose, lang }) {
           <div style={{ display:"flex", alignItems:"center", gap:14 }}>
             <LogoBadge vendorId={vendor.id} size={56}/>
             <div>
-              <div style={{ fontWeight:900, fontSize:22, lineHeight:1.2 }}>{vendor.name}</div>
-              <div style={{ color:"var(--dim)", fontSize:13, marginTop:2 }}>{vendor.org}</div>
+              <div style={{ fontWeight:900, fontSize:ux(22), lineHeight:1.2 }}>{vendor.name}</div>
+              <div style={{ color:"var(--dim)", fontSize:ux(13), marginTop:ux(2) }}>{vendor.org}</div>
             </div>
           </div>
           <button onClick={onClose} style={{ background:"none",border:"none",cursor:"pointer",padding:4 }}>
@@ -687,33 +690,33 @@ function DetailModal({ vendor, onClose, lang }) {
           </button>
         </div>
         <div style={{ display:"flex", gap:7, marginBottom:18, flexWrap:"wrap" }}>
-          {vendor.priceFree && <span style={{ fontSize:12, padding:"4px 12px", borderRadius:100, background:"var(--okbg)", color:"var(--ok)", fontWeight:700 }}>{lang==="ko"?"무료 플랜":"Free Tier"}</span>}
-          {vendor.priceLabel && <span style={{ fontSize:12, padding:"4px 12px", borderRadius:100, background:"var(--adim)", color:"var(--a2)", fontWeight:600 }}>{vendor.priceLabel}</span>}
-          <span style={{ fontSize:12, padding:"4px 12px", borderRadius:100, background:"var(--cydim)", color:"var(--a3)", fontWeight:600 }}>{bestFit}</span>
+          {vendor.priceFree && <span style={{ fontSize:ux(12), padding:`${ux(4)}px ${ux(12)}px`, borderRadius:100, background:"var(--okbg)", color:"var(--ok)", fontWeight:700 }}>{lang==="ko"?"무료 플랜":"Free Tier"}</span>}
+          {vendor.priceLabel && <span style={{ fontSize:ux(12), padding:`${ux(4)}px ${ux(12)}px`, borderRadius:100, background:"var(--adim)", color:"var(--a2)", fontWeight:600 }}>{vendor.priceLabel}</span>}
+          <span style={{ fontSize:ux(12), padding:`${ux(4)}px ${ux(12)}px`, borderRadius:100, background:"var(--cydim)", color:"var(--a3)", fontWeight:600 }}>{bestFit}</span>
         </div>
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14, marginBottom:16 }}>
           <div style={{ background:"var(--card)", borderRadius:12, padding:16 }}>
-            <div style={{ fontWeight:700, fontSize:12.5, color:"var(--ok)", marginBottom:8 }}>✦ {lang==="ko"?"강점":"Strengths"}</div>
-            {strengths.map((s,i) => <div key={i} style={{ fontSize:13.5, lineHeight:1.65, paddingLeft:14, position:"relative", marginBottom:5 }}><span style={{ position:"absolute",left:0,color:"var(--dim)" }}>›</span>{s}</div>)}
+            <div style={{ fontWeight:700, fontSize:ux(12.5), color:"var(--ok)", marginBottom:ux(8) }}>✦ {lang==="ko"?"강점":"Strengths"}</div>
+            {strengths.map((s,i) => <div key={i} style={{ fontSize:ux(13.5), lineHeight:1.65, paddingLeft:ux(14), position:"relative", marginBottom:ux(5) }}><span style={{ position:"absolute",left:0,color:"var(--dim)" }}>›</span>{s}</div>)}
           </div>
           <div style={{ background:"var(--card)", borderRadius:12, padding:16 }}>
-            <div style={{ fontWeight:700, fontSize:12.5, color:"var(--warn)", marginBottom:8 }}>⚠ {lang==="ko"?"한계":"Limitations"}</div>
-            {limitations.map((s,i) => <div key={i} style={{ fontSize:13.5, lineHeight:1.65, paddingLeft:14, position:"relative", marginBottom:5 }}><span style={{ position:"absolute",left:0,color:"var(--dim)" }}>›</span>{s}</div>)}
+            <div style={{ fontWeight:700, fontSize:ux(12.5), color:"var(--warn)", marginBottom:ux(8) }}>⚠ {lang==="ko"?"한계":"Limitations"}</div>
+            {limitations.map((s,i) => <div key={i} style={{ fontSize:ux(13.5), lineHeight:1.65, paddingLeft:ux(14), position:"relative", marginBottom:ux(5) }}><span style={{ position:"absolute",left:0,color:"var(--dim)" }}>›</span>{s}</div>)}
           </div>
         </div>
         <div style={{ background:"linear-gradient(135deg,var(--adim),var(--cydim))", border:"1px solid var(--bdr)", borderRadius:12, padding:18, marginBottom:16 }}>
           <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:7 }}>
             <MessageSquareQuote size={14} color="var(--a2)"/>
-            <span style={{ fontWeight:700, fontSize:11.5, color:"var(--a2)", textTransform:"uppercase", letterSpacing:.9 }}>{lang==="ko"?"세일즈 디렉터 인사이트":"Sales Director's Take"}</span>
+            <span style={{ fontWeight:700, fontSize:ux(11.5), color:"var(--a2)", textTransform:"uppercase", letterSpacing:.9 }}>{lang==="ko"?"세일즈 디렉터 인사이트":"Sales Director's Take"}</span>
           </div>
-          <p style={{ fontSize:14.5, lineHeight:1.75, fontStyle:"italic" }}>"{insight}"</p>
+          <p style={{ fontSize:ux(14.5), lineHeight:1.75, fontStyle:"italic" }}>"{insight}"</p>
         </div>
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14 }}>
           <div>
-            <div style={{ fontWeight:700, fontSize:13, marginBottom:9 }}>{lang==="ko"?"유즈케이스":"Use Cases"}</div>
+            <div style={{ fontWeight:700, fontSize:ux(13), marginBottom:ux(9) }}>{lang==="ko"?"유즈케이스":"Use Cases"}</div>
             <div style={{ display:"flex", flexWrap:"wrap", gap:6 }}>
               {vendor.useCases.map(uid => { const u=USE_CASES.find(x=>x.id===uid); if(!u) return null;
-                return <span key={uid} style={{ fontSize:12, padding:"4px 10px", borderRadius:7, background:"var(--card)", border:"1px solid var(--bdr)" }}>{u.emoji} {lang==="ko"?u.labelKo:u.label}</span>;
+                return <span key={uid} style={{ fontSize:ux(12), padding:`${ux(4)}px ${ux(10)}px`, borderRadius:7, background:"var(--card)", border:"1px solid var(--bdr)" }}>{u.emoji} {lang==="ko"?u.labelKo:u.label}</span>;
               })}
             </div>
           </div>
@@ -721,7 +724,7 @@ function DetailModal({ vendor, onClose, lang }) {
             <ResponsiveContainer width="100%" height={190}>
               <RadarChart data={rd}>
                 <PolarGrid stroke="rgba(139,92,246,.18)" gridType="polygon"/>
-                <PolarAngleAxis dataKey="metric" tick={{ fill:"var(--dim)", fontSize:11 }}/>
+                <PolarAngleAxis dataKey="metric" tick={{ fill:"var(--dim)", fontSize:ux(11) }}/>
                 <Radar dataKey="value" stroke="var(--a)" fill="var(--a)" fillOpacity={.22} strokeWidth={2} dot={{ r:3, fill:"var(--a)" }}/>
               </RadarChart>
             </ResponsiveContainer>
@@ -738,14 +741,14 @@ function CompareBar({ selIds, vendors, onCompare, onClear, onRemove, lang }) {
   const selected = vendors.filter(v => selIds.includes(v.id));
   return (
     <div className="au" style={{ marginBottom:14, padding:"10px 14px", background:"var(--card)", borderRadius:13, border:"1px solid var(--bdr)", display:"flex", alignItems:"center", gap:10, flexWrap:"wrap" }}>
-      <span style={{ fontSize:12, fontWeight:700, color:"var(--dim)", whiteSpace:"nowrap" }}>
+      <span style={{ fontSize:ux(12), fontWeight:700, color:"var(--dim)", whiteSpace:"nowrap" }}>
         {lang==="ko"?`${selIds.length}/6 선택됨`:`${selIds.length}/6 selected`}
       </span>
       <div style={{ display:"flex", gap:7, flex:1, flexWrap:"wrap" }}>
         {selected.map(v => (
           <div key={v.id} style={{ display:"flex", alignItems:"center", gap:5, background:"var(--adim)", borderRadius:8, padding:"4px 9px", border:"1px solid var(--bdr)" }}>
-            <LogoBadge vendorId={v.id} size={20}/>
-            <span style={{ fontSize:12.5, fontWeight:600 }}>{v.name}</span>
+            <LogoBadge vendorId={v.id} size={ux(20)}/>
+            <span style={{ fontSize:ux(12.5), fontWeight:600 }}>{v.name}</span>
             <button onClick={() => onRemove(v.id)} style={{ background:"none",border:"none",cursor:"pointer",padding:1,display:"flex",alignItems:"center" }}>
               <X size={12} color="var(--dim)"/>
             </button>
@@ -753,7 +756,7 @@ function CompareBar({ selIds, vendors, onCompare, onClear, onRemove, lang }) {
         ))}
       </div>
       {selIds.length>=2 && (
-        <button className="cbtn" onClick={onCompare} style={{ fontSize:13, padding:"7px 16px" }}>
+        <button className="cbtn" onClick={onCompare} style={{ fontSize:ux(13), padding:`${ux(7)}px ${ux(16)}px` }}>
           <GitCompare size={13}/> {lang==="ko"?"비교":"Compare"} <ArrowRight size={13}/>
         </button>
       )}
@@ -772,51 +775,51 @@ function ComparisonView({ vendors, onBack, lang }) {
     <div className="au" style={{ paddingBottom:40 }}>
       <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:18 }}>
         <button className="ghost" onClick={onBack}><RotateCcw size={13}/> {lang==="ko"?"뒤로":"Back"}</button>
-        <span style={{ fontWeight:700, fontSize:18 }}>{lang==="ko"?"벤더 비교":"Vendor Comparison"}</span>
-        <span style={{ fontSize:12.5, color:"var(--dim)" }}>— {vendors.length} {lang==="ko"?"선택됨":"selected"}</span>
+        <span style={{ fontWeight:700, fontSize:ux(18) }}>{lang==="ko"?"벤더 비교":"Vendor Comparison"}</span>
+        <span style={{ fontSize:ux(12.5), color:"var(--dim)" }}>— {vendors.length} {lang==="ko"?"선택됨":"selected"}</span>
       </div>
       <div style={{ display:"grid", gridTemplateColumns:`repeat(${Math.min(vendors.length,6)},1fr)`, gap:10, marginBottom:18 }}>
         {vendors.map((v,i) => (
           <div key={v.id} className="asi" style={{ animationDelay:`${i*70}ms`, background:"var(--card)", borderRadius:12, padding:16, borderLeft:`4px solid ${RC[i]}` }}>
             <div style={{ display:"flex", alignItems:"center", gap:9, marginBottom:9 }}>
               <LogoBadge vendorId={v.id} size={38}/>
-              <div><div style={{ fontWeight:700, fontSize:14 }}>{v.name}</div><div style={{ fontSize:11, color:"var(--dim)" }}>{v.org}</div></div>
+              <div><div style={{ fontWeight:700, fontSize:ux(14) }}>{v.name}</div><div style={{ fontSize:ux(11), color:"var(--dim)" }}>{v.org}</div></div>
             </div>
-            <p style={{ fontSize:12, color:"var(--dim)", lineHeight:1.6, fontStyle:"italic" }}>"{vf(v,"insight",lang)}"</p>
+            <p style={{ fontSize:ux(12), color:"var(--dim)", lineHeight:1.6, fontStyle:"italic" }}>"{vf(v,"insight",lang)}"</p>
           </div>
         ))}
       </div>
       <div className="asi" style={{ animationDelay:"180ms", background:"var(--card)", borderRadius:14, padding:20, border:"1px solid var(--bdr)", marginBottom:18 }}>
-        <div style={{ fontWeight:700, fontSize:18, marginBottom:3 }}>{lang==="ko"?"역량 레이더":"Capability Radar"}</div>
-        <div style={{ fontSize:12, color:"var(--dim)", marginBottom:14 }}>{lang==="ko"?"6축 다차원 비교":"6-axis multi-dimensional comparison"}</div>
+        <div style={{ fontWeight:700, fontSize:ux(18), marginBottom:3 }}>{lang==="ko"?"역량 레이더":"Capability Radar"}</div>
+        <div style={{ fontSize:ux(12), color:"var(--dim)", marginBottom:ux(14) }}>{lang==="ko"?"6축 다차원 비교":"6-axis multi-dimensional comparison"}</div>
         <ResponsiveContainer width="100%" height={300}>
           <RadarChart data={radarData}>
             <PolarGrid stroke="rgba(139,92,246,.13)" gridType="polygon"/>
-            <PolarAngleAxis dataKey="metric" tick={{ fill:"var(--dim)", fontSize:12, fontFamily:"Outfit" }}/>
+            <PolarAngleAxis dataKey="metric" tick={{ fill:"var(--dim)", fontSize:ux(12), fontFamily:"Outfit" }}/>
             {vendors.map((v,i) => <Radar key={v.id} dataKey={v.id} name={v.name} stroke={RC[i]} fill={RC[i]} fillOpacity={.08} strokeWidth={2} dot={{r:3,fill:RC[i]}}/>)}
           </RadarChart>
         </ResponsiveContainer>
         <div style={{ display:"flex", justifyContent:"center", gap:18, marginTop:6 }}>
-          {vendors.map((v,i) => <div key={v.id} style={{ display:"flex", alignItems:"center", gap:5 }}><div style={{ width:9,height:9,borderRadius:"50%",background:RC[i] }}/><span style={{ fontSize:12, color:"var(--dim)" }}>{v.name}</span></div>)}
+          {vendors.map((v,i) => <div key={v.id} style={{ display:"flex", alignItems:"center", gap:ux(5) }}><div style={{ width:ux(9),height:ux(9),borderRadius:"50%",background:RC[i] }}/><span style={{ fontSize:ux(12), color:"var(--dim)" }}>{v.name}</span></div>)}
         </div>
       </div>
       <div className="asi" style={{ animationDelay:"260ms", background:"var(--card)", borderRadius:14, padding:20, border:"1px solid var(--bdr)" }}>
-        <div style={{ fontWeight:700, fontSize:18, marginBottom:14 }}>{lang==="ko"?"메트릭 세부":"Metric Breakdown"}</div>
+        <div style={{ fontWeight:700, fontSize:ux(18), marginBottom:ux(14) }}>{lang==="ko"?"메트릭 세부":"Metric Breakdown"}</div>
         <div style={{ overflowX:"auto" }}>
-          <table style={{ width:"100%", borderCollapse:"collapse", fontSize:13 }}>
+          <table style={{ width:"100%", borderCollapse:"collapse", fontSize:ux(13) }}>
             <thead><tr style={{ borderBottom:"1px solid var(--bdr)" }}>
-              <th style={{ textAlign:"left", padding:"8px 12px", color:"var(--dim)", fontWeight:500, fontSize:12 }}>{lang==="ko"?"메트릭":"Metric"}</th>
-              {vendors.map((v,i) => <th key={v.id} style={{ textAlign:"center", padding:"8px 12px", color:RC[i], fontWeight:700, fontSize:12 }}>{v.name}</th>)}
+              <th style={{ textAlign:"left", padding:`${ux(8)}px ${ux(12)}px`, color:"var(--dim)", fontWeight:500, fontSize:ux(12) }}>{lang==="ko"?"메트릭":"Metric"}</th>
+              {vendors.map((v,i) => <th key={v.id} style={{ textAlign:"center", padding:`${ux(8)}px ${ux(12)}px`, color:RC[i], fontWeight:700, fontSize:ux(12) }}>{v.name}</th>)}
             </tr></thead>
             <tbody>
               {Object.entries(ml).map(([k,lbl]) => (
                 <tr key={k} style={{ borderBottom:"1px solid rgba(139,92,246,.07)" }}>
-                  <td style={{ padding:"9px 12px", fontWeight:600 }}>{lbl}</td>
+                  <td style={{ padding:`${ux(9)}px ${ux(12)}px`, fontWeight:600 }}>{lbl}</td>
                   {vendors.map((v,i) => { const val=v.metrics[k]; const mx=Math.max(...vendors.map(x=>x.metrics[k]));
-                    return <td key={v.id} style={{ textAlign:"center", padding:"9px 12px" }}>
-                      <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:7 }}>
+                    return <td key={v.id} style={{ textAlign:"center", padding:`${ux(9)}px ${ux(12)}px` }}>
+                      <div style={{ display:"flex", alignItems:"center", justifyContent:"center", gap:ux(7) }}>
                         <div className="mb"><div className="mbf" style={{ width:`${val*10}%`, background:val===mx?RC[i]:`${RC[i]}55` }}/></div>
-                        <span style={{ fontWeight:val===mx?700:400, color:val===mx?RC[i]:"var(--dim)", fontSize:13 }}>{val}</span>
+                        <span style={{ fontWeight:val===mx?700:400, color:val===mx?RC[i]:"var(--dim)", fontSize:ux(13) }}>{val}</span>
                       </div>
                     </td>;
                   })}
@@ -883,7 +886,7 @@ function DecisionFlow({ onBuildStack }) {
 
   return (
     <div className="au">
-      <div style={{ fontSize:13.5, color:"var(--dim)", marginBottom:14 }}>
+      <div style={{ fontSize:ux(13.5), color:"var(--dim)", marginBottom:ux(14) }}>
         {lang==="ko"
           ?"세 가지 질문에 답하면 현재 고객 상황에 맞는 추천 AI 스택을 제안합니다."
           :"Answer three questions and get a recommended AI stack for the customer in front of you."}
@@ -922,8 +925,8 @@ function DecisionFlow({ onBuildStack }) {
       {openStep===1 && (
         <div className="asi" style={{ background:"var(--card)", border:"1px solid var(--bdr)", borderRadius:18, padding:22 }}>
           <div style={{ marginBottom:16 }}>
-            <div style={{ fontWeight:700, fontSize:18, marginBottom:5 }}>{lang==="ko"?"1단계. 예산 규모":"Step 1. Budget"}</div>
-            <div style={{ color:"var(--dim)", fontSize:13 }}>{lang==="ko"?"고객이 허용할 수 있는 연간 예산 범위를 선택하세요.":"Choose the annual budget range the customer is comfortable with."}</div>
+            <div style={{ fontWeight:700, fontSize:ux(18), marginBottom:ux(5) }}>{lang==="ko"?"1단계. 예산 규모":"Step 1. Budget"}</div>
+            <div style={{ color:"var(--dim)", fontSize:ux(13) }}>{lang==="ko"?"고객이 허용할 수 있는 연간 예산 범위를 선택하세요.":"Choose the annual budget range the customer is comfortable with."}</div>
           </div>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(3,minmax(0,1fr))", gap:10 }}>
             {DECISION_BUDGETS.map(option => {
@@ -933,10 +936,10 @@ function DecisionFlow({ onBuildStack }) {
                   key={option.id}
                   className={`pill ${selected ? "on" : ""}`}
                   onClick={() => handleBudget(option.id)}
-                  style={{ minHeight:128, borderRadius:18, padding:"18px 18px 16px", display:"flex", flexDirection:"column", alignItems:"flex-start", justifyContent:"space-between", textAlign:"left", whiteSpace:"normal" }}
+                  style={{ minHeight:ux(128), borderRadius:18, padding:`${ux(18)}px ${ux(18)}px ${ux(16)}px`, display:"flex", flexDirection:"column", alignItems:"flex-start", justifyContent:"space-between", textAlign:"left", whiteSpace:"normal" }}
                 >
-                  <div style={{ fontWeight:800, fontSize:15, lineHeight:1.35 }}>{lang==="ko" ? option.labelKo : option.label}</div>
-                  <div style={{ fontSize:12.5, color:selected ? "inherit" : "var(--dim)", lineHeight:1.55 }}>{lang==="ko" ? option.descKo : option.desc}</div>
+                  <div style={{ fontWeight:800, fontSize:ux(15), lineHeight:1.35 }}>{lang==="ko" ? option.labelKo : option.label}</div>
+                  <div style={{ fontSize:ux(12.5), color:selected ? "inherit" : "var(--dim)", lineHeight:1.55 }}>{lang==="ko" ? option.descKo : option.desc}</div>
                 </button>
               );
             })}
@@ -947,8 +950,8 @@ function DecisionFlow({ onBuildStack }) {
       {openStep===2 && (
         <div className="asi" style={{ background:"var(--card)", border:"1px solid var(--bdr)", borderRadius:18, padding:22 }}>
           <div style={{ marginBottom:16 }}>
-            <div style={{ fontWeight:700, fontSize:18, marginBottom:5 }}>{lang==="ko"?"2단계. 데이터 주권":"Step 2. Data Sovereignty"}</div>
-            <div style={{ color:"var(--dim)", fontSize:13 }}>{lang==="ko"?"데이터를 퍼블릭 클라우드로 보낼 수 있는지, 프라이빗 통제가 필요한지 선택하세요.":"Choose whether public cloud is acceptable or private deployment is required."}</div>
+            <div style={{ fontWeight:700, fontSize:ux(18), marginBottom:ux(5) }}>{lang==="ko"?"2단계. 데이터 주권":"Step 2. Data Sovereignty"}</div>
+            <div style={{ color:"var(--dim)", fontSize:ux(13) }}>{lang==="ko"?"데이터를 퍼블릭 클라우드로 보낼 수 있는지, 프라이빗 통제가 필요한지 선택하세요.":"Choose whether public cloud is acceptable or private deployment is required."}</div>
           </div>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(2,minmax(0,1fr))", gap:10 }}>
             {DECISION_SOVEREIGNTY.map(option => {
@@ -958,10 +961,10 @@ function DecisionFlow({ onBuildStack }) {
                   key={option.id}
                   className={`pill ${selected ? "on" : ""}`}
                   onClick={() => handleSovereignty(option.id)}
-                  style={{ minHeight:128, borderRadius:18, padding:"18px 18px 16px", display:"flex", flexDirection:"column", alignItems:"flex-start", justifyContent:"space-between", textAlign:"left", whiteSpace:"normal" }}
+                  style={{ minHeight:ux(128), borderRadius:18, padding:`${ux(18)}px ${ux(18)}px ${ux(16)}px`, display:"flex", flexDirection:"column", alignItems:"flex-start", justifyContent:"space-between", textAlign:"left", whiteSpace:"normal" }}
                 >
-                  <div style={{ fontWeight:800, fontSize:15, lineHeight:1.35 }}>{lang==="ko" ? option.labelKo : option.label}</div>
-                  <div style={{ fontSize:12.5, color:selected ? "inherit" : "var(--dim)", lineHeight:1.55 }}>{lang==="ko" ? option.descKo : option.desc}</div>
+                  <div style={{ fontWeight:800, fontSize:ux(15), lineHeight:1.35 }}>{lang==="ko" ? option.labelKo : option.label}</div>
+                  <div style={{ fontSize:ux(12.5), color:selected ? "inherit" : "var(--dim)", lineHeight:1.55 }}>{lang==="ko" ? option.descKo : option.desc}</div>
                 </button>
               );
             })}
@@ -972,8 +975,8 @@ function DecisionFlow({ onBuildStack }) {
       {openStep===3 && (
         <div className="asi" style={{ background:"var(--card)", border:"1px solid var(--bdr)", borderRadius:18, padding:22 }}>
           <div style={{ marginBottom:16 }}>
-            <div style={{ fontWeight:700, fontSize:18, marginBottom:5 }}>{lang==="ko"?"3단계. 주요 유즈케이스":"Step 3. Primary Use Case"}</div>
-            <div style={{ color:"var(--dim)", fontSize:13 }}>{lang==="ko"?"가장 먼저 성과를 내야 하는 업무 시나리오를 선택하세요.":"Pick the business scenario that matters most for this customer."}</div>
+            <div style={{ fontWeight:700, fontSize:ux(18), marginBottom:ux(5) }}>{lang==="ko"?"3단계. 주요 유즈케이스":"Step 3. Primary Use Case"}</div>
+            <div style={{ color:"var(--dim)", fontSize:ux(13) }}>{lang==="ko"?"가장 먼저 성과를 내야 하는 업무 시나리오를 선택하세요.":"Pick the business scenario that matters most for this customer."}</div>
           </div>
           <div style={{ display:"grid", gridTemplateColumns:"repeat(3,minmax(0,1fr))", gap:10 }}>
             {USE_CASES.map(useCase => {
@@ -983,12 +986,12 @@ function DecisionFlow({ onBuildStack }) {
                   key={useCase.id}
                   className={`pill ${selected ? "on" : ""}`}
                   onClick={() => handleUseCase(useCase.id)}
-                  style={{ minHeight:132, borderRadius:18, padding:"18px", display:"flex", flexDirection:"column", alignItems:"flex-start", justifyContent:"space-between", textAlign:"left", whiteSpace:"normal" }}
+                  style={{ minHeight:ux(132), borderRadius:18, padding:ux(18), display:"flex", flexDirection:"column", alignItems:"flex-start", justifyContent:"space-between", textAlign:"left", whiteSpace:"normal" }}
                 >
-                  <div style={{ fontSize:28, lineHeight:1 }}>{useCase.emoji}</div>
+                  <div style={{ fontSize:ux(28), lineHeight:1 }}>{useCase.emoji}</div>
                   <div>
-                    <div style={{ fontWeight:800, fontSize:15, lineHeight:1.35, marginBottom:4 }}>{lang==="ko" ? useCase.labelKo : useCase.label}</div>
-                    <div style={{ fontSize:12.5, color:selected ? "inherit" : "var(--dim)" }}>{lang==="ko"?"추천 스택을 이 시나리오 기준으로 맞춥니다.":"Tune the stack recommendation around this scenario."}</div>
+                    <div style={{ fontWeight:800, fontSize:ux(15), lineHeight:1.35, marginBottom:ux(4) }}>{lang==="ko" ? useCase.labelKo : useCase.label}</div>
+                    <div style={{ fontSize:ux(12.5), color:selected ? "inherit" : "var(--dim)" }}>{lang==="ko"?"추천 스택을 이 시나리오 기준으로 맞춥니다.":"Tune the stack recommendation around this scenario."}</div>
                   </div>
                 </button>
               );
@@ -1003,9 +1006,9 @@ function DecisionFlow({ onBuildStack }) {
             <div>
               <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:5 }}>
                 <Shield size={18} color="var(--a2)"/>
-                <span style={{ fontWeight:700, fontSize:18 }}>{lang==="ko"?"추천 스택":"Recommended Stack"}</span>
+                <span style={{ fontWeight:700, fontSize:ux(18) }}>{lang==="ko"?"추천 스택":"Recommended Stack"}</span>
               </div>
-              <div style={{ color:"var(--dim)", fontSize:13 }}>
+              <div style={{ color:"var(--dim)", fontSize:ux(13) }}>
                 {lang==="ko"
                   ?"현재 선택한 예산, 데이터 주권, 유즈케이스를 기준으로 각 레이어별 최적 후보를 골랐습니다."
                   :"Based on your budget, sovereignty, and use case, here is the best-fit vendor in each layer."}
@@ -1021,26 +1024,26 @@ function DecisionFlow({ onBuildStack }) {
               <div key={layer.id} className="au" style={{ animationDelay:`${index*70}ms`, background:"var(--bg2)", border:"1px solid var(--bdr)", borderRadius:16, padding:16 }}>
                 <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:12 }}>
                   <div className="tab on" style={{ padding:"6px 10px", cursor:"default" }}>{lang==="ko" ? layer.labelKo : layer.label}</div>
-                  <div style={{ marginLeft:"auto", fontSize:12, color:"var(--dim)" }}>{getStackPriceText(vendor, lang)}</div>
+                  <div style={{ marginLeft:"auto", fontSize:ux(12), color:"var(--dim)" }}>{getStackPriceText(vendor, lang)}</div>
                 </div>
                 <div style={{ display:"flex", alignItems:"center", gap:12, marginBottom:12 }}>
                   <LogoBadge vendorId={vendor.id} size={42}/>
                   <div style={{ minWidth:0 }}>
-                    <div style={{ fontWeight:800, fontSize:16, lineHeight:1.25 }}>{vendor.name}</div>
-                    <div style={{ fontSize:12, color:"var(--dim)" }}>{vendor.org}</div>
+                    <div style={{ fontWeight:800, fontSize:ux(16), lineHeight:1.25 }}>{vendor.name}</div>
+                    <div style={{ fontSize:ux(12), color:"var(--dim)" }}>{vendor.org}</div>
                   </div>
                 </div>
-                <div style={{ fontSize:11, color:"var(--a2)", fontWeight:700, textTransform:"uppercase", letterSpacing:0.8, marginBottom:6 }}>
+                <div style={{ fontSize:ux(11), color:"var(--a2)", fontWeight:700, textTransform:"uppercase", letterSpacing:0.8, marginBottom:ux(6) }}>
                   {lang==="ko"?"선정 이유":"Why it was chosen"}
                 </div>
-                <p style={{ fontSize:13.5, lineHeight:1.65, color:"var(--dim)", fontStyle:"italic" }}>"{vf(vendor, "insight", lang)}"</p>
+                <p style={{ fontSize:ux(13.5), lineHeight:1.65, color:"var(--dim)", fontStyle:"italic" }}>"{vf(vendor, "insight", lang)}"</p>
               </div>
             ))}
           </div>
 
           <div style={{ display:"flex", justifyContent:"space-between", alignItems:"center", gap:10, flexWrap:"wrap", borderTop:"1px solid var(--bdr)", paddingTop:16 }}>
             <button className="ghost" onClick={() => setOpenStep(3)}><RotateCcw size={12}/> {lang==="ko"?"답변 조정":"Adjust Answers"}</button>
-            <button className="cbtn" onClick={() => onBuildStack(recommendation.picks)} style={{ padding:"11px 22px", fontSize:14 }}>
+            <button className="cbtn" onClick={() => onBuildStack(recommendation.picks)} style={{ padding:`${ux(11)}px ${ux(22)}px`, fontSize:ux(14) }}>
               <Boxes size={15}/> {lang==="ko"?"이 스택으로 빌드":"Build This Stack"} <ArrowRight size={14}/>
             </button>
           </div>
@@ -1089,18 +1092,18 @@ function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
 
   return (
     <div className="au">
-      <div style={{ fontSize:13.5, color:"var(--dim)", marginBottom:14 }}>
+      <div style={{ fontSize:ux(13.5), color:"var(--dim)", marginBottom:ux(14) }}>
         {lang==="ko"?"각 레이어에서 벤더를 하나씩 선택해 추천 AI 스택을 구성하세요.":"Build your recommended AI stack by selecting one vendor from each layer."}
       </div>
 
       {/* Presets */}
       <div style={{ marginBottom:18 }}>
-        <div style={{ fontSize:11, color:"var(--dim)", marginBottom:8, fontWeight:700, textTransform:"uppercase", letterSpacing:.8 }}>{lang==="ko"?"빠른 프리셋":"Quick Presets"}</div>
+        <div style={{ fontSize:ux(11), color:"var(--dim)", marginBottom:ux(8), fontWeight:700, textTransform:"uppercase", letterSpacing:.8 }}>{lang==="ko"?"빠른 프리셋":"Quick Presets"}</div>
         <div style={{ display:"flex", gap:8, flexWrap:"wrap" }}>
           {STACK_PRESETS.map(p => (
             <button key={p.name} className={`pill ${activePreset===p.name?"on":""}`} onClick={() => applyPreset(p)}>
               <Star size={12}/> {lang==="ko"?p.nameKo:p.name}
-              <span style={{ fontSize:11, opacity:.65 }}>— {lang==="ko"?p.descKo:p.desc}</span>
+              <span style={{ fontSize:ux(11), opacity:.65 }}>— {lang==="ko"?p.descKo:p.desc}</span>
             </button>
           ))}
           {pickCount>0 && <button className="pill" onClick={handleReset} style={{ color:"var(--dim)" }}><RotateCcw size={11}/> {lang==="ko"?"초기화":"Reset"}</button>}
@@ -1109,19 +1112,19 @@ function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
 
       {/* Total cost bar */}
       {pickCount > 0 && (
-        <div className="asi" style={{ marginBottom:18, padding:"14px 20px", borderRadius:13, background:"linear-gradient(135deg,rgba(139,92,246,.12),rgba(99,102,241,.06))", border:"1px solid rgba(139,92,246,.22)" }}>
+        <div className="asi" style={{ marginBottom:18, padding:`${ux(14)}px ${ux(20)}px`, borderRadius:13, background:"linear-gradient(135deg,rgba(139,92,246,.12),rgba(99,102,241,.06))", border:"1px solid rgba(139,92,246,.22)" }}>
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:10 }}>
             <div>
-              <div style={{ fontSize:11, color:"var(--a2)", fontWeight:700, textTransform:"uppercase", letterSpacing:.9, marginBottom:4 }}>
-                <DollarSign size={11} style={{ display:"inline", verticalAlign:"middle" }}/> {lang==="ko"?"예상 월 비용 구성":"Estimated Monthly Cost Breakdown"}
+              <div style={{ fontSize:ux(11), color:"var(--a2)", fontWeight:700, textTransform:"uppercase", letterSpacing:.9, marginBottom:ux(10) }}>
+                <DollarSign size={ux(11)} style={{ display:"inline", verticalAlign:"middle" }}/> {lang==="ko"?"예상 월 비용 구성":"Estimated Monthly Cost Breakdown"}
               </div>
-              <div style={{ display:"flex", gap:10, flexWrap:"wrap" }}>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))", gap:8 }}>
                 {costSummary.items.map(({layer,vendor}) => (
-                  <div key={layer.id} style={{ display:"flex", alignItems:"center", gap:5 }}>
-                    <LogoBadge vendorId={vendor.id} size={22}/>
+                  <div key={layer.id} style={{ display:"flex", alignItems:"center", gap:ux(10), background:"var(--card)", border:"1px solid var(--bdr)", borderRadius:12, padding:`${ux(12)}px ${ux(14)}px`, minHeight:ux(68), boxShadow:"0 10px 24px var(--shadow)" }}>
+                    <LogoBadge vendorId={vendor.id} size={ux(32)}/>
                     <div>
-                      <div style={{ fontSize:11.5, fontWeight:600 }}>{vendor.name}</div>
-                      <div style={{ fontSize:11, color: vendor.priceFree ? "var(--ok)" : "var(--a2)", fontWeight:700 }}>
+                      <div style={{ fontSize:ux(11.5), fontWeight:600, lineHeight:1.2 }}>{vendor.name}</div>
+                      <div style={{ fontSize:ux(11), color: vendor.priceFree ? "var(--ok)" : "var(--a2)", fontWeight:700, lineHeight:1.25 }}>
                         {getStackPriceText(vendor, lang)}
                       </div>
                     </div>
@@ -1130,9 +1133,9 @@ function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
               </div>
             </div>
             <div style={{ textAlign:"right" }}>
-              <div style={{ fontSize:11, color:"var(--dim)" }}>{lang==="ko"?"무료 컴포넌트":"Free components"}</div>
-              <div style={{ fontSize:28, fontWeight:900, color:"var(--ok)", lineHeight:1.1 }}>{costSummary.freeCount}</div>
-              <div style={{ fontSize:11, color:"var(--dim)" }}>/ {pickCount} {lang==="ko"?"레이어":"layers"}</div>
+              <div style={{ fontSize:ux(11), color:"var(--dim)" }}>{lang==="ko"?"무료 컴포넌트":"Free components"}</div>
+              <div style={{ fontSize:ux(28), fontWeight:900, color:"var(--ok)", lineHeight:1.1 }}>{costSummary.freeCount}</div>
+              <div style={{ fontSize:ux(11), color:"var(--dim)" }}>/ {pickCount} {lang==="ko"?"레이어":"layers"}</div>
             </div>
           </div>
         </div>
@@ -1147,25 +1150,25 @@ function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
           <div key={layer.id}>
             <div className="au" style={{ animationDelay:`${idx*70}ms` }}>
               <div style={{ display:"flex", alignItems:"center", gap:9, marginBottom:10 }}>
-                <div style={{ width:30,height:30,borderRadius:8,background:layer.gradient,display:"flex",alignItems:"center",justifyContent:"center",fontSize:13,fontWeight:800,color:"#fff",boxShadow:`0 0 12px ${layer.color}44`,flexShrink:0 }}>{layer.step}</div>
+                <div style={{ width:ux(30),height:ux(30),borderRadius:8,background:layer.gradient,display:"flex",alignItems:"center",justifyContent:"center",fontSize:ux(13),fontWeight:800,color:"#fff",boxShadow:`0 0 12px ${layer.color}44`,flexShrink:0 }}>{layer.step}</div>
                 <div style={{ flex:1 }}>
-                  <div style={{ fontWeight:800, fontSize:14, color:layer.color }}>{lbl}</div>
-                  <div style={{ fontSize:11, color:"var(--dim)" }}>{lang==="ko"?"벤더 하나 선택":"Select one vendor"}</div>
+                  <div style={{ fontWeight:800, fontSize:ux(14), color:layer.color }}>{lbl}</div>
+                  <div style={{ fontSize:ux(11), color:"var(--dim)" }}>{lang==="ko"?"벤더 하나 선택":"Select one vendor"}</div>
                 </div>
                 {picks[layer.id] && (
-                  <div className="asi" style={{ display:"flex", alignItems:"center", gap:5, background:"var(--okbg)", padding:"4px 9px", borderRadius:6 }}>
-                    <Check size={11} color="var(--ok)"/><span style={{ fontSize:11.5, color:"var(--ok)", fontWeight:700 }}>{V.find(v=>v.id===picks[layer.id])?.name}</span>
+                  <div className="asi" style={{ display:"flex", alignItems:"center", gap:ux(5), background:"var(--okbg)", padding:`${ux(4)}px ${ux(9)}px`, borderRadius:6 }}>
+                    <Check size={ux(11)} color="var(--ok)"/><span style={{ fontSize:ux(11.5), color:"var(--ok)", fontWeight:700 }}>{V.find(v=>v.id===picks[layer.id])?.name}</span>
                   </div>
                 )}
               </div>
-              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(175px,1fr))", gap:8 }}>
+              <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))", gap:8 }}>
                 {lv.map(v => (
                   <div key={v.id} className={`sn ${picks[layer.id]===v.id?"pick":""}`} onClick={() => handlePick(layer.id,v.id)}>
                     {picks[layer.id]===v.id && <div className="chk" style={{ width:18,height:18 }}><Check size={10} color="white" strokeWidth={3}/></div>}
-                    <LogoBadge vendorId={v.id} size={36}/>
+                    <LogoBadge vendorId={v.id} size={ux(36)}/>
                     <div style={{ minWidth:0, flex:1 }}>
-                      <div style={{ fontWeight:700, fontSize:13, lineHeight:1.2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{v.name}</div>
-                      <div style={{ fontSize:11, color:"var(--dim)" }}>
+                      <div style={{ fontWeight:700, fontSize:ux(13), lineHeight:1.2, overflow:"hidden", textOverflow:"ellipsis", whiteSpace:"nowrap" }}>{v.name}</div>
+                      <div style={{ fontSize:ux(11), color:"var(--dim)" }}>
                         {v.priceFree ? <span style={{ color:"var(--ok)" }}>{lang==="ko"?"무료":"Free"}</span> : ""}
                         {v.priceFree && v.priceLabel ? " · " : ""}
                         {v.priceLabel}
@@ -1182,7 +1185,7 @@ function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
 
       {pickCount>=2 && !showResult && (
         <div className="au" style={{ display:"flex", justifyContent:"center", marginTop:22 }}>
-          <button className="cbtn" onClick={() => setShowResult(true)} style={{ padding:"12px 32px", fontSize:14.5, borderRadius:12, gap:8 }}>
+          <button className="cbtn" onClick={() => setShowResult(true)} style={{ padding:`${ux(12)}px ${ux(32)}px`, fontSize:ux(14.5), borderRadius:12, gap:ux(8) }}>
             <Boxes size={16}/> {lang==="ko"?`스택 빌드 (${pickCount}/4)`:`Build My Stack (${pickCount}/4)`} <ArrowRight size={15}/>
           </button>
         </div>
@@ -1197,13 +1200,13 @@ function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
               <div style={{ display:"flex", alignItems:"center", gap:12 }}>
                 <Shield size={20} color="var(--a2)"/>
                 <div>
-                  <div style={{ fontWeight:700, fontSize:18 }}>{lang==="ko"?"나의 추천 스택":"My Recommended Stack"}</div>
-                  <div style={{ fontSize:12, color:"var(--dim)" }}>{selectedVendors.length} {lang==="ko"?"레이어 구성됨":"layers configured"}</div>
+                  <div style={{ fontWeight:700, fontSize:ux(18) }}>{lang==="ko"?"나의 추천 스택":"My Recommended Stack"}</div>
+                  <div style={{ fontSize:ux(12), color:"var(--dim)" }}>{selectedVendors.length} {lang==="ko"?"레이어 구성됨":"layers configured"}</div>
                 </div>
                 {stackGrade && (
                   <div style={{ background:stackGrade.bg, border:`1px solid ${stackGrade.color}`, borderRadius:10, padding:"4px 12px", display:"flex", alignItems:"center", gap:5 }}>
-                    <span style={{ fontWeight:900, fontSize:22, color:stackGrade.color }}>{stackGrade.letter}</span>
-                    <span style={{ fontSize:11, color:"var(--dim)" }}>{lang==="ko"?"점수":"Score"}</span>
+                    <span style={{ fontWeight:900, fontSize:ux(22), color:stackGrade.color }}>{stackGrade.letter}</span>
+                    <span style={{ fontSize:ux(11), color:"var(--dim)" }}>{lang==="ko"?"점수":"Score"}</span>
                   </div>
                 )}
               </div>
@@ -1217,15 +1220,15 @@ function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
                 {selectedVendors.map(({layer,vendor},i) => (
                   <div key={layer.id} className="au" style={{ animationDelay:`${i*80}ms` }}>
                     <div style={{ display:"flex", alignItems:"center", gap:10, background:"var(--card)", borderRadius:11, padding:"10px 14px", border:`1px solid ${layer.color}22` }}>
-                      <div style={{ width:26,height:26,borderRadius:6,background:layer.gradient,display:"flex",alignItems:"center",justifyContent:"center",fontSize:12,fontWeight:800,color:"#fff",flexShrink:0 }}>{layer.step}</div>
-                      <LogoBadge vendorId={vendor.id} size={34}/>
+                      <div style={{ width:ux(26),height:ux(26),borderRadius:6,background:layer.gradient,display:"flex",alignItems:"center",justifyContent:"center",fontSize:ux(12),fontWeight:800,color:"#fff",flexShrink:0 }}>{layer.step}</div>
+                      <LogoBadge vendorId={vendor.id} size={ux(34)}/>
                       <div style={{ flex:1, minWidth:0 }}>
-                        <div style={{ fontSize:10.5, color:layer.color, fontWeight:700, textTransform:"uppercase", letterSpacing:.4 }}>{lang==="ko"?layer.labelKo:layer.label}</div>
-                        <div style={{ fontWeight:700, fontSize:14, lineHeight:1.2 }}>{vendor.name}</div>
+                        <div style={{ fontSize:ux(10.5), color:layer.color, fontWeight:700, textTransform:"uppercase", letterSpacing:.4 }}>{lang==="ko"?layer.labelKo:layer.label}</div>
+                        <div style={{ fontWeight:700, fontSize:ux(14), lineHeight:1.2 }}>{vendor.name}</div>
                       </div>
                       <div style={{ textAlign:"right" }}>
-                        {vendor.priceFree && <div style={{ fontSize:11, color:"var(--ok)", fontWeight:700 }}>{lang==="ko"?"무료":"Free"}</div>}
-                        <div style={{ fontSize:11, color:"var(--dim)" }}>{vendor.priceLabel}</div>
+                        {vendor.priceFree && <div style={{ fontSize:ux(11), color:"var(--ok)", fontWeight:700 }}>{lang==="ko"?"무료":"Free"}</div>}
+                        <div style={{ fontSize:ux(11), color:"var(--dim)" }}>{vendor.priceLabel}</div>
                       </div>
                     </div>
                     {i<selectedVendors.length-1 && <div style={{ display:"flex", justifyContent:"center", padding:"1px 0" }}><ChevronDown size={12} color="var(--a)" style={{ opacity:.25 }}/></div>}
@@ -1235,11 +1238,11 @@ function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
               {/* Right: hexagonal radar */}
               {avgMetrics && (
                 <div style={{ background:"var(--card)", borderRadius:13, padding:"10px 4px", display:"flex", flexDirection:"column" }}>
-                  <div style={{ fontSize:12.5, fontWeight:700, padding:"0 12px 4px", color:"var(--dim)" }}>{lang==="ko"?"스택 프로필":"Stack Profile"}</div>
+                  <div style={{ fontSize:ux(12.5), fontWeight:700, padding:`0 ${ux(12)}px ${ux(4)}px`, color:"var(--dim)" }}>{lang==="ko"?"스택 프로필":"Stack Profile"}</div>
                   <ResponsiveContainer width="100%" height={260}>
                     <RadarChart data={avgMetrics}>
                       <PolarGrid stroke="rgba(139,92,246,.18)" gridType="polygon"/>
-                      <PolarAngleAxis dataKey="metric" tick={{ fill:"var(--dim)", fontSize:11 }}/>
+                      <PolarAngleAxis dataKey="metric" tick={{ fill:"var(--dim)", fontSize:ux(11) }}/>
                       <Radar dataKey="value" stroke="var(--a)" fill="var(--a)" fillOpacity={.22} strokeWidth={2} dot={{ r:3, fill:"var(--a)" }}/>
                     </RadarChart>
                   </ResponsiveContainer>
@@ -1251,19 +1254,19 @@ function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
             <div style={{ borderTop:"1px solid var(--bdr)", paddingTop:16 }}>
               <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:12 }}>
                 <MessageSquareQuote size={14} color="var(--a2)"/>
-                <span style={{ fontWeight:700, fontSize:12, color:"var(--a2)", textTransform:"uppercase", letterSpacing:.9 }}>{lang==="ko"?"스택 분석":"Stack Analysis"}</span>
+                <span style={{ fontWeight:700, fontSize:ux(12), color:"var(--a2)", textTransform:"uppercase", letterSpacing:.9 }}>{lang==="ko"?"스택 분석":"Stack Analysis"}</span>
               </div>
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))", gap:10 }}>
                 {selectedVendors.map(({layer,vendor}) => (
                   <div key={layer.id} style={{ background:"var(--card)", borderRadius:11, padding:14, border:`1px solid ${layer.color}22` }}>
                     <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:7 }}>
-                      <LogoBadge vendorId={vendor.id} size={28}/>
+                      <LogoBadge vendorId={vendor.id} size={ux(28)}/>
                       <div>
-                        <div style={{ fontSize:10, color:layer.color, fontWeight:700, textTransform:"uppercase", letterSpacing:.4 }}>{lang==="ko"?layer.labelKo:layer.label}</div>
-                        <div style={{ fontWeight:700, fontSize:13 }}>{vendor.name}</div>
+                        <div style={{ fontSize:ux(10), color:layer.color, fontWeight:700, textTransform:"uppercase", letterSpacing:.4 }}>{lang==="ko"?layer.labelKo:layer.label}</div>
+                        <div style={{ fontWeight:700, fontSize:ux(13) }}>{vendor.name}</div>
                       </div>
                     </div>
-                    <p style={{ fontSize:12.5, lineHeight:1.65, color:"var(--dim)", fontStyle:"italic" }}>"{vf(vendor,"insight",lang)}"</p>
+                    <p style={{ fontSize:ux(12.5), lineHeight:1.65, color:"var(--dim)", fontStyle:"italic" }}>"{vf(vendor,"insight",lang)}"</p>
                   </div>
                 ))}
               </div>
@@ -1326,12 +1329,12 @@ export default function App() {
               <Layers size={22} color="white"/>
             </div>
             <div style={{ flex:1 }}>
-              <h1 style={{ fontWeight:800, fontSize:28, letterSpacing:-.7, lineHeight:1.1 }}>
+              <h1 style={{ fontWeight:800, fontSize:ux(28), letterSpacing:-.7, lineHeight:1.1 }}>
                 {lang==="ko"?"AI 벤더 에코시스템 네비게이터":"AI Vendor Ecosystem Navigator"}
               </h1>
               {/* Prominent subtitle */}
-              <div style={{ marginTop:6, padding:"8px 14px", borderRadius:12, display:"inline-flex", alignItems:"center", gap:8, background:"linear-gradient(90deg,var(--adim),var(--cydim))", border:"1px solid var(--bdr)" }}>
-                <span style={{ fontWeight:500, fontSize:14, background:"linear-gradient(90deg,var(--a2),var(--a3))", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>{L.subtitle}</span>
+              <div style={{ marginTop:ux(6), padding:`${ux(8)}px ${ux(14)}px`, borderRadius:12, display:"inline-flex", alignItems:"center", gap:ux(8), background:"linear-gradient(90deg,var(--adim),var(--cydim))", border:"1px solid var(--bdr)" }}>
+                <span style={{ fontWeight:500, fontSize:ux(14), background:"linear-gradient(90deg,var(--a2),var(--a3))", WebkitBackgroundClip:"text", WebkitTextFillColor:"transparent" }}>{L.subtitle}</span>
               </div>
             </div>
             <div style={{ display:"flex", alignItems:"center", gap:7, flexShrink:0 }}>
