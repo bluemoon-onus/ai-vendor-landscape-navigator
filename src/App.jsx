@@ -1080,6 +1080,21 @@ function StackBuilder({ lang, theme, picks, setPicks, autoRevealKey }) {
     return {letter:"C",color:"var(--err)",bg:"var(--errbg)"};
   }, [avgMetrics]);
 
+  // Top 3 strengths vs ecosystem average
+  const stackHighlights = useMemo(() => {
+    if (!avgMetrics) return [];
+    const ml2 = lang==="ko"?MLK:ML;
+    const ecoAvg = Object.keys(ml2).map(k => {
+      const avg = V.reduce((s,v) => s+v.metrics[k], 0) / V.length;
+      return { key:k, label:ml2[k], ecoAvg:+avg.toFixed(1) };
+    });
+    return avgMetrics
+      .map((m,i) => ({ ...m, diff:+(m.value - ecoAvg[i].ecoAvg).toFixed(1), key:ecoAvg[i].key }))
+      .sort((a,b) => b.diff - a.diff)
+      .slice(0,3)
+      .filter(x => x.diff > 0);
+  }, [avgMetrics, lang]);
+
   // Cost summary
   const costSummary = useMemo(() => {
     const freeItems = selectedVendors.filter(x => x.vendor.priceFree);
@@ -1285,17 +1300,37 @@ function StackBuilder({ lang, theme, picks, setPicks, autoRevealKey }) {
                   </div>
                 ))}
               </div>
-              {/* Right: hexagonal radar */}
+              {/* Right: hexagonal radar + highlights */}
               {avgMetrics && (
-                <div style={{ background:"var(--card)", borderRadius:13, padding:"10px 4px", display:"flex", flexDirection:"column" }}>
-                  <div style={{ fontSize:ux(12.5), fontWeight:700, padding:`0 ${ux(12)}px ${ux(4)}px`, color:"var(--dim)" }}>{lang==="ko"?"스택 프로필":"Stack Profile"}</div>
-                  <ResponsiveContainer width="100%" height={260}>
-                    <RadarChart data={avgMetrics}>
-                      <PolarGrid stroke="rgba(139,92,246,.18)" gridType="polygon"/>
-                      <PolarAngleAxis dataKey="metric" tick={{ fill:"var(--dim)", fontSize:ux(11) }}/>
-                      <Radar dataKey="value" stroke="var(--a)" fill="var(--a)" fillOpacity={.22} strokeWidth={2} dot={{ r:3, fill:"var(--a)" }}/>
-                    </RadarChart>
-                  </ResponsiveContainer>
+                <div style={{ background:"var(--card)", borderRadius:13, padding:`${ux(10)}px ${ux(8)}px`, display:"flex", flexDirection:"column" }}>
+                  <div style={{ fontSize:ux(12.5), fontWeight:700, padding:`0 ${ux(8)}px ${ux(2)}px`, color:"var(--dim)" }}>{lang==="ko"?"스택 프로필":"Stack Profile"}</div>
+                  <div style={{ flex:1, minHeight:0 }}>
+                    <ResponsiveContainer width="100%" height="100%" minHeight={280}>
+                      <RadarChart data={avgMetrics} cx="50%" cy="50%" outerRadius="78%">
+                        <PolarGrid stroke="rgba(139,92,246,.18)" gridType="polygon"/>
+                        <PolarAngleAxis dataKey="metric" tick={{ fill:"var(--dim)", fontSize:ux(11) }}/>
+                        <Radar dataKey="value" stroke="var(--a)" fill="var(--a)" fillOpacity={.22} strokeWidth={2} dot={{ r:3, fill:"var(--a)" }}/>
+                      </RadarChart>
+                    </ResponsiveContainer>
+                  </div>
+                  {stackHighlights.length > 0 && (
+                    <div style={{ padding:`${ux(8)}px ${ux(10)}px 0`, borderTop:"1px solid var(--bdr)", marginTop:ux(4) }}>
+                      <div style={{ fontSize:ux(10), color:"var(--accentText)", fontWeight:700, textTransform:"uppercase", letterSpacing:.8, marginBottom:ux(6) }}>
+                        {lang==="ko"?"다른 조합 대비 강점":"Strengths vs Avg"}
+                      </div>
+                      <div style={{ display:"flex", flexDirection:"column", gap:ux(5) }}>
+                        {stackHighlights.map(h => (
+                          <div key={h.key} style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:ux(8) }}>
+                            <span style={{ fontSize:ux(11.5), color:"var(--txt)", fontWeight:600 }}>{h.metric}</span>
+                            <div style={{ display:"flex", alignItems:"center", gap:ux(5) }}>
+                              <span style={{ fontSize:ux(12), fontWeight:800, color:"var(--ok)" }}>{h.value}</span>
+                              <span style={{ fontSize:ux(10), fontWeight:700, color:"var(--ok)", background:"var(--okbg)", padding:`${ux(2)}px ${ux(6)}px`, borderRadius:6 }}>+{h.diff}</span>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
