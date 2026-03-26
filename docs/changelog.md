@@ -5,6 +5,15 @@
 
 ---
 
+## [1.5.3] 2026-03-26 — light mode text contrast + annual total in cost panel
+
+### Changed
+- 라이트 모드에서 연한 보라색으로 보이던 강조 텍스트를 검정 계열로 전환
+  - tooltip 라벨, 가격 라벨, Stack Analysis 등 `var(--a2)` 기반 텍스트 가독성 개선
+- Stack Builder의 `예상 월 비용 구성` 패널 오른쪽에 `예상 연간 총비용` 카드 추가
+  - 선택된 스택의 연간 추정 총비용을 큰 숫자로 즉시 확인 가능
+  - 기존 무료 컴포넌트 집계는 보조 정보로 유지
+
 ## [1.5.2] 2026-03-26 — hover-first vendor cards + light mode toggle polish
 
 ### Changed

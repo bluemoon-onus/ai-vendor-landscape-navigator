@@ -443,6 +443,7 @@ const CSS = `
   --bg:#0A0A0F;--bg2:#0F1118;--card:#13131A;--cardh:#171722;
   --a:#8B5CF6;--a2:#A78BFA;--a3:#06B6D4;--cy:#06B6D4;--a-rgb:139,92,246;--cy-rgb:6,182,212;
   --adim:rgba(139,92,246,0.12);--aglow:rgba(139,92,246,0.18);--cydim:rgba(6,182,212,0.12);
+  --accentText:#A78BFA;
   --txt:#F1F0FF;--dim:#6B7280;--bdr:#1E1E2E;--g1:#8B5CF6;--g2:#06B6D4;
   --ok:#10B981;--okbg:rgba(16,185,129,0.12);--warn:#F59E0B;--warnbg:rgba(245,158,11,0.12);--err:#EF4444;--errbg:rgba(239,68,68,0.12);
   --shadow:rgba(0,0,0,0.42);--overlay:rgba(10,10,15,0.72);--logo-shell:rgba(255,255,255,0.98);
@@ -451,6 +452,7 @@ const CSS = `
   --bg:#F8FAFC;--bg2:#F1F5F9;--card:#FFFFFF;--cardh:#FFFFFF;
   --a:#8B5CF6;--a2:#7C3AED;--a3:#06B6D4;--cy:#06B6D4;--a-rgb:139,92,246;--cy-rgb:6,182,212;
   --adim:rgba(139,92,246,0.08);--aglow:rgba(139,92,246,0.12);--cydim:rgba(6,182,212,0.1);
+  --accentText:#0F172A;
   --txt:#0F172A;--dim:#64748B;--bdr:#E2E8F0;--g1:#8B5CF6;--g2:#06B6D4;
   --ok:#10B981;--okbg:rgba(16,185,129,0.1);--warn:#F59E0B;--warnbg:rgba(245,158,11,0.1);--err:#EF4444;--errbg:rgba(239,68,68,0.1);
   --shadow:rgba(15,23,42,0.1);--overlay:rgba(15,23,42,0.28);--logo-shell:#FFFFFF;
@@ -634,7 +636,7 @@ function VendorNode({ vendor, isHighlighted, isDimmed, isSelected, onClick, dela
             </div>
           </div>
 
-          <div style={{ fontSize:ux(10.5), color:"var(--a2)", fontWeight:700, textTransform:"uppercase", letterSpacing:0.8, marginBottom:ux(5) }}>
+          <div style={{ fontSize:ux(10.5), color:"var(--accentText)", fontWeight:700, textTransform:"uppercase", letterSpacing:0.8, marginBottom:ux(5) }}>
             {lang==="ko"?"인사이트":"Insight"}
           </div>
           <p style={{
@@ -650,7 +652,7 @@ function VendorNode({ vendor, isHighlighted, isDimmed, isSelected, onClick, dela
             "{insight}"
           </p>
 
-          <div style={{ fontSize:ux(10.5), color:"var(--a2)", fontWeight:700, textTransform:"uppercase", letterSpacing:0.8, marginBottom:ux(6) }}>
+          <div style={{ fontSize:ux(10.5), color:"var(--accentText)", fontWeight:700, textTransform:"uppercase", letterSpacing:0.8, marginBottom:ux(6) }}>
             {lang==="ko"?"핵심 강점":"Top Strengths"}
           </div>
           <div style={{ display:"grid", gap:ux(5), marginBottom:ux(10) }}>
@@ -674,7 +676,7 @@ function VendorNode({ vendor, isHighlighted, isDimmed, isSelected, onClick, dela
 
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:ux(10), borderTop:"1px solid var(--bdr)", paddingTop:ux(10) }}>
             <div style={{ fontSize:ux(11), color:"var(--dim)", fontWeight:600 }}>{lang==="ko"?"가격":"Price"}</div>
-            <div style={{ fontSize:ux(11.5), color:vendor.priceFree ? "var(--ok)" : "var(--a2)", fontWeight:700, textAlign:"right" }}>
+            <div style={{ fontSize:ux(11.5), color:vendor.priceFree ? "var(--ok)" : "var(--accentText)", fontWeight:700, textAlign:"right" }}>
               {getStackPriceText(vendor, lang)}
             </div>
           </div>
@@ -770,7 +772,7 @@ function DetailModal({ vendor, onClose, lang }) {
         </div>
         <div style={{ display:"flex", gap:7, marginBottom:18, flexWrap:"wrap" }}>
           {vendor.priceFree && <span style={{ fontSize:ux(12), padding:`${ux(4)}px ${ux(12)}px`, borderRadius:100, background:"var(--okbg)", color:"var(--ok)", fontWeight:700 }}>{lang==="ko"?"무료 플랜":"Free Tier"}</span>}
-          {vendor.priceLabel && <span style={{ fontSize:ux(12), padding:`${ux(4)}px ${ux(12)}px`, borderRadius:100, background:"var(--adim)", color:"var(--a2)", fontWeight:600 }}>{vendor.priceLabel}</span>}
+          {vendor.priceLabel && <span style={{ fontSize:ux(12), padding:`${ux(4)}px ${ux(12)}px`, borderRadius:100, background:"var(--adim)", color:"var(--accentText)", fontWeight:600 }}>{vendor.priceLabel}</span>}
           <span style={{ fontSize:ux(12), padding:`${ux(4)}px ${ux(12)}px`, borderRadius:100, background:"var(--cydim)", color:"var(--a3)", fontWeight:600 }}>{bestFit}</span>
         </div>
         <div style={{ display:"grid", gridTemplateColumns:"1fr 1fr", gap:14, marginBottom:16 }}>
@@ -786,7 +788,7 @@ function DetailModal({ vendor, onClose, lang }) {
         <div style={{ background:"linear-gradient(135deg,var(--adim),var(--cydim))", border:"1px solid var(--bdr)", borderRadius:12, padding:18, marginBottom:16 }}>
           <div style={{ display:"flex", alignItems:"center", gap:6, marginBottom:7 }}>
             <MessageSquareQuote size={14} color="var(--a2)"/>
-            <span style={{ fontWeight:700, fontSize:ux(11.5), color:"var(--a2)", textTransform:"uppercase", letterSpacing:.9 }}>{lang==="ko"?"세일즈 디렉터 인사이트":"Sales Director's Take"}</span>
+            <span style={{ fontWeight:700, fontSize:ux(11.5), color:"var(--accentText)", textTransform:"uppercase", letterSpacing:.9 }}>{lang==="ko"?"세일즈 디렉터 인사이트":"Sales Director's Take"}</span>
           </div>
           <p style={{ fontSize:ux(14.5), lineHeight:1.75, fontStyle:"italic" }}>"{insight}"</p>
         </div>
@@ -1112,7 +1114,7 @@ function DecisionFlow({ onBuildStack }) {
                     <div style={{ fontSize:ux(12), color:"var(--dim)" }}>{vendor.org}</div>
                   </div>
                 </div>
-                <div style={{ fontSize:ux(11), color:"var(--a2)", fontWeight:700, textTransform:"uppercase", letterSpacing:0.8, marginBottom:ux(6) }}>
+                <div style={{ fontSize:ux(11), color:"var(--accentText)", fontWeight:700, textTransform:"uppercase", letterSpacing:0.8, marginBottom:ux(6) }}>
                   {lang==="ko"?"선정 이유":"Why it was chosen"}
                 </div>
                 <p style={{ fontSize:ux(13.5), lineHeight:1.65, color:"var(--dim)", fontStyle:"italic" }}>"{vf(vendor, "insight", lang)}"</p>
@@ -1195,7 +1197,7 @@ function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
         <div className="asi" style={{ marginBottom:18, padding:`${ux(14)}px ${ux(20)}px`, borderRadius:13, background:"linear-gradient(135deg,rgba(139,92,246,.12),rgba(99,102,241,.06))", border:"1px solid rgba(139,92,246,.22)" }}>
           <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", flexWrap:"wrap", gap:10 }}>
             <div>
-              <div style={{ fontSize:ux(11), color:"var(--a2)", fontWeight:700, textTransform:"uppercase", letterSpacing:.9, marginBottom:ux(10) }}>
+              <div style={{ fontSize:ux(11), color:"var(--accentText)", fontWeight:700, textTransform:"uppercase", letterSpacing:.9, marginBottom:ux(10) }}>
                 <DollarSign size={ux(11)} style={{ display:"inline", verticalAlign:"middle" }}/> {lang==="ko"?"예상 월 비용 구성":"Estimated Monthly Cost Breakdown"}
               </div>
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fit,minmax(280px,1fr))", gap:8 }}>
@@ -1204,7 +1206,7 @@ function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
                     <LogoBadge vendorId={vendor.id} size={ux(32)}/>
                     <div>
                       <div style={{ fontSize:ux(11.5), fontWeight:600, lineHeight:1.2 }}>{vendor.name}</div>
-                      <div style={{ fontSize:ux(11), color: vendor.priceFree ? "var(--ok)" : "var(--a2)", fontWeight:700, lineHeight:1.25 }}>
+                      <div style={{ fontSize:ux(11), color: vendor.priceFree ? "var(--ok)" : "var(--accentText)", fontWeight:700, lineHeight:1.25 }}>
                         {getStackPriceText(vendor, lang)}
                       </div>
                     </div>
@@ -1212,10 +1214,20 @@ function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
                 ))}
               </div>
             </div>
-            <div style={{ textAlign:"right" }}>
-              <div style={{ fontSize:ux(11), color:"var(--dim)" }}>{lang==="ko"?"무료 컴포넌트":"Free components"}</div>
-              <div style={{ fontSize:ux(28), fontWeight:900, color:"var(--ok)", lineHeight:1.1 }}>{costSummary.freeCount}</div>
-              <div style={{ fontSize:ux(11), color:"var(--dim)" }}>/ {pickCount} {lang==="ko"?"레이어":"layers"}</div>
+            <div style={{ minWidth:ux(260), display:"flex", flexDirection:"column", gap:ux(10), flexShrink:0 }}>
+              <div style={{ padding:`${ux(16)}px ${ux(18)}px`, borderRadius:18, border:"1px solid var(--ok)", background:"linear-gradient(135deg,var(--okbg),rgba(6,182,212,0.08))" }}>
+                <div style={{ fontSize:ux(11), color:"var(--dim)", fontWeight:700, marginBottom:ux(6) }}>
+                  {lang==="ko"?"예상 연간 총비용":"Estimated Annual Total"}
+                </div>
+                <div style={{ fontSize:ux(24), fontWeight:900, color:"var(--ok)", lineHeight:1.1 }}>
+                  {formatAnnualEstimate(costSummary.annualTotal, lang)}
+                </div>
+              </div>
+              <div style={{ textAlign:"right", padding:`0 ${ux(4)}px` }}>
+                <div style={{ fontSize:ux(11), color:"var(--dim)" }}>{lang==="ko"?"무료 컴포넌트":"Free components"}</div>
+                <div style={{ fontSize:ux(24), fontWeight:900, color:"var(--ok)", lineHeight:1.1 }}>{costSummary.freeCount}</div>
+                <div style={{ fontSize:ux(11), color:"var(--dim)" }}>/ {pickCount} {lang==="ko"?"레이어":"layers"}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -1345,7 +1357,7 @@ function StackBuilder({ lang, picks, setPicks, autoRevealKey }) {
             <div style={{ borderTop:"1px solid var(--bdr)", paddingTop:16 }}>
               <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:12 }}>
                 <MessageSquareQuote size={14} color="var(--a2)"/>
-                <span style={{ fontWeight:700, fontSize:ux(12), color:"var(--a2)", textTransform:"uppercase", letterSpacing:.9 }}>{lang==="ko"?"스택 분석":"Stack Analysis"}</span>
+                <span style={{ fontWeight:700, fontSize:ux(12), color:"var(--accentText)", textTransform:"uppercase", letterSpacing:.9 }}>{lang==="ko"?"스택 분석":"Stack Analysis"}</span>
               </div>
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))", gap:10 }}>
                 {selectedVendors.map(({layer,vendor}) => (
