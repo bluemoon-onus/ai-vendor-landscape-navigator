@@ -1,6 +1,7 @@
 import { useState, useMemo, useEffect, useRef, createContext, useContext } from "react";
 import { createPortal } from "react-dom";
 import { RadarChart, Radar, PolarGrid, PolarAngleAxis, ResponsiveContainer } from "recharts";
+import { Analytics } from "@vercel/analytics/react";
 import { X, GitCompare, Layers, Sparkles, Zap, Building2, Wrench, ChevronDown, ArrowRight, Check, RotateCcw, MessageSquareQuote, Boxes, Shield, Star, Sun, Moon, DollarSign } from "lucide-react";
 
 const LangCtx = createContext("en");
@@ -1604,6 +1605,7 @@ export default function App() {
           {tab==="stack" && <StackBuilder key="stack" lang={lang} theme={theme} picks={stackPicks} setPicks={setStackPicks} autoRevealKey={stackAutoRevealKey}/>}
         </div>
       </div>
+      <Analytics />
     </LangCtx.Provider>
   );
 }
