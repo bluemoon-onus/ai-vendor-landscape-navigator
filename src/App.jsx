@@ -802,8 +802,8 @@ function StackBuilder({ lang, theme, picks, setPicks, autoRevealKey, initialTeam
   const [showResult, setShowResult] = useState(false);
   const [activePreset, setActivePreset] = useState(null);
   const [calcUsers, setCalcUsers] = useState(initialTeamSize || 50);
-  const [calcInputTok, setCalcInputTok] = useState(300);
-  const [calcOutputTok, setCalcOutputTok] = useState(100);
+  const [calcInputTok, setCalcInputTok] = useState(700);
+  const [calcOutputTok, setCalcOutputTok] = useState(300);
   useEffect(() => { if (initialTeamSize) setCalcUsers(initialTeamSize); }, [initialTeamSize]);
   const isLight = theme==="light";
   const pickCount = Object.values(picks).filter(Boolean).length;
@@ -834,6 +834,48 @@ function StackBuilder({ lang, theme, picks, setPicks, autoRevealKey, initialTeam
     const ecoAvg = Object.keys(ml2).map(k => ({ key:k, label:ml2[k], ecoAvg:+(V.reduce((s,v)=>s+v.metrics[k],0)/V.length).toFixed(1) }));
     return avgMetrics.map((m,i) => ({ ...m, diff:+(m.value - ecoAvg[i].ecoAvg).toFixed(1), key:ecoAvg[i].key })).sort((a,b) => b.diff - a.diff).slice(0,3).filter(x => x.diff > 0);
   }, [avgMetrics, lang]);
+
+  // Find weakest vendor and suggest improvement
+  const improveSuggestion = useMemo(() => {
+    if (selectedVendors.length < 2) return null;
+    const metricKeys = Object.keys(ML);
+    // Score each selected vendor by its avg metrics
+    const scored = selectedVendors.map(({ layer, vendor }) => {
+      const avg = metricKeys.reduce((s, k) => s + (vendor.metrics[k] || 0), 0) / metricKeys.length;
+      return { layer, vendor, avg };
+    }).sort((a, b) => a.avg - b.avg);
+    const weakest = scored[0];
+    // Find the best alternative in that layer
+    const layerVendors = V.filter(v => v.layer === weakest.layer.id && v.id !== weakest.vendor.id);
+    const alternatives = layerVendors.map(v => {
+      const avg = metricKeys.reduce((s, k) => s + (v.metrics[k] || 0), 0) / metricKeys.length;
+      return { vendor: v, avg };
+    }).sort((a, b) => b.avg - a.avg);
+    const best = alternatives[0];
+    if (!best || best.avg <= weakest.avg) return null;
+    // Compute current overall avg and new overall avg if we swap
+    const currentOverall = scored.reduce((s, x) => s + x.avg, 0) / scored.length;
+    const newOverall = (currentOverall * scored.length - weakest.avg + best.avg) / scored.length;
+    // What grade would it be?
+    const gradeLetter = avg => { if (avg>=8.5) return "A+"; if (avg>=7.5) return "A"; if (avg>=6.5) return "B+"; if (avg>=5.5) return "B"; return "C"; };
+    // Find which metrics improve most
+    const improvements = metricKeys
+      .map(k => ({ key: k, label: (lang==="ko"?MLK:ML)[k], diff: (best.vendor.metrics[k]||0) - (weakest.vendor.metrics[k]||0) }))
+      .filter(x => x.diff > 0)
+      .sort((a, b) => b.diff - a.diff)
+      .slice(0, 2);
+    return {
+      weakLayer: weakest.layer,
+      weakVendor: weakest.vendor,
+      weakAvg: weakest.avg.toFixed(1),
+      bestVendor: best.vendor,
+      bestAvg: best.avg.toFixed(1),
+      currentGrade: gradeLetter(currentOverall),
+      newGrade: gradeLetter(newOverall),
+      diff: +(newOverall - currentOverall).toFixed(1),
+      improvements,
+    };
+  }, [selectedVendors, lang]);
 
   const costSummary = useMemo(() => {
     const freeItems = selectedVendors.filter(x => x.vendor.priceFree);
@@ -1053,6 +1095,50 @@ function StackBuilder({ lang, theme, picks, setPicks, autoRevealKey, initialTeam
                 </div>
               )}
             </div>
+            {/* Improvement Suggestion */}
+            {improveSuggestion && (
+              <div style={{ background:"linear-gradient(135deg,rgba(251,191,36,.08),rgba(245,158,11,.04))", border:"1px solid rgba(251,191,36,.3)", borderRadius:14, padding:`${ux(16)}px ${ux(20)}px`, marginBottom:16 }}>
+                <div style={{ display:"flex", alignItems:"center", gap:8, marginBottom:ux(12) }}>
+                  <Zap size={ux(16)} color="var(--warn)"/>
+                  <span style={{ fontWeight:800, fontSize:ux(14), color:"var(--warn)" }}>{lang==="ko"?"스택 개선 제안":"Stack Improvement Suggestion"}</span>
+                </div>
+                <div style={{ display:"flex", alignItems:"center", gap:ux(14), flexWrap:"wrap" }}>
+                  <div style={{ display:"flex", alignItems:"center", gap:ux(10), background:"var(--card)", border:"1px solid var(--bdr)", borderRadius:12, padding:`${ux(10)}px ${ux(14)}px` }}>
+                    <LogoBadge vendorId={improveSuggestion.weakVendor.id} size={ux(30)}/>
+                    <div>
+                      <div style={{ fontSize:ux(10), color:"var(--err)", fontWeight:700, textTransform:"uppercase", letterSpacing:.5 }}>{lang==="ko"?"가장 약한 벤더":"Weakest vendor"}</div>
+                      <div style={{ fontWeight:700, fontSize:ux(13), color:"var(--txt)" }}>{improveSuggestion.weakVendor.name}</div>
+                      <div style={{ fontSize:ux(11), color:"var(--dim)" }}>{lang==="ko"?improveSuggestion.weakLayer.labelKo:improveSuggestion.weakLayer.label} · {lang==="ko"?"평균":"avg"} {improveSuggestion.weakAvg}</div>
+                    </div>
+                  </div>
+                  <ArrowRight size={ux(18)} color="var(--warn)" style={{ flexShrink:0 }}/>
+                  <div style={{ display:"flex", alignItems:"center", gap:ux(10), background:"var(--okbg)", border:"1px solid var(--ok)", borderRadius:12, padding:`${ux(10)}px ${ux(14)}px` }}>
+                    <LogoBadge vendorId={improveSuggestion.bestVendor.id} size={ux(30)}/>
+                    <div>
+                      <div style={{ fontSize:ux(10), color:"var(--ok)", fontWeight:700, textTransform:"uppercase", letterSpacing:.5 }}>{lang==="ko"?"추천 대체 벤더":"Recommended alternative"}</div>
+                      <div style={{ fontWeight:700, fontSize:ux(13), color:"var(--txt)" }}>{improveSuggestion.bestVendor.name}</div>
+                      <div style={{ fontSize:ux(11), color:"var(--dim)" }}>{lang==="ko"?"평균":"avg"} {improveSuggestion.bestAvg}</div>
+                    </div>
+                  </div>
+                  <div style={{ marginLeft:"auto", textAlign:"center", padding:`${ux(8)}px ${ux(14)}px`, background:"var(--card)", border:"1px solid var(--bdr)", borderRadius:10 }}>
+                    <div style={{ fontSize:ux(10), color:"var(--dim)", fontWeight:600, marginBottom:ux(2) }}>{lang==="ko"?"등급 변화":"Grade"}</div>
+                    <div style={{ display:"flex", alignItems:"center", gap:ux(6) }}>
+                      <span style={{ fontWeight:900, fontSize:ux(18), color:"var(--warn)" }}>{improveSuggestion.currentGrade}</span>
+                      <ArrowRight size={ux(14)} color="var(--ok)"/>
+                      <span style={{ fontWeight:900, fontSize:ux(18), color:"var(--ok)" }}>{improveSuggestion.newGrade}</span>
+                    </div>
+                  </div>
+                </div>
+                {improveSuggestion.improvements.length > 0 && (
+                  <div style={{ marginTop:ux(10), fontSize:ux(12), color:"var(--dim)", lineHeight:1.6 }}>
+                    {lang==="ko"
+                      ? `${improveSuggestion.bestVendor.name}으로 변경 시 ${improveSuggestion.improvements.map(x=>`${x.label} +${x.diff}`).join(", ")} 향상됩니다.`
+                      : `Switching to ${improveSuggestion.bestVendor.name} improves ${improveSuggestion.improvements.map(x=>`${x.label} +${x.diff}`).join(", ")}.`}
+                  </div>
+                )}
+              </div>
+            )}
+
             <div style={{ borderTop:"1px solid var(--bdr)", paddingTop:16 }}>
               <div style={{ display:"flex", alignItems:"center", gap:7, marginBottom:12 }}><MessageSquareQuote size={14} color="var(--a2)"/><span style={{ fontWeight:700, fontSize:ux(12), color:"var(--accentText)", textTransform:"uppercase", letterSpacing:.9 }}>{lang==="ko"?"스택 분석":"Stack Analysis"}</span></div>
               <div style={{ display:"grid", gridTemplateColumns:"repeat(auto-fill,minmax(260px,1fr))", gap:10 }}>
