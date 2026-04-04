@@ -95,15 +95,15 @@ const RC  = ["#8B5CF6","#F59E0B","#10B981","#F43F5E","#60A5FA","#FB923C"];
 
 const V = [
   /* FOUNDATION — updated to latest models & pricing (2025) */
-  { id:"gpt4o",    name:"GPT-4o",              org:"OpenAI",           layer:"foundation", priceFree:false, priceLabel:"$2.5/1M tok",    useCases:["customer-service","doc-intel","code-assist","sales-intel","content-gen","data-analytics","e-commerce","legal","advertising","blog-seo","tax-advisory"], pricing:"Pay-per-token",       bestFit:"Enterprise & Startup",       strengths:["Broadest ecosystem & plugins","Strongest general reasoning","Multimodal (text, image, audio, video)"],                              limitations:["Cost escalation at scale","Data privacy in regulated industries","Rate limits at peak"],                                    insight:"Market leader with broadest ecosystem. Best for Microsoft-stack enterprises. Watch cost escalation at scale.",         metrics:{performance:9,integration:9,cost:6,enterprise:8,scalability:9,community:10} },
-  { id:"claude35", name:"Claude 3.7 Sonnet",   org:"Anthropic",        layer:"foundation", priceFree:false, priceLabel:"$3/1M tok",      useCases:["customer-service","doc-intel","code-assist","content-gen","legal","tax-advisory","e-commerce","blog-seo"],                                                pricing:"Pay-per-token",       bestFit:"Enterprise (regulated)",     strengths:["200K context — best for long docs","Constitutional AI safety","Superior instruction following & coding"],           limitations:["Smaller plugin ecosystem","No native image gen","Fewer fine-tuning options"],                                    insight:"Strongest in safety-critical & regulated industries. 200K context is game-changer for legal & document workflows.",    metrics:{performance:9,integration:7,cost:6,enterprise:9,scalability:8,community:8} },
-  { id:"gemini",   name:"Gemini 2.5 Pro",      org:"Google DeepMind",  layer:"foundation", priceFree:true,  priceLabel:"$1.25/1M tok",   useCases:["doc-intel","data-analytics","content-gen","customer-service","video-creation","advertising","e-commerce","blog-seo"],                                      pricing:"Pay-per-token",       bestFit:"Data-heavy Enterprise",      strengths:["1M token context — largest window","Native multimodal (text,image,video,audio)","Deep Google Workspace integration"],limitations:["Still building enterprise trust","Fewer third-party integrations","Perception lags GPT-4o"],                     insight:"Best price-performance for multimodal. Natural fit for GCP/BigQuery enterprises. 1M context unmatched.",               metrics:{performance:9,integration:7,cost:8,enterprise:7,scalability:9,community:7} },
-  { id:"llama",    name:"Llama 3.3 70B",       org:"Meta AI",          layer:"foundation", priceFree:true,  priceLabel:"Self-hosted",    useCases:["customer-service","content-gen","code-assist","blog-seo"],                                                                                                  pricing:"Open Source",         bestFit:"Tech-savvy Enterprise",      strengths:["Open source — full control & customization","No vendor lock-in","Fine-tunable for any domain"],                    limitations:["Requires GPU infra investment","No managed service from Meta","128K context, shorter vs some competitors"],      insight:"Sovereignty play — for enterprises that cannot send data to external APIs. Pair with cloud managed hosting.",          metrics:{performance:8,integration:5,cost:9,enterprise:6,scalability:7,community:9} },
-  { id:"mistral",  name:"Mistral Large 2",     org:"Mistral AI",       layer:"foundation", priceFree:false, priceLabel:"$2/1M tok",      useCases:["doc-intel","code-assist","content-gen","legal"],                                                                                                           pricing:"Pay-per-token",       bestFit:"EU Enterprise",              strengths:["EU data sovereignty compliance","Excellent cost-performance ratio","Strong multilingual (incl. Korean)"],           limitations:["Smaller ecosystem","Limited enterprise track record","Fewer benchmarks"],                                        insight:"The European champion — critical for EU customers with GDPR sovereignty requirements.",                                metrics:{performance:8,integration:6,cost:8,enterprise:6,scalability:7,community:6} },
-  { id:"cohere",   name:"Command R+",          org:"Cohere",           layer:"foundation", priceFree:false, priceLabel:"$2.5/1M tok",    useCases:["customer-service","doc-intel","sales-intel","legal","e-commerce"],                                                                                          pricing:"Pay-per-token",       bestFit:"Enterprise RAG",             strengths:["Built-in RAG with citations","Enterprise data connectors","Best for search & retrieval"],                          limitations:["Weaker general reasoning","Smaller brand recognition","Limited multimodal"],                                     insight:"The RAG specialist. Enterprise search or knowledge-base Q&A: often outperforms GPT-4 at lower cost.",                 metrics:{performance:7,integration:7,cost:7,enterprise:7,scalability:7,community:5} },
-  { id:"deepseek", name:"DeepSeek V3",         org:"DeepSeek AI",      layer:"foundation", priceFree:true,  priceLabel:"$0.27/1M tok",   useCases:["code-assist","data-analytics","doc-intel","blog-seo"],                                                                                                      pricing:"Open Source + API",   bestFit:"Cost-conscious Developer",   strengths:["State-of-art reasoning at fraction of cost","MIT open-source license","Exceptional coding & math"],                limitations:["China-based — data sovereignty concerns","Smaller ecosystem","Enterprise trust building"],                       insight:"Disruptive cost-performance. Best OSS reasoning model. Data sovereignty concerns for regulated industries.",           metrics:{performance:9,integration:5,cost:10,enterprise:4,scalability:7,community:8} },
-  { id:"grok",     name:"Grok-2",              org:"xAI",              layer:"foundation", priceFree:false, priceLabel:"$2/1M tok",      useCases:["content-gen","data-analytics","code-assist","customer-service","blog-seo","advertising"],                                                                    pricing:"Pay-per-token",       bestFit:"Real-time Data Needs",       strengths:["Real-time X/Twitter data access","Strong reasoning & analysis","Competitive pricing"],                             limitations:["Newer ecosystem, fewer integrations","X platform dependency","Limited enterprise compliance certs"],              insight:"Unique advantage via real-time X data integration. Best when trend analysis and live data matter.",                     metrics:{performance:8,integration:5,cost:7,enterprise:4,scalability:7,community:5} },
-  { id:"perplexity",name:"Perplexity Sonar",   org:"Perplexity AI",    layer:"foundation", priceFree:true,  priceLabel:"Free~$20/mo",    useCases:["doc-intel","data-analytics","sales-intel","blog-seo","legal","tax-advisory"],                                                                               pricing:"Freemium + API",      bestFit:"Research & Knowledge",       strengths:["Real-time web search with citations","Best for research workflows","Simple, fast API"],                            limitations:["Limited customization vs raw LLMs","Not suitable for fine-tuning","Less code-focused"],                          insight:"The search-native AI. Where accuracy and citation matter more than creativity. Perfect for research tasks.",            metrics:{performance:7,integration:6,cost:8,enterprise:5,scalability:7,community:6} },
+  { id:"gpt4o",    name:"GPT",                 org:"OpenAI",           layer:"foundation", priceFree:false, priceLabel:"$2.5/1M tok",    useCases:["customer-service","doc-intel","code-assist","sales-intel","content-gen","data-analytics","e-commerce","legal","advertising","blog-seo","tax-advisory"], pricing:"Pay-per-token",       bestFit:"Enterprise & Startup",       strengths:["Broadest ecosystem & plugins","Strongest general reasoning","Multimodal (text, image, audio, video)"],                              limitations:["Cost escalation at scale","Data privacy in regulated industries","Rate limits at peak"],                                    insight:"Market leader with broadest ecosystem. Best for Microsoft-stack enterprises. Watch cost escalation at scale.",         metrics:{performance:9,integration:9,cost:6,enterprise:8,scalability:9,community:10} },
+  { id:"claude35", name:"Claude",               org:"Anthropic",        layer:"foundation", priceFree:false, priceLabel:"$3/1M tok",      useCases:["customer-service","doc-intel","code-assist","content-gen","legal","tax-advisory","e-commerce","blog-seo"],                                                pricing:"Pay-per-token",       bestFit:"Enterprise (regulated)",     strengths:["200K context — best for long docs","Constitutional AI safety","Superior instruction following & coding"],           limitations:["Smaller plugin ecosystem","No native image gen","Fewer fine-tuning options"],                                    insight:"Strongest in safety-critical & regulated industries. 200K context is game-changer for legal & document workflows.",    metrics:{performance:9,integration:7,cost:6,enterprise:9,scalability:8,community:8} },
+  { id:"gemini",   name:"Gemini",               org:"Google DeepMind",  layer:"foundation", priceFree:true,  priceLabel:"$1.25/1M tok",   useCases:["doc-intel","data-analytics","content-gen","customer-service","video-creation","advertising","e-commerce","blog-seo"],                                      pricing:"Pay-per-token",       bestFit:"Data-heavy Enterprise",      strengths:["1M token context — largest window","Native multimodal (text,image,video,audio)","Deep Google Workspace integration"],limitations:["Still building enterprise trust","Fewer third-party integrations","Perception lags GPT-4o"],                     insight:"Best price-performance for multimodal. Natural fit for GCP/BigQuery enterprises. 1M context unmatched.",               metrics:{performance:9,integration:7,cost:8,enterprise:7,scalability:9,community:7} },
+  { id:"llama",    name:"Llama",                org:"Meta AI",          layer:"foundation", priceFree:true,  priceLabel:"Self-hosted",    useCases:["customer-service","content-gen","code-assist","blog-seo"],                                                                                                  pricing:"Open Source",         bestFit:"Tech-savvy Enterprise",      strengths:["Open source — full control & customization","No vendor lock-in","Fine-tunable for any domain"],                    limitations:["Requires GPU infra investment","No managed service from Meta","128K context, shorter vs some competitors"],      insight:"Sovereignty play — for enterprises that cannot send data to external APIs. Pair with cloud managed hosting.",          metrics:{performance:8,integration:5,cost:9,enterprise:6,scalability:7,community:9} },
+  { id:"mistral",  name:"Mistral",              org:"Mistral AI",       layer:"foundation", priceFree:false, priceLabel:"$2/1M tok",      useCases:["doc-intel","code-assist","content-gen","legal"],                                                                                                           pricing:"Pay-per-token",       bestFit:"EU Enterprise",              strengths:["EU data sovereignty compliance","Excellent cost-performance ratio","Strong multilingual (incl. Korean)"],           limitations:["Smaller ecosystem","Limited enterprise track record","Fewer benchmarks"],                                        insight:"The European champion — critical for EU customers with GDPR sovereignty requirements.",                                metrics:{performance:8,integration:6,cost:8,enterprise:6,scalability:7,community:6} },
+  { id:"cohere",   name:"Cohere",               org:"Cohere",           layer:"foundation", priceFree:false, priceLabel:"$2.5/1M tok",    useCases:["customer-service","doc-intel","sales-intel","legal","e-commerce"],                                                                                          pricing:"Pay-per-token",       bestFit:"Enterprise RAG",             strengths:["Built-in RAG with citations","Enterprise data connectors","Best for search & retrieval"],                          limitations:["Weaker general reasoning","Smaller brand recognition","Limited multimodal"],                                     insight:"The RAG specialist. Enterprise search or knowledge-base Q&A: often outperforms GPT-4 at lower cost.",                 metrics:{performance:7,integration:7,cost:7,enterprise:7,scalability:7,community:5} },
+  { id:"deepseek", name:"DeepSeek",             org:"DeepSeek AI",      layer:"foundation", priceFree:true,  priceLabel:"$0.27/1M tok",   useCases:["code-assist","data-analytics","doc-intel","blog-seo"],                                                                                                      pricing:"Open Source + API",   bestFit:"Cost-conscious Developer",   strengths:["State-of-art reasoning at fraction of cost","MIT open-source license","Exceptional coding & math"],                limitations:["China-based — data sovereignty concerns","Smaller ecosystem","Enterprise trust building"],                       insight:"Disruptive cost-performance. Best OSS reasoning model. Data sovereignty concerns for regulated industries.",           metrics:{performance:9,integration:5,cost:10,enterprise:4,scalability:7,community:8} },
+  { id:"grok",     name:"Grok",                org:"xAI",              layer:"foundation", priceFree:false, priceLabel:"$2/1M tok",      useCases:["content-gen","data-analytics","code-assist","customer-service","blog-seo","advertising"],                                                                    pricing:"Pay-per-token",       bestFit:"Real-time Data Needs",       strengths:["Real-time X/Twitter data access","Strong reasoning & analysis","Competitive pricing"],                             limitations:["Newer ecosystem, fewer integrations","X platform dependency","Limited enterprise compliance certs"],              insight:"Unique advantage via real-time X data integration. Best when trend analysis and live data matter.",                     metrics:{performance:8,integration:5,cost:7,enterprise:4,scalability:7,community:5} },
+  { id:"perplexity",name:"Perplexity",          org:"Perplexity AI",    layer:"foundation", priceFree:true,  priceLabel:"Free~$20/mo",    useCases:["doc-intel","data-analytics","sales-intel","blog-seo","legal","tax-advisory"],                                                                               pricing:"Freemium + API",      bestFit:"Research & Knowledge",       strengths:["Real-time web search with citations","Best for research workflows","Simple, fast API"],                            limitations:["Limited customization vs raw LLMs","Not suitable for fine-tuning","Less code-focused"],                          insight:"The search-native AI. Where accuracy and citation matter more than creativity. Perfect for research tasks.",            metrics:{performance:7,integration:6,cost:8,enterprise:5,scalability:7,community:6} },
   /* PLATFORM */
   { id:"azure-openai",  name:"Azure OpenAI",   org:"Microsoft Azure",   layer:"platform", priceFree:false, priceLabel:"PAYG + PTU",     useCases:["customer-service","doc-intel","code-assist","sales-intel","content-gen","data-analytics","legal","tax-advisory","e-commerce","advertising"], pricing:"Pay-as-you-go + PTU", bestFit:"Microsoft-stack Enterprise", strengths:["Enterprise compliance (SOC2, HIPAA, ISO)","Seamless M365 integration","Private networking & data residency"],       limitations:["Locked to OpenAI models","Complex PTU pricing","Slower model availability than OpenAI direct"],                  insight:"The enterprise safe choice. Azure AD + Teams + Dynamics shops — path of least resistance.",                           metrics:{performance:9,integration:9,cost:5,enterprise:10,scalability:9,community:8} },
   { id:"bedrock",       name:"AWS Bedrock",     org:"Amazon Web Services",layer:"platform", priceFree:false, priceLabel:"On-demand",      useCases:["customer-service","doc-intel","content-gen","data-analytics","e-commerce","legal"],                                                             pricing:"Pay-per-token",       bestFit:"Multi-model Enterprise",     strengths:["Multi-model marketplace (Claude, Llama, Titan, Mistral)","Deep AWS integration","Guardrails & fine-tuning built-in"],limitations:["Steep learning curve","Some models lag direct API","Complex IAM"],                                               insight:"Don't-put-all-eggs-in-one-basket play. One API for Claude, Llama, and more.",                                         metrics:{performance:8,integration:8,cost:6,enterprise:9,scalability:10,community:7} },
@@ -180,13 +180,6 @@ const STACK_PRESETS = [
   { name:"Data-First",       nameKo:"데이터 우선형",       desc:"Analytics & data pipeline focused", descKo:"분석 & 데이터 파이프라인 중심", picks:{foundation:"gemini",  platform:"vertex",      vertical:"glean",         tooling:"pinecone"},    cost:"$50-120/user/mo" },
 ];
 
-const ANNUAL_COST_ESTIMATES = {
-  "gpt4o":6000,"claude35":5400,"gemini":1800,"llama":12000,"mistral":2400,"cohere":3000,"deepseek":660,"grok":4800,"perplexity":1200,
-  "azure-openai":24000,"bedrock":18000,"vertex":9600,"huggingface":540,"databricks":36000,"nvidia-nim":48000,"groq":720,
-  "salesforce-einstein":30000,"servicenow":18000,"sap-joule":0,"github-copilot":11400,"glean":15000,"ms-copilot":18000,
-  "langchain":468,"pinecone":840,"wandb":3000,"llamaindex":0,"weaviate":300,"mlflow":0,"chroma":0,
-  "elevenlabs":2640,"midjourney":1200,"stability":0,"runwayml":1440,"suno":1200,"heygen":2880,
-};
 
 /* ── COST CALCULATOR PARAMS ─────────────────────────────────────────── */
 const COST_CALC_PARAMS = {
@@ -230,9 +223,9 @@ const COST_CALC_PARAMS = {
 const makeEmptyStack = () => ({ foundation:null, platform:null, vertical:null, tooling:null, multimedia:null });
 
 const DECISION_BUDGETS = [
-  { id:"limited",    label:"Limited (< $100K/yr)",     labelKo:"제한적 (연간 $100K 미만)",       desc:"Up to ~10 employees — prioritize cost efficiency and fast wins",      descKo:"10명 이하 팀 — 비용 효율과 빠른 성과를 우선합니다.", teamEn:"~10 people", teamKo:"~10명 이하" },
-  { id:"moderate",   label:"Moderate ($100K–$200K)",   labelKo:"중간 규모 ($100K–$200K)",       desc:"Up to ~50 employees — balance capability, integration, and spend",    descKo:"50명 이하 팀 — 역량, 통합, 예산의 균형을 맞춥니다.", teamEn:"~50 people", teamKo:"~50명 이하" },
-  { id:"enterprise", label:"Enterprise ($200K–$300K+)",labelKo:"엔터프라이즈 ($200K–$300K+)",   desc:"100+ employees — optimize for governance, scale, and adoption",        descKo:"100명 이상 조직 — 거버넌스, 확장성, 전사 도입을 우선합니다.", teamEn:"100+ people", teamKo:"100명 이상" },
+  { id:"limited",    label:"Limited (< $100K/yr)",      usdMax:100000,  teamSize:10,  desc:"Up to ~10 employees — prioritize cost efficiency and fast wins",      descKo:"10명 이하 팀 — 비용 효율과 빠른 성과를 우선합니다.", teamEn:"~10 people", teamKo:"~10명 이하" },
+  { id:"moderate",   label:"Moderate ($100K–$200K)",    usdMax:200000,  teamSize:50,  desc:"Up to ~50 employees — balance capability, integration, and spend",    descKo:"50명 이하 팀 — 역량, 통합, 예산의 균형을 맞춥니다.", teamEn:"~50 people", teamKo:"~50명 이하" },
+  { id:"enterprise", label:"Enterprise ($200K–$300K+)", usdMax:300000,  teamSize:100, desc:"100+ employees — optimize for governance, scale, and adoption",       descKo:"100명 이상 조직 — 거버넌스, 확장성, 전사 도입을 우선합니다.", teamEn:"100+ people", teamKo:"100명 이상" },
 ];
 
 const DECISION_SOVEREIGNTY = [
@@ -338,8 +331,6 @@ function getStackPriceText(vendor, lang) {
   return `${freeLabel} · ${vendor.priceLabel}`;
 }
 
-function getVendorAnnualEstimate(vendorId) { return ANNUAL_COST_ESTIMATES[vendorId] ?? 0; }
-
 function formatCurrency(amount, lang, rate) {
   if (lang === "ko" && rate) {
     const krw = Math.round(amount * rate);
@@ -368,7 +359,7 @@ const CARD_SCALE = 0.85;
 const cx = value => Number((ux(value) * CARD_SCALE).toFixed(1));
 
 function getVendorTooltipPosition(rect) {
-  const gap = 14, width = 354, estimatedHeight = 228, viewportPad = 12;
+  const gap = 14, width = 530, estimatedHeight = 342, viewportPad = 12;
   const fitsRight = rect.right + gap + width <= window.innerWidth - viewportPad;
   if (fitsRight) {
     const top = Math.max(viewportPad, Math.min(rect.top + rect.height / 2 - estimatedHeight / 2, window.innerHeight - estimatedHeight - viewportPad));
@@ -529,25 +520,25 @@ function VendorNode({ vendor, isHighlighted, isDimmed, isSelected, onClick, dela
         </div>
       </div>
       {isTooltipVisible && typeof document !== "undefined" && createPortal(
-        <div className="ai" style={{ position:"fixed", left:tooltipStyle.left, top:tooltipStyle.top, width:tooltipStyle.width, zIndex:40, pointerEvents:"none", borderRadius:14, border:"1px solid var(--bdr)", background:"linear-gradient(135deg,var(--bg2),var(--card))", boxShadow:"0 18px 44px var(--shadow)", backdropFilter:"blur(14px)", padding:ux(14) }}>
-          <div style={{ display:"flex", alignItems:"center", gap:ux(9), marginBottom:ux(10) }}>
-            <LogoBadge vendorId={vendor.id} size={ux(28)}/>
-            <div style={{ minWidth:0 }}><div style={{ fontSize:ux(13.5), fontWeight:800, color:"var(--txt)", lineHeight:1.2 }}>{vendor.name}</div><div style={{ fontSize:ux(11), color:"var(--dim)", lineHeight:1.2 }}>{vendor.org}</div></div>
+        <div className="ai" style={{ position:"fixed", left:tooltipStyle.left, top:tooltipStyle.top, width:tooltipStyle.width, zIndex:40, pointerEvents:"none", borderRadius:18, border:"1px solid var(--bdr)", background:"linear-gradient(135deg,var(--bg2),var(--card))", boxShadow:"0 18px 44px var(--shadow)", backdropFilter:"blur(14px)", padding:ux(21) }}>
+          <div style={{ display:"flex", alignItems:"center", gap:ux(13), marginBottom:ux(15) }}>
+            <LogoBadge vendorId={vendor.id} size={ux(42)}/>
+            <div style={{ minWidth:0 }}><div style={{ fontSize:ux(20), fontWeight:800, color:"var(--txt)", lineHeight:1.2 }}>{vendor.name}</div><div style={{ fontSize:ux(15), color:"var(--dim)", lineHeight:1.2 }}>{vendor.org}</div></div>
           </div>
-          <div style={{ fontSize:ux(10.5), color:"var(--accentText)", fontWeight:700, textTransform:"uppercase", letterSpacing:0.8, marginBottom:ux(5) }}>{lang==="ko"?"인사이트":"Insight"}</div>
-          <p style={{ fontSize:ux(12.5), color:"var(--txt)", lineHeight:1.45, marginBottom:ux(10), overflow:"hidden", display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical" }}>"{insight}"</p>
-          <div style={{ fontSize:ux(10.5), color:"var(--accentText)", fontWeight:700, textTransform:"uppercase", letterSpacing:0.8, marginBottom:ux(6) }}>{lang==="ko"?"핵심 강점":"Top Strengths"}</div>
-          <div style={{ display:"grid", gap:ux(5), marginBottom:ux(10) }}>
+          <div style={{ fontSize:ux(14), color:"var(--accentText)", fontWeight:700, textTransform:"uppercase", letterSpacing:0.8, marginBottom:ux(7) }}>{lang==="ko"?"인사이트":"Insight"}</div>
+          <p style={{ fontSize:ux(16), color:"var(--txt)", lineHeight:1.5, marginBottom:ux(15), overflow:"hidden", display:"-webkit-box", WebkitLineClamp:3, WebkitBoxOrient:"vertical" }}>"{insight}"</p>
+          <div style={{ fontSize:ux(14), color:"var(--accentText)", fontWeight:700, textTransform:"uppercase", letterSpacing:0.8, marginBottom:ux(9) }}>{lang==="ko"?"핵심 강점":"Top Strengths"}</div>
+          <div style={{ display:"grid", gap:ux(7), marginBottom:ux(15) }}>
             {strengths.map((strength, index) => (
-              <div key={`${vendor.id}-tip-${index}`} style={{ display:"flex", gap:ux(6), alignItems:"flex-start" }}>
-                <span style={{ color:"var(--ok)", fontWeight:800, lineHeight:1.4 }}>•</span>
-                <span style={{ fontSize:ux(12), color:"var(--dim)", lineHeight:1.5, overflow:"hidden", display:"-webkit-box", WebkitLineClamp:1, WebkitBoxOrient:"vertical" }}>{strength}</span>
+              <div key={`${vendor.id}-tip-${index}`} style={{ display:"flex", gap:ux(9), alignItems:"flex-start" }}>
+                <span style={{ color:"var(--ok)", fontWeight:800, lineHeight:1.4, fontSize:ux(16) }}>•</span>
+                <span style={{ fontSize:ux(15), color:"var(--dim)", lineHeight:1.5, overflow:"hidden", display:"-webkit-box", WebkitLineClamp:2, WebkitBoxOrient:"vertical" }}>{strength}</span>
               </div>
             ))}
           </div>
-          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:ux(10), borderTop:"1px solid var(--bdr)", paddingTop:ux(10) }}>
-            <div style={{ fontSize:ux(11), color:"var(--dim)", fontWeight:600 }}>{lang==="ko"?"가격":"Price"}</div>
-            <div style={{ fontSize:ux(11.5), color:vendor.priceFree ? "var(--ok)" : "var(--accentText)", fontWeight:700, textAlign:"right" }}>{getStackPriceText(vendor, lang)}</div>
+          <div style={{ display:"flex", alignItems:"center", justifyContent:"space-between", gap:ux(14), borderTop:"1px solid var(--bdr)", paddingTop:ux(14) }}>
+            <div style={{ fontSize:ux(15), color:"var(--dim)", fontWeight:600 }}>{lang==="ko"?"가격":"Price"}</div>
+            <div style={{ fontSize:ux(16), color:vendor.priceFree ? "var(--ok)" : "var(--accentText)", fontWeight:700, textAlign:"right" }}>{getStackPriceText(vendor, lang)}</div>
           </div>
         </div>, document.body
       )}
@@ -662,6 +653,14 @@ function EcosystemAssessment({ lang, theme }) {
 }
 
 /* ── DECISION FLOW ───────────────────────────────────────────────────── */
+function budgetLabelKrw(option, rate) {
+  if (!rate) return option.label;
+  const fmt = v => { const krw = Math.round(v * rate); if (krw >= 100000000) return `${(krw/100000000).toFixed(1)}억원`; return `${Math.round(krw/10000).toLocaleString("ko-KR")}만원`; };
+  if (option.id==="limited")    return `제한적 (연간 ${fmt(option.usdMax)} 미만)`;
+  if (option.id==="moderate")   return `중간 규모 (${fmt(100000)}–${fmt(option.usdMax)})`;
+  return `엔터프라이즈 (${fmt(200000)}–${fmt(option.usdMax)}+)`;
+}
+
 function DecisionFlow({ onBuildStack }) {
   const lang = useLang();
   const rate = useRate();
@@ -688,7 +687,7 @@ function DecisionFlow({ onBuildStack }) {
   const handleUseCase = id => { setAnswers(prev => ({ ...prev, useCase:id })); setOpenStep(4); };
 
   const summaryChips = [
-    selectedBudget && { key:"budget", step:1, label:lang==="ko"?selectedBudget.labelKo:selectedBudget.label },
+    selectedBudget && { key:"budget", step:1, label:lang==="ko"?budgetLabelKrw(selectedBudget, rate):selectedBudget.label },
     selectedSovereignty && { key:"sovereignty", step:2, label:lang==="ko"?selectedSovereignty.labelKo:selectedSovereignty.label },
     selectedUseCase && { key:"useCase", step:3, label:`${selectedUseCase.emoji} ${lang==="ko"?selectedUseCase.labelKo:selectedUseCase.label}` },
   ].filter(Boolean);
@@ -717,7 +716,7 @@ function DecisionFlow({ onBuildStack }) {
               return (
                 <button key={option.id} className={`pill ${selected?"on":""}`} onClick={() => handleBudget(option.id)} style={{ minHeight:ux(148), borderRadius:18, padding:`${ux(18)}px ${ux(18)}px ${ux(16)}px`, display:"flex", flexDirection:"column", alignItems:"flex-start", justifyContent:"space-between", textAlign:"left", whiteSpace:"normal" }}>
                   <div>
-                    <div style={{ fontWeight:800, fontSize:ux(15), lineHeight:1.35 }}>{lang==="ko"?option.labelKo:option.label}</div>
+                    <div style={{ fontWeight:800, fontSize:ux(15), lineHeight:1.35 }}>{lang==="ko"?budgetLabelKrw(option, rate):option.label}</div>
                     <div style={{ fontSize:ux(13), color:selected?"rgba(255,255,255,.8)":"var(--a)", fontWeight:700, marginTop:ux(4), background:selected?"rgba(255,255,255,.15)":"var(--adim)", padding:`${ux(3)}px ${ux(8)}px`, borderRadius:6, display:"inline-block" }}>{lang==="ko"?option.teamKo:option.teamEn}</div>
                   </div>
                   <div style={{ fontSize:ux(12.5), color:selected?"inherit":"var(--dim)", lineHeight:1.55 }}>{lang==="ko"?option.descKo:option.desc}</div>
@@ -786,7 +785,7 @@ function DecisionFlow({ onBuildStack }) {
             ))}
           </div>
           <div style={{ borderTop:"1px solid var(--bdr)", paddingTop:20, display:"flex", flexDirection:"column", alignItems:"center", gap:12 }}>
-            <button className="cbtn" onClick={() => onBuildStack(recommendation.picks)} style={{ padding:`${ux(16)}px ${ux(44)}px`, fontSize:ux(17), borderRadius:16, gap:ux(10), border:"2px solid rgba(255,255,255,.45)", boxShadow:"0 8px 32px rgba(139,92,246,.4), 0 0 0 4px rgba(139,92,246,.25), 0 0 60px rgba(139,92,246,.15)", animation:"pulse 2.2s ease-in-out infinite" }}>
+            <button className="cbtn" onClick={() => onBuildStack(recommendation.picks, selectedBudget?.teamSize || 50)} style={{ padding:`${ux(16)}px ${ux(44)}px`, fontSize:ux(17), borderRadius:16, gap:ux(10), border:"2px solid rgba(255,255,255,.45)", boxShadow:"0 8px 32px rgba(139,92,246,.4), 0 0 0 4px rgba(139,92,246,.25), 0 0 60px rgba(139,92,246,.15)", animation:"pulse 2.2s ease-in-out infinite" }}>
               <Boxes size={18}/> {lang==="ko"?"이 스택으로 빌드":"Build This Stack"} <ArrowRight size={16}/>
             </button>
             <button className="ghost" onClick={resetFlow} style={{ fontSize:ux(12) }}><RotateCcw size={12}/> {lang==="ko"?"초기화":"Reset"}</button>
@@ -798,13 +797,14 @@ function DecisionFlow({ onBuildStack }) {
 }
 
 /* ── STACK BUILDER ────────────────────────────────────────────────────── */
-function StackBuilder({ lang, theme, picks, setPicks, autoRevealKey }) {
+function StackBuilder({ lang, theme, picks, setPicks, autoRevealKey, initialTeamSize }) {
   const rate = useRate();
   const [showResult, setShowResult] = useState(false);
   const [activePreset, setActivePreset] = useState(null);
-  const [calcUsers, setCalcUsers] = useState(50);
+  const [calcUsers, setCalcUsers] = useState(initialTeamSize || 50);
   const [calcInputTok, setCalcInputTok] = useState(300);
   const [calcOutputTok, setCalcOutputTok] = useState(100);
+  useEffect(() => { if (initialTeamSize) setCalcUsers(initialTeamSize); }, [initialTeamSize]);
   const isLight = theme==="light";
   const pickCount = Object.values(picks).filter(Boolean).length;
   const handlePick = (lid, vid) => { setPicks(p => ({...p,[lid]:p[lid]===vid?null:vid})); setShowResult(false); setActivePreset(null); };
@@ -838,8 +838,7 @@ function StackBuilder({ lang, theme, picks, setPicks, autoRevealKey }) {
   const costSummary = useMemo(() => {
     const freeItems = selectedVendors.filter(x => x.vendor.priceFree);
     const paidItems = selectedVendors.filter(x => !x.vendor.priceFree);
-    const annualTotal = selectedVendors.reduce((sum, { vendor }) => sum + getVendorAnnualEstimate(vendor.id), 0);
-    return { freeCount:freeItems.length, paidCount:paidItems.length, items:selectedVendors, annualTotal };
+    return { freeCount:freeItems.length, paidCount:paidItems.length, items:selectedVendors };
   }, [selectedVendors]);
 
   // Cost calculator
@@ -910,7 +909,7 @@ function StackBuilder({ lang, theme, picks, setPicks, autoRevealKey }) {
             <div style={{ display:"flex", flexDirection:"column", gap:ux(10) }}>
               <div style={{ padding:`${ux(16)}px ${ux(18)}px`, borderRadius:18, border:"1px solid var(--ok)", background:"linear-gradient(135deg,var(--okbg),rgba(6,182,212,0.08))" }}>
                 <div style={{ fontSize:ux(11), color:"var(--dim)", fontWeight:700, marginBottom:ux(6) }}>{lang==="ko"?"예상 연간 총비용":"Estimated Annual Total"}</div>
-                <div style={{ fontSize:ux(24), fontWeight:900, color:"var(--ok)", lineHeight:1.1 }}>{formatAnnualEstimate(costSummary.annualTotal, lang, rate)}</div>
+                <div style={{ fontSize:ux(24), fontWeight:900, color:"var(--ok)", lineHeight:1.1 }}>{formatAnnualEstimate(calcTotal*12, lang, rate)}</div>
               </div>
               <div style={{ textAlign:"right", padding:`0 ${ux(4)}px` }}>
                 <div style={{ fontSize:ux(11), color:"var(--dim)" }}>{lang==="ko"?"무료 컴포넌트":"Free components"}</div>
@@ -1021,7 +1020,7 @@ function StackBuilder({ lang, theme, picks, setPicks, autoRevealKey }) {
                   <div style={{ background:stackGrade.bg, border:`1px solid ${stackGrade.color}`, borderRadius:12, padding:`${ux(6)}px ${ux(12)}px`, display:"flex", alignItems:"center", gap:ux(10) }}>
                     <div style={{ display:"flex", alignItems:"center", gap:5 }}><span style={{ fontWeight:900, fontSize:ux(22), color:stackGrade.color }}>{stackGrade.letter}</span><span style={{ fontSize:ux(11), color:"var(--dim)" }}>{lang==="ko"?"점수":"Score"}</span></div>
                     <div style={{ width:1, alignSelf:"stretch", background:`${stackGrade.color}33` }}/>
-                    <div style={{ display:"flex", flexDirection:"column", gap:ux(2) }}><span style={{ fontSize:ux(10.5), color:"var(--dim)", fontWeight:600 }}>{lang==="ko"?"예상 연간 총비용":"Est. annual total"}</span><span style={{ fontSize:ux(12.5), color:stackGrade.color, fontWeight:800 }}>{formatAnnualEstimate(costSummary.annualTotal, lang, rate)}</span></div>
+                    <div style={{ display:"flex", flexDirection:"column", gap:ux(2) }}><span style={{ fontSize:ux(10.5), color:"var(--dim)", fontWeight:600 }}>{lang==="ko"?"예상 연간 총비용":"Est. annual total"}</span><span style={{ fontSize:ux(12.5), color:stackGrade.color, fontWeight:800 }}>{formatAnnualEstimate(calcTotal*12, lang, rate)}</span></div>
                   </div>
                 )}
               </div>
@@ -1077,6 +1076,7 @@ export default function App() {
   const [view,  setView]  = useState("map");
   const [stackPicks, setStackPicks] = useState(makeEmptyStack);
   const [stackAutoRevealKey, setStackAutoRevealKey] = useState(0);
+  const [stackTeamSize, setStackTeamSize] = useState(null);
   const [exchangeRate, setExchangeRate] = useState(null);
 
   // Fetch exchange rate on mount
@@ -1092,7 +1092,7 @@ export default function App() {
   const handleCompare = () => { if (selIds.length>=2) setView("compare"); };
   const handleBack = () => setView("map");
   const handleClear = () => { setSelIds([]); setView("map"); };
-  const handleBuildStack = picks => { setStackPicks(prev => ({ ...makeEmptyStack(), ...picks })); setStackAutoRevealKey(key => key + 1); setTab("stack"); };
+  const handleBuildStack = (picks, teamSize) => { setStackPicks(prev => ({ ...makeEmptyStack(), ...picks })); setStackTeamSize(teamSize || null); setStackAutoRevealKey(key => key + 1); setTab("stack"); };
   const selectedVendors = V.filter(v => selIds.includes(v.id));
 
   const today = new Date();
@@ -1175,7 +1175,7 @@ export default function App() {
             </div>
           )}
           {tab==="decision" && <DecisionFlow key="decision" onBuildStack={handleBuildStack}/>}
-          {tab==="stack" && <StackBuilder key="stack" lang={lang} theme={theme} picks={stackPicks} setPicks={setStackPicks} autoRevealKey={stackAutoRevealKey}/>}
+          {tab==="stack" && <StackBuilder key="stack" lang={lang} theme={theme} picks={stackPicks} setPicks={setStackPicks} autoRevealKey={stackAutoRevealKey} initialTeamSize={stackTeamSize}/>}
         </div>
       </div>
     </RateCtx.Provider>
