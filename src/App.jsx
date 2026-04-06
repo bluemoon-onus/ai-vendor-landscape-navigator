@@ -1059,8 +1059,17 @@ function StackBuilder({ lang, theme, picks, setPicks, autoRevealKey, initialTeam
                 <Shield size={20} color="var(--a2)"/>
                 <div><div style={{ fontWeight:700, fontSize:ux(18) }}>{lang==="ko"?"나의 추천 스택":"My Recommended Stack"}</div><div style={{ fontSize:ux(12), color:"var(--dim)" }}>{selectedVendors.length} {lang==="ko"?"레이어 구성됨":"layers configured"}</div></div>
                 {stackGrade && (
-                  <div style={{ background:stackGrade.bg, border:`1px solid ${stackGrade.color}`, borderRadius:12, padding:`${ux(6)}px ${ux(12)}px`, display:"flex", alignItems:"center", gap:ux(10) }}>
-                    <div style={{ display:"flex", alignItems:"center", gap:5 }}><span style={{ fontWeight:900, fontSize:ux(22), color:stackGrade.color }}>{stackGrade.letter}</span><span style={{ fontSize:ux(11), color:"var(--dim)" }}>{lang==="ko"?"점수":"Score"}</span></div>
+                  <div title={lang==="ko"
+                    ? "성능·통합·비용·엔터프라이즈·확장성·커뮤니티 6개 항목(각 1–10점) 평균으로 산출\nA+ ≥8.5 · A ≥7.5 · B+ ≥6.5 · B ≥5.5 · C 이하\n성능·엔터프라이즈 가중치 ↑ · 커뮤니티 가중치 ↓"
+                    : "Average of 6 metrics (1–10): Performance, Integration, Cost, Enterprise, Scalability, Community\nA+ ≥8.5 · A ≥7.5 · B+ ≥6.5 · B ≥5.5 · C below\nPerformance & Enterprise weighted higher · Community weighted lower"}
+                    style={{ background:stackGrade.bg, border:`1px solid ${stackGrade.color}`, borderRadius:12, padding:`${ux(6)}px ${ux(12)}px`, display:"flex", alignItems:"center", gap:ux(10), cursor:"help" }}>
+                    <div style={{ display:"flex", alignItems:"center", gap:5 }}>
+                      <span style={{ fontWeight:900, fontSize:ux(22), color:stackGrade.color }}>{stackGrade.letter}</span>
+                      <div style={{ display:"flex", flexDirection:"column", gap:1 }}>
+                        <span style={{ fontSize:ux(11), color:"var(--dim)" }}>{lang==="ko"?"점수":"Score"}</span>
+                        <span style={{ fontSize:ux(9), color:`${stackGrade.color}99`, fontWeight:600 }}>{lang==="ko"?"6항목 평균 ⓘ":"6-metric avg ⓘ"}</span>
+                      </div>
+                    </div>
                     <div style={{ width:1, alignSelf:"stretch", background:`${stackGrade.color}33` }}/>
                     <div style={{ display:"flex", flexDirection:"column", gap:ux(2) }}><span style={{ fontSize:ux(10.5), color:"var(--dim)", fontWeight:600 }}>{lang==="ko"?"예상 연간 총비용":"Est. annual total"}</span><span style={{ fontSize:ux(12.5), color:stackGrade.color, fontWeight:800 }}>{formatAnnualEstimate(calcTotal*12, lang, rate)}</span></div>
                   </div>
