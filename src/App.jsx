@@ -800,6 +800,7 @@ function DecisionFlow({ onBuildStack }) {
 function StackBuilder({ lang, theme, picks, setPicks, autoRevealKey, initialTeamSize }) {
   const rate = useRate();
   const [showResult, setShowResult] = useState(false);
+  const [showGradeTooltip, setShowGradeTooltip] = useState(false);
   const [activePreset, setActivePreset] = useState(null);
   const [calcUsers, setCalcUsers] = useState(initialTeamSize || 50);
   const [calcInputTok, setCalcInputTok] = useState(700);
@@ -1059,19 +1060,55 @@ function StackBuilder({ lang, theme, picks, setPicks, autoRevealKey, initialTeam
                 <Shield size={20} color="var(--a2)"/>
                 <div><div style={{ fontWeight:700, fontSize:ux(18) }}>{lang==="ko"?"나의 추천 스택":"My Recommended Stack"}</div><div style={{ fontSize:ux(12), color:"var(--dim)" }}>{selectedVendors.length} {lang==="ko"?"레이어 구성됨":"layers configured"}</div></div>
                 {stackGrade && (
-                  <div title={lang==="ko"
-                    ? "성능·통합·비용·엔터프라이즈·확장성·커뮤니티 6개 항목(각 1–10점) 평균으로 산출\nA+ ≥8.5 · A ≥7.5 · B+ ≥6.5 · B ≥5.5 · C 이하\n성능·엔터프라이즈 가중치 ↑ · 커뮤니티 가중치 ↓"
-                    : "Average of 6 metrics (1–10): Performance, Integration, Cost, Enterprise, Scalability, Community\nA+ ≥8.5 · A ≥7.5 · B+ ≥6.5 · B ≥5.5 · C below\nPerformance & Enterprise weighted higher · Community weighted lower"}
-                    style={{ background:stackGrade.bg, border:`1px solid ${stackGrade.color}`, borderRadius:12, padding:`${ux(6)}px ${ux(12)}px`, display:"flex", alignItems:"center", gap:ux(10), cursor:"help" }}>
-                    <div style={{ display:"flex", alignItems:"center", gap:5 }}>
-                      <span style={{ fontWeight:900, fontSize:ux(22), color:stackGrade.color }}>{stackGrade.letter}</span>
-                      <div style={{ display:"flex", flexDirection:"column", gap:1 }}>
-                        <span style={{ fontSize:ux(11), color:"var(--dim)" }}>{lang==="ko"?"점수":"Score"}</span>
-                        <span style={{ fontSize:ux(9), color:`${stackGrade.color}99`, fontWeight:600 }}>{lang==="ko"?"6항목 평균 ⓘ":"6-metric avg ⓘ"}</span>
+                  <div style={{ position:"relative" }}
+                    onMouseEnter={() => setShowGradeTooltip(true)}
+                    onMouseLeave={() => setShowGradeTooltip(false)}>
+                    <div style={{ background:stackGrade.bg, border:`1px solid ${stackGrade.color}`, borderRadius:12, padding:`${ux(6)}px ${ux(12)}px`, display:"flex", alignItems:"center", gap:ux(10), cursor:"help" }}>
+                      <div style={{ display:"flex", alignItems:"center", gap:5 }}>
+                        <span style={{ fontWeight:900, fontSize:ux(22), color:stackGrade.color }}>{stackGrade.letter}</span>
+                        <div style={{ display:"flex", flexDirection:"column", gap:1 }}>
+                          <span style={{ fontSize:ux(11), color:"var(--dim)" }}>{lang==="ko"?"점수":"Score"}</span>
+                          <span style={{ fontSize:ux(9), color:`${stackGrade.color}99`, fontWeight:600 }}>{lang==="ko"?"6항목 평균 ⓘ":"6-metric avg ⓘ"}</span>
+                        </div>
                       </div>
+                      <div style={{ width:1, alignSelf:"stretch", background:`${stackGrade.color}33` }}/>
+                      <div style={{ display:"flex", flexDirection:"column", gap:ux(2) }}><span style={{ fontSize:ux(10.5), color:"var(--dim)", fontWeight:600 }}>{lang==="ko"?"예상 연간 총비용":"Est. annual total"}</span><span style={{ fontSize:ux(12.5), color:stackGrade.color, fontWeight:800 }}>{formatAnnualEstimate(calcTotal*12, lang, rate)}</span></div>
                     </div>
-                    <div style={{ width:1, alignSelf:"stretch", background:`${stackGrade.color}33` }}/>
-                    <div style={{ display:"flex", flexDirection:"column", gap:ux(2) }}><span style={{ fontSize:ux(10.5), color:"var(--dim)", fontWeight:600 }}>{lang==="ko"?"예상 연간 총비용":"Est. annual total"}</span><span style={{ fontSize:ux(12.5), color:stackGrade.color, fontWeight:800 }}>{formatAnnualEstimate(calcTotal*12, lang, rate)}</span></div>
+                    {showGradeTooltip && (
+                      <div style={{ position:"absolute", top:"calc(100% + 8px)", left:"50%", transform:"translateX(-50%)", zIndex:50, minWidth:330, background:"var(--card)", border:`1px solid ${stackGrade.color}55`, borderRadius:14, padding:"16px 18px", boxShadow:"0 12px 36px rgba(0,0,0,.45)", backdropFilter:"blur(12px)", pointerEvents:"none" }}>
+                        <div style={{ fontSize:15, fontWeight:700, color:stackGrade.color, marginBottom:10 }}>{lang==="ko"?"스택 점수 산출 방식":"How the Score is Calculated"}</div>
+                        <div style={{ fontSize:13.5, color:"var(--txt)", lineHeight:1.7, marginBottom:10 }}>
+                          {lang==="ko"
+                            ? "선택된 벤더들의 6개 항목(각 1–10점)을 평균하여 등급을 산출합니다."
+                            : "Each vendor is rated on 6 metrics (1–10). The grade reflects the average across all selected vendors."}
+                        </div>
+                        <div style={{ display:"flex", flexDirection:"column", gap:6, marginBottom:12 }}>
+                          {[
+                            { label: lang==="ko"?"성능 (Performance)":"Performance", note: lang==="ko"?"가중치 높음 ↑":"High weight ↑", hi:true },
+                            { label: lang==="ko"?"엔터프라이즈":"Enterprise",       note: lang==="ko"?"가중치 높음 ↑":"High weight ↑", hi:true },
+                            { label: lang==="ko"?"통합성 (Integration)":"Integration", note: lang==="ko"?"중간 가중치":"Medium weight", hi:false },
+                            { label: lang==="ko"?"비용 효율":"Cost",                 note: lang==="ko"?"중간 가중치":"Medium weight", hi:false },
+                            { label: lang==="ko"?"확장성":"Scalability",             note: lang==="ko"?"중간 가중치":"Medium weight", hi:false },
+                            { label: lang==="ko"?"커뮤니티":"Community",             note: lang==="ko"?"가중치 낮음 ↓":"Low weight ↓", hi:false },
+                          ].map(item => (
+                            <div key={item.label} style={{ display:"flex", justifyContent:"space-between", alignItems:"center", fontSize:13 }}>
+                              <span style={{ color:"var(--txt)", fontWeight:600 }}>{item.label}</span>
+                              <span style={{ color: item.hi ? stackGrade.color : "var(--dim)", fontWeight:600, fontSize:12 }}>{item.note}</span>
+                            </div>
+                          ))}
+                        </div>
+                        <div style={{ borderTop:"1px solid var(--bdr)", paddingTop:10, display:"flex", flexDirection:"column", gap:4 }}>
+                          <div style={{ fontSize:13, fontWeight:700, color:"var(--dim)", marginBottom:4 }}>{lang==="ko"?"등급 기준":"Grade Scale"}</div>
+                          {[["A+","≥ 8.5"],["A","≥ 7.5"],["B+","≥ 6.5"],["B","≥ 5.5"],["C","< 5.5"]].map(([g,r]) => (
+                            <div key={g} style={{ display:"flex", gap:10, alignItems:"center" }}>
+                              <span style={{ fontWeight:900, fontSize:14, color: g===stackGrade.letter ? stackGrade.color : "var(--dim)", minWidth:24 }}>{g}</span>
+                              <span style={{ fontSize:13, color:"var(--dim)" }}>{r}</span>
+                              {g===stackGrade.letter && <span style={{ fontSize:11, color:stackGrade.color, fontWeight:700 }}>← {lang==="ko"?"현재":"current"}</span>}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
